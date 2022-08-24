@@ -3,7 +3,7 @@ package com.seabreyh.mana.client;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.client.renderers.AmethystEnergyBallRenderer;
 import com.seabreyh.mana.init.ManaEntities;
-import com.seabreyh.mana.init.ManaParticles;
+import com.seabreyh.mana.particle.ManaParticles;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;

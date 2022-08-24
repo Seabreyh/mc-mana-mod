@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.init.ManaEntities;
+import com.seabreyh.mana.particle.ManaParticles;
 
 import org.slf4j.Logger;
 import javax.annotation.Nonnull;
@@ -27,6 +28,11 @@ public class AmethystEnergyBall extends ThrowableProjectile {
 
     public AmethystEnergyBall(Level world, LivingEntity player) {
         super(ManaEntities.AMETHYST_ENERGY_BALL.get(), player, world);
+        double xPos = player.getX();
+        double yPos = player.getEyeY() - 0.2D;
+        double zPos = player.getZ();
+
+        this.setPos(xPos, yPos, zPos);
         this.noPhysics = true;
         this.life = 0;
     }
@@ -45,13 +51,6 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         super(p_37462_, p_37463_, p_37464_);
     }
 
-    // If you forget to override this method, the default vanilla method will be
-    // called.
-    // This sends a vanilla spawn packet, which is then silently discarded when it
-    // reaches the client.
-    // Your entity will be present on the server and can cause effects, but the
-    // client will not have a copy of the entity
-    // and hence it will not render.
     @Nonnull
     @Override
     public Packet<?> getAddEntityPacket() {
@@ -82,7 +81,8 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         this.shoot((double) f, (double) f1, (double) f2, p_37256_, p_37257_);
         Vec3 vec3 = player.getDeltaMovement();
         Vec3 shootDelta = this.getDeltaMovement();
-        shootDelta = new Vec3(shootDelta.x / 5.0F, shootDelta.y / 5.0F, shootDelta.z / 5.0F);
+        float speedDampen = 3.0f;
+        shootDelta = new Vec3(shootDelta.x / speedDampen, shootDelta.y / speedDampen, shootDelta.z / speedDampen);
 
         this.setDeltaMovement(shootDelta.add(vec3.x, player.isOnGround() ? 0.0D : vec3.y, vec3.z));
     }
@@ -97,16 +97,18 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         super.tick();
 
         if (!this.level.isClientSide) {
-            for (int i = 0; i < 4; ++i) {
-                ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(),
-                        1, 0.0D, this.random.nextGaussian() * 0.02D, -this.getDeltaMovement().y * 0.2D,
-                        this.random.nextGaussian() * 0.02D);
-            }
 
             // Despawn after 5 seconds
             if (this.life > 20 * 5) {
                 this.level.broadcastEntityEvent(this, (byte) 3);
                 this.discard();
+            }
+        } else {
+            for (int i = 0; i < 4; ++i) {
+                this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE.get(), this.getX(),
+                        this.getY(), this.getZ(),
+                        this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
+                        this.random.nextGaussian() * 0.1D);
             }
         }
     }

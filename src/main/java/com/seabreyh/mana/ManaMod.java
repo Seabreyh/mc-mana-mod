@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.client.ClientSetup;
 import com.seabreyh.mana.init.ManaEntities;
 import com.seabreyh.mana.init.ManaItems;
-import com.seabreyh.mana.init.ManaParticles;
+import com.seabreyh.mana.particle.ManaParticles;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -44,7 +44,7 @@ public class ManaMod {
         // Register items
         ManaItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ManaEntities.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        // ManaParticles.PARTICLE_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ManaParticles.PARTICLE_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
