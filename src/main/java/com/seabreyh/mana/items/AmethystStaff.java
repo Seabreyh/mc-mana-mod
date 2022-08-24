@@ -16,16 +16,14 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class AmethystStaff extends SwordItem {
+public class AmethystStaff extends Item {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public AmethystStaff(Properties properties) {
-        super(Tiers.STONE, 1, 1.0f, properties);
+        super(properties);
     }
 
     @Override
