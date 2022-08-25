@@ -4,22 +4,30 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 
+import com.google.common.base.MoreObjects;
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.init.ManaEntities;
 import com.seabreyh.mana.particle.ManaParticles;
 
 import org.slf4j.Logger;
+
 import javax.annotation.Nonnull;
 
 public class AmethystEnergyBall extends ThrowableProjectile {
@@ -81,7 +89,7 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         this.shoot((double) f, (double) f1, (double) f2, p_37256_, p_37257_);
         Vec3 vec3 = player.getDeltaMovement();
         Vec3 shootDelta = this.getDeltaMovement();
-        float speedDampen = 3.0f;
+        float speedDampen = 2.0f;
         shootDelta = new Vec3(shootDelta.x / speedDampen, shootDelta.y / speedDampen, shootDelta.z / speedDampen);
 
         this.setDeltaMovement(shootDelta.add(vec3.x, player.isOnGround() ? 0.0D : vec3.y, vec3.z));
@@ -91,10 +99,21 @@ public class AmethystEnergyBall extends ThrowableProjectile {
     protected void defineSynchedData() {
     }
 
+    protected SoundEvent getPloofSound() {
+        return SoundEvents.AMETHYST_BLOCK_STEP;
+    }
+
+    protected SoundEvent getHitSound() {
+        return SoundEvents.ZOMBIE_VILLAGER_CURE;
+    }
+
     @Override
     public void tick() {
         ++this.life;
         super.tick();
+        if (this.life % 2 == 0) {
+            this.playSound(this.getPloofSound(), 2F, 3F);
+        }
 
         if (!this.level.isClientSide) {
 
@@ -113,19 +132,30 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         }
     }
 
-    @Override
-    protected void onHitEntity(EntityHitResult hit) {
-        super.onHitEntity(hit);
-        Entity entity = hit.getEntity();
-        entity.hurt(DamageSource.thrown(this, this.getOwner()), 1.0F);
+    protected void onHitBlock(BlockHitResult hitBlock) {
+        super.onHitBlock(hitBlock);
+        if (!this.level.isClientSide) {                                                                           //  qty          spread                               velocity
+            ((ServerLevel)this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1, 0D, 0D, 0D, 0D);
+            ((ServerLevel)this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(), 20, 1D, 1D, 1D, 0.3D);
+        }
+        this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);  
+    }
+    
+    protected void onHit(HitResult hitResult) {
+        super.onHit(hitResult);
+        this.discard();
     }
 
-    @Override
-    protected void onHit(HitResult hit) {
-        super.onHit(hit);
-        if (!this.level.isClientSide) {
-            this.level.broadcastEntityEvent(this, (byte) 3);
-            this.discard();
+    protected void onHitEntity(EntityHitResult hitEntity) {
+        super.onHitEntity(hitEntity);
+        Entity entity = hitEntity.getEntity();
+        Entity entity1 = this.getOwner();
+        LivingEntity livingentity = entity1 instanceof LivingEntity ? (LivingEntity)entity1 : null;
+        boolean flag = entity.hurt(DamageSource.indirectMobAttack(this, livingentity).setProjectile(), 2F);
+        if (flag) {
+            this.doEnchantDamageEffects(livingentity, entity);
+            this.playSound(this.getHitSound(), 1.2F, 1.5F);
         }
     }
+    
 }
