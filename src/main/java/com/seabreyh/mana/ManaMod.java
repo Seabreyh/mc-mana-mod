@@ -2,9 +2,9 @@ package com.seabreyh.mana;
 
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.client.ClientSetup;
-import com.seabreyh.mana.init.ManaEntities;
-import com.seabreyh.mana.init.ManaItems;
 import com.seabreyh.mana.particle.ManaParticles;
+import com.seabreyh.mana.registry.ManaEntities;
+import com.seabreyh.mana.registry.ManaItems;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -51,14 +51,14 @@ public class ManaMod {
 
     }
 
-    private void clientSetup(final FMLClientSetupEvent event) {
-        ClientSetup.doSetup(event);
-    }
-
     private void setup(final FMLCommonSetupEvent event) {
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+    }
+
+    private void clientSetup(final FMLClientSetupEvent event) {
+        ClientSetup.registerEntityRenderers(event);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {

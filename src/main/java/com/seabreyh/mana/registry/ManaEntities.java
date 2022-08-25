@@ -1,7 +1,8 @@
-package com.seabreyh.mana.init;
+package com.seabreyh.mana.registry;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.projectiles.AmethystEnergyBall;
+import com.seabreyh.mana.entity.AmethystEnergyBall;
+import com.seabreyh.mana.entity.FallenStar;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -18,4 +19,9 @@ public class ManaEntities {
                         "amethyst_energy_ball",
                         () -> EntityType.Builder.<AmethystEnergyBall>of(AmethystEnergyBall::new, MobCategory.MISC)
                                         .build("amethyst_energy_ball"));
+
+        public static final RegistryObject<EntityType<FallenStar>> FALLEN_STAR = ENTITIES.register(
+                        "fallen_star",
+                        () -> EntityType.Builder.<FallenStar>of(FallenStar::new, MobCategory.MISC)
+                                        .build("fallen_star"));
 }
