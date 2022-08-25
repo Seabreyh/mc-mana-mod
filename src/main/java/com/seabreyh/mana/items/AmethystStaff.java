@@ -34,9 +34,8 @@ public class AmethystStaff extends Item {
         ItemStack itemstack = player.getItemInHand(hand);
         if (!world.isClientSide) {
             LOGGER.info("*Use amethyst staff (server)*");
-
             AmethystEnergyBall energyBall = new AmethystEnergyBall(world, player);
-            energyBall.shootFromRotation(player, player.getXRot(), player.getYRot(), 1.0F, 1.5F, 1.0F);
+            energyBall.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
             energyBall.setNoGravity(true);
             world.addFreshEntity(energyBall);
         }
@@ -47,7 +46,7 @@ public class AmethystStaff extends Item {
     private void playSound(Level level, Player player) {
         Random random = level.getRandom();
         level.playSound((Player) null, player.getX(), player.getY(), player.getZ(), SoundEvents.FIRECHARGE_USE,
-                SoundSource.BLOCKS, 1.0F,
-                (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+            SoundSource.BLOCKS, 1.0F,
+            (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
     }
 }
