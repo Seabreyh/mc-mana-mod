@@ -18,13 +18,18 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 
+import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaEntities;
+
+import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
 
 public class AmethystEnergyBall extends ThrowableProjectile {
     private int life;
+    
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     public AmethystEnergyBall(Level world, LivingEntity player) {
         super(ManaEntities.AMETHYST_ENERGY_BALL.get(), player, world);
@@ -100,9 +105,7 @@ public class AmethystEnergyBall extends ThrowableProjectile {
     public void tick() {
         super.tick();
         ++this.life;
-        if (this.life % 2 == 0) {
-            this.playSound(this.getPloofSound(), 2F, 3F);
-        }
+        this.playSound(this.getPloofSound(), 2F, 3F);
 
         boolean flag = this.noPhysics;
         Vec3 vec3 = this.getDeltaMovement();                      
@@ -169,11 +172,11 @@ public class AmethystEnergyBall extends ThrowableProjectile {
                     1D, 1D, 1D, 0.3D);
         }
         this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
+        this.discard();
     }
 
     protected void onHit(HitResult hitResult) {
         super.onHit(hitResult);
-        this.discard();
     }
 
     protected void onHitEntity(EntityHitResult hitEntity) {
@@ -182,9 +185,15 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         Entity entity1 = this.getOwner();
         LivingEntity livingentity = entity1 instanceof LivingEntity ? (LivingEntity) entity1 : null;
         boolean flag = entity.hurt(DamageSource.indirectMobAttack(this, livingentity).setProjectile(), 2F);
-        if (flag) {
+        if (flag && entity != entity1) {
             this.doEnchantDamageEffects(livingentity, entity);
             this.playSound(this.getHitSound(), 1.2F, 1.5F);
+
+            if (!this.level.isClientSide) {
+                ((ServerLevel) this.level).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 20, 0.15D,
+                        0.15D, 0.15D, 0.2D);
+            }
+            this.discard();
         }
     }
 
