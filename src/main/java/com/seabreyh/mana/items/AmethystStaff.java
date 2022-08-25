@@ -1,7 +1,7 @@
 package com.seabreyh.mana.items;
 
 import com.mojang.logging.LogUtils;
-import com.seabreyh.mana.projectiles.AmethystEnergyBall;
+import com.seabreyh.mana.entity.AmethystEnergyBall;
 
 import java.util.Random;
 
@@ -30,7 +30,7 @@ public class AmethystStaff extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {    
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         if (!world.isClientSide) {
             LOGGER.info("*Use amethyst staff (server)*");

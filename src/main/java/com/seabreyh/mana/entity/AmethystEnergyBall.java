@@ -1,4 +1,4 @@
-package com.seabreyh.mana.projectiles;
+package com.seabreyh.mana.entity;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -18,16 +18,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 
-import com.mojang.logging.LogUtils;
-import com.seabreyh.mana.init.ManaEntities;
 import com.seabreyh.mana.particle.ManaParticles;
-
-import org.slf4j.Logger;
+import com.seabreyh.mana.registry.ManaEntities;
 
 import javax.annotation.Nonnull;
 
 public class AmethystEnergyBall extends ThrowableProjectile {
-    private static final Logger LOGGER = LogUtils.getLogger();
     private int life;
 
     public AmethystEnergyBall(Level world, LivingEntity player) {
@@ -130,13 +126,15 @@ public class AmethystEnergyBall extends ThrowableProjectile {
 
     protected void onHitBlock(BlockHitResult hitBlock) {
         super.onHitBlock(hitBlock);
-        if (!this.level.isClientSide) {                                                                           //  qty          spread                               velocity
-            ((ServerLevel)this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1, 0D, 0D, 0D, 0D);
-            ((ServerLevel)this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(), 20, 1D, 1D, 1D, 0.3D);
+        if (!this.level.isClientSide) { // qty spread velocity
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1, 0D,
+                    0D, 0D, 0D);
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(), 20,
+                    1D, 1D, 1D, 0.3D);
         }
-        this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);  
+        this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
     }
-    
+
     protected void onHit(HitResult hitResult) {
         super.onHit(hitResult);
         this.discard();
@@ -146,12 +144,12 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         super.onHitEntity(hitEntity);
         Entity entity = hitEntity.getEntity();
         Entity entity1 = this.getOwner();
-        LivingEntity livingentity = entity1 instanceof LivingEntity ? (LivingEntity)entity1 : null;
+        LivingEntity livingentity = entity1 instanceof LivingEntity ? (LivingEntity) entity1 : null;
         boolean flag = entity.hurt(DamageSource.indirectMobAttack(this, livingentity).setProjectile(), 2F);
         if (flag) {
             this.doEnchantDamageEffects(livingentity, entity);
             this.playSound(this.getHitSound(), 1.2F, 1.5F);
         }
     }
-    
+
 }
