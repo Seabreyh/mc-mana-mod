@@ -16,7 +16,9 @@ public class ManaItems {
             ManaMod.MOD_ID);
 
     public static final RegistryObject<Item> AMETHYST_STAFF = ITEMS.register("amethyst_staff",
-            () -> new AmethystStaff(new Item.Properties().tab(ModCreativeTab.instance).stacksTo(1)));
+            () -> new AmethystStaff(new Item.Properties()
+            .tab(ModCreativeTab.instance)
+            .stacksTo(1)));
 
     public static class ModCreativeTab extends CreativeModeTab {
         public static final ModCreativeTab instance = new ModCreativeTab(CreativeModeTab.TABS.length, "mana");
