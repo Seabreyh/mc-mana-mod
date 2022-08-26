@@ -9,8 +9,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -28,7 +31,9 @@ import javax.annotation.Nonnull;
 
 public class AmethystEnergyBall extends ThrowableProjectile {
     private int life;
-    
+    private boolean fireCharged;
+    private int explosionPower = 2;
+
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public AmethystEnergyBall(Level world, LivingEntity player) {
@@ -45,13 +50,11 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         super(p_37391_, p_37392_);
     }
 
-    protected AmethystEnergyBall(EntityType<? extends ThrowableProjectile> p_37456_, double p_37457_, double p_37458_,
-            double p_37459_, Level p_37460_) {
+    protected AmethystEnergyBall(EntityType<? extends ThrowableProjectile> p_37456_, double p_37457_, double p_37458_, double p_37459_, Level p_37460_) {
         super(p_37456_, p_37457_, p_37458_, p_37459_, p_37460_);
     }
 
-    protected AmethystEnergyBall(EntityType<? extends ThrowableProjectile> p_37462_, LivingEntity p_37463_,
-            Level p_37464_) {
+    protected AmethystEnergyBall(EntityType<? extends ThrowableProjectile> p_37462_, LivingEntity p_37463_, Level p_37464_) {
         super(p_37462_, p_37463_, p_37464_);
     }
 
@@ -65,8 +68,8 @@ public class AmethystEnergyBall extends ThrowableProjectile {
     public void shoot(double p_37266_, double p_37267_, double p_37268_, float p_37269_, float p_37270_) {
         Vec3 vec3 = (new Vec3(p_37266_, p_37267_, p_37268_)).normalize()
                 .add(this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_,
-                        this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_,
-                        this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_)
+                    this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_,
+                    this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_)
                 .scale((double) p_37269_);
         this.setDeltaMovement(vec3);
         double d0 = vec3.horizontalDistance();
@@ -104,32 +107,62 @@ public class AmethystEnergyBall extends ThrowableProjectile {
     
     public void tick() {
         super.tick();
+
+        if(this.isOnFire()){
+            if(!this.fireCharged){
+                fireCharged = true;
+                this.playSound(SoundEvents.BLAZE_SHOOT, 3.0F, 0.3F);
+                this.playSound(SoundEvents.FIRECHARGE_USE, 3.0F, 1F);
+                this.playSound(SoundEvents.PUFFER_FISH_BLOW_OUT, 3.0F, 1F);
+            }
+        }
+
+        if(this.fireCharged){
+            this.playSound(this.getPloofSound(), 2F, 0.2F);
+        }else{
+            this.playSound(this.getPloofSound(), 2F, 3F);
+        }
+
         ++this.life;
-        this.playSound(this.getPloofSound(), 2F, 3F);
 
         boolean flag = this.noPhysics;
         Vec3 vec3 = this.getDeltaMovement();                      
-                                                                  //(double)3 changes the underwater speed.
         this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.015D * (double)3, this.getZ());
+        
         if (this.level.isClientSide) {
             this.yOld = this.getY();
-        }                 
-                          //(double)3 changes the underwater speed.
+        }
+
         double d0 = 0.05D * (double)3; 
         this.setDeltaMovement(this.getDeltaMovement().scale(0.75D).add(vec3.normalize().scale(d0)));
 
         if (!this.level.isClientSide) {
-            // Despawn after 5 seconds
-            if (this.life > 20 * 5) {
+            // Despawn after 10 seconds
+            if (this.life > 20 * 10) {
                 this.level.broadcastEntityEvent(this, (byte) 3);
                 this.discard();
             }
         } else {
             for (int i = 0; i < 4; ++i) {
-                this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE.get(), this.getX(),
-                this.getY(), this.getZ(),
-                this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
-                this.random.nextGaussian() * 0.1D);
+
+                if(fireCharged){
+                    this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_FIRE.get(), this.getX(),
+                    this.getY(), this.getZ(),
+                    this.random.nextGaussian() * 0.2D, this.random.nextGaussian() * 0.2D,
+                    this.random.nextGaussian() * 0.2D);
+
+                    this.level.addParticle(ParticleTypes.FLAME, this.getX(),
+                    this.getY(), this.getZ(),
+                    this.random.nextGaussian() * 0D, this.random.nextGaussian() * 0.02D,
+                    this.random.nextGaussian() * 0.05D);
+
+                }else{
+                    this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_DEFAULT.get(), this.getX(),
+                    this.getY(), this.getZ(),
+                    this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
+                    this.random.nextGaussian() * 0.1D);
+                }
+
 
                 vec3 = this.getDeltaMovement();
                 double d5 = vec3.x;
@@ -140,7 +173,7 @@ public class AmethystEnergyBall extends ThrowableProjectile {
                 double d2 = this.getY() + d6;
                 double d3 = this.getZ() + d1;
                 double d4 = vec3.horizontalDistance();
-                
+
                 if (flag) {
                     this.setYRot((float)(Mth.atan2(-d5, -d1) * (double)(180F / (float)Math.PI)));
                 } else {
@@ -164,14 +197,25 @@ public class AmethystEnergyBall extends ThrowableProjectile {
     }
 
     protected void onHitBlock(BlockHitResult hitBlock) {
-        super.onHitBlock(hitBlock);
-        if (!this.level.isClientSide) { // qty spread velocity
-            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1, 0D,
-                    0D, 0D, 0D);
-            ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(), 20,
-                    1D, 1D, 1D, 0.3D);
+        BlockState blockstate = this.level.getBlockState(hitBlock.getBlockPos().above());
+        LOGGER.debug(blockstate.getBlock().toString());
+
+        if(fireCharged || this.wasOnFire || blockstate.getBlock() == Blocks.FIRE || blockstate.getBlock() == Blocks.SOUL_FIRE){
+            if (!this.level.isClientSide) {
+                boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this.getOwner());
+                this.level.explode((Entity)null, this.getX(), this.getY(), this.getZ(), (float)this.explosionPower, flag, flag ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
+                this.discard();
+            }
+        }else{
+            this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
         }
-        this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
+
+        if (!this.level.isClientSide) { // qty spread velocity
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1, 0D, 0D, 0D, 0D);
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(), 20, 1D, 1D, 1D, 0.3D);
+        }
+
+        super.onHitBlock(hitBlock);
         this.discard();
     }
 
@@ -185,6 +229,7 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         Entity entity1 = this.getOwner();
         LivingEntity livingentity = entity1 instanceof LivingEntity ? (LivingEntity) entity1 : null;
         boolean flag = entity.hurt(DamageSource.indirectMobAttack(this, livingentity).setProjectile(), 2F);
+
         if (flag && entity != entity1) {
             this.doEnchantDamageEffects(livingentity, entity);
             this.playSound(this.getHitSound(), 1.2F, 1.5F);
@@ -193,8 +238,16 @@ public class AmethystEnergyBall extends ThrowableProjectile {
                 ((ServerLevel) this.level).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 20, 0.15D,
                         0.15D, 0.15D, 0.2D);
             }
+
+            if(fireCharged || this.wasOnFire){
+                if (!this.level.isClientSide) {
+                    boolean flag2 = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this.getOwner());
+                    this.level.explode((Entity)null, this.getX(), this.getY(), this.getZ(), (float)this.explosionPower, flag2, flag2 ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
+                    this.discard();
+                }
+            }
+
             this.discard();
         }
     }
-
 }
