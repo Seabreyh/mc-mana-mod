@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 
 public class AmethystEnergyBall extends ThrowableProjectile {
     private int life;
-    
+
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public AmethystEnergyBall(Level world, LivingEntity player) {
@@ -77,13 +77,14 @@ public class AmethystEnergyBall extends ThrowableProjectile {
     }
 
     @Override
-    public void shootFromRotation(Entity player, float p_37253_, float p_37254_, float p_37255_, float p_37256_, float p_37257_) {
+    public void shootFromRotation(Entity player, float p_37253_, float p_37254_, float p_37255_, float p_37256_,
+            float p_37257_) {
         float f = -Mth.sin(p_37254_ * ((float) Math.PI / 180F)) * Mth.cos(p_37253_ * ((float) Math.PI / 180F));
         float f1 = -Mth.sin((p_37253_ + p_37255_) * ((float) Math.PI / 180F));
         float f2 = Mth.cos(p_37254_ * ((float) Math.PI / 180F)) * Mth.cos(p_37253_ * ((float) Math.PI / 180F));
         this.shoot((double) f, (double) f1, (double) f2, p_37256_, p_37257_);
         Vec3 vec3 = player.getDeltaMovement();
-        this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, player.isOnGround() ? 0.0D : vec3.y, vec3.z));
+        this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, 0.0F, vec3.z));
     }
 
     @Override
@@ -101,21 +102,21 @@ public class AmethystEnergyBall extends ThrowableProjectile {
     protected float getWaterInertia() {
         return 0.99F;
     }
-    
+
     public void tick() {
         super.tick();
         ++this.life;
         this.playSound(this.getPloofSound(), 2F, 3F);
 
         boolean flag = this.noPhysics;
-        Vec3 vec3 = this.getDeltaMovement();                      
-                                                                  //(double)3 changes the underwater speed.
-        this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.015D * (double)3, this.getZ());
+        Vec3 vec3 = this.getDeltaMovement();
+        // (double)3 changes the underwater speed.
+        this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.015D * (double) 3, this.getZ());
         if (this.level.isClientSide) {
             this.yOld = this.getY();
-        }                 
-                          //(double)3 changes the underwater speed.
-        double d0 = 0.05D * (double)3; 
+        }
+        // (double)3 changes the underwater speed.
+        double d0 = 0.05D * (double) 3;
         this.setDeltaMovement(this.getDeltaMovement().scale(0.75D).add(vec3.normalize().scale(d0)));
 
         if (!this.level.isClientSide) {
@@ -127,9 +128,9 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         } else {
             for (int i = 0; i < 4; ++i) {
                 this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE.get(), this.getX(),
-                this.getY(), this.getZ(),
-                this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
-                this.random.nextGaussian() * 0.1D);
+                        this.getY(), this.getZ(),
+                        this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
+                        this.random.nextGaussian() * 0.1D);
 
                 vec3 = this.getDeltaMovement();
                 double d5 = vec3.x;
@@ -140,14 +141,14 @@ public class AmethystEnergyBall extends ThrowableProjectile {
                 double d2 = this.getY() + d6;
                 double d3 = this.getZ() + d1;
                 double d4 = vec3.horizontalDistance();
-                
+
                 if (flag) {
-                    this.setYRot((float)(Mth.atan2(-d5, -d1) * (double)(180F / (float)Math.PI)));
+                    this.setYRot((float) (Mth.atan2(-d5, -d1) * (double) (180F / (float) Math.PI)));
                 } else {
-                    this.setYRot((float)(Mth.atan2(d5, d1) * (double)(180F / (float)Math.PI)));
+                    this.setYRot((float) (Mth.atan2(d5, d1) * (double) (180F / (float) Math.PI)));
                 }
 
-                this.setXRot((float)(Mth.atan2(d6, d4) * (double)(180F / (float)Math.PI)));
+                this.setXRot((float) (Mth.atan2(d6, d4) * (double) (180F / (float) Math.PI)));
                 this.setXRot(lerpRotation(this.xRotO, this.getXRot()));
                 this.setYRot(lerpRotation(this.yRotO, this.getYRot()));
                 float f = 0.7F;
@@ -156,7 +157,7 @@ public class AmethystEnergyBall extends ThrowableProjectile {
                     f = this.getWaterInertia();
                 }
 
-                this.setDeltaMovement(vec3.scale((double)f));
+                this.setDeltaMovement(vec3.scale((double) f));
                 this.setPos(d7, d2, d3);
                 this.checkInsideBlocks();
             }
@@ -190,7 +191,8 @@ public class AmethystEnergyBall extends ThrowableProjectile {
             this.playSound(this.getHitSound(), 1.2F, 1.5F);
 
             if (!this.level.isClientSide) {
-                ((ServerLevel) this.level).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 20, 0.15D,
+                ((ServerLevel) this.level).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 20,
+                        0.15D,
                         0.15D, 0.15D, 0.2D);
             }
             this.discard();
