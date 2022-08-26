@@ -1,5 +1,7 @@
 package com.seabreyh.mana.entity;
 
+import java.util.Random;
+
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaItems;
 
@@ -16,13 +18,18 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.NaturalSpawner.SpawnPredicate;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -30,7 +37,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class FallenStar extends AbstractArrow {
+public class FallenStar extends AbstractArrow implements SpawnPredicate {
     private int age;
     public float bobOffs;
     private BlockState lastState;
@@ -45,6 +52,33 @@ public class FallenStar extends AbstractArrow {
     protected FallenStar(EntityType<? extends FallenStar> p_36711_, double p_36712_, double p_36713_,
             double p_36714_, Level p_36715_) {
         super(p_36711_, p_36712_, p_36713_, p_36714_, p_36715_);
+    }
+
+    public static boolean canSpawn(EntityType<? extends FallenStar> p_27578_, LevelAccessor p_27579_,
+            MobSpawnType p_27580_, BlockPos p_27581_, Random p_27582_) {
+        return true;
+    }
+
+    public void shoot(double p_37266_, double p_37267_, double p_37268_, float p_37269_, float p_37270_) {
+        Vec3 vec3 = (new Vec3(p_37266_, p_37267_, p_37268_)).normalize()
+                .add(this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_,
+                        this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_,
+                        this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_)
+                .scale((double) p_37269_);
+        this.setDeltaMovement(vec3);
+        double d0 = vec3.horizontalDistance();
+        this.setYRot((float) (Mth.atan2(vec3.x, vec3.z) * (double) (180F / (float) Math.PI)));
+        this.setXRot((float) (Mth.atan2(vec3.y, d0) * (double) (180F / (float) Math.PI)));
+        this.yRotO = this.getYRot();
+        this.xRotO = this.getXRot();
+    }
+
+    public void shootFromRotation(float p_37253_, float p_37254_, float p_37255_, float p_37256_,
+            float p_37257_) {
+        float f = -Mth.sin(p_37254_ * ((float) Math.PI / 180F)) * Mth.cos(p_37253_ * ((float) Math.PI / 180F));
+        float f1 = -Mth.sin((p_37253_ + p_37255_) * ((float) Math.PI / 180F));
+        float f2 = Mth.cos(p_37254_ * ((float) Math.PI / 180F)) * Mth.cos(p_37253_ * ((float) Math.PI / 180F));
+        this.shoot((double) f, (double) f1, (double) f2, p_37256_, p_37257_);
     }
 
     public void tick() {
@@ -330,6 +364,12 @@ public class FallenStar extends AbstractArrow {
 
     public float getSpin(float p_32009_) {
         return ((float) this.getAge() + p_32009_) / 20.0F + this.bobOffs;
+    }
+
+    @Override
+    public boolean test(EntityType<?> p_47107_, BlockPos p_47108_, ChunkAccess p_47109_) {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

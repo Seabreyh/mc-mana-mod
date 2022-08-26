@@ -2,6 +2,7 @@ package com.seabreyh.mana;
 
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.client.ClientSetup;
+import com.seabreyh.mana.entity.FallenStar;
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaItems;
@@ -20,6 +21,9 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.stream.Collectors;
 
@@ -29,7 +33,7 @@ public class ManaMod {
     public static final String MOD_ID = "mana";
 
     // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public ManaMod() {
         // Register the setup method for modloading
@@ -55,6 +59,7 @@ public class ManaMod {
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
