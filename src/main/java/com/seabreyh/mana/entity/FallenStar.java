@@ -141,7 +141,7 @@ public class FallenStar extends AbstractArrow {
             if (!this.isOnGround()) {
                 for (int i = 0; i < 4; ++i) {
                     if (this.age % 1 == 0)
-                        this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE.get(),
+                        this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_DEFAULT.get(),
                                 this.getX() + deltaX * (double) i / 4.0D - deltaX * 1.5,
                                 this.getY() + deltaY * (double) i / 4.0D - deltaY * 1.5,
                                 this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 1.5, -deltaX,
