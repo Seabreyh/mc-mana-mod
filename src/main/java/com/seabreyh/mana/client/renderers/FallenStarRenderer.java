@@ -28,21 +28,25 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class FallenStarRenderer extends EntityRenderer<FallenStar> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(ManaMod.MOD_ID, "textures/entity/fallen_star/fallen_star.png");
-    private static final RenderType RENDER_TYPE = RenderType.beaconBeam(TEXTURE, true);
+    private static final RenderType RENDER_TYPE = RenderType.entitySolid(TEXTURE);
     private static final float SIN_45 = (float) Math.sin((Math.PI / 4D));
     private final ModelPart glass;
+    private final ModelPart cube;
 
     public FallenStarRenderer(EntityRendererProvider.Context manager) {
         super(manager);
         this.shadowRadius = 0.0F;
         ModelPart modelpart = manager.bakeLayer(ModelLayers.END_CRYSTAL);
         this.glass = modelpart.getChild("glass");
+        this.cube = modelpart.getChild("cube");
+
     }
 
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
         partdefinition.addOrReplaceChild("glass", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
+        partdefinition.addOrReplaceChild("cube", CubeListBuilder.create().texOffs(32, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
         return LayerDefinition.create(meshdefinition, 64, 32);
     }
 
@@ -51,7 +55,7 @@ public class FallenStarRenderer extends EntityRenderer<FallenStar> {
         p_114165_.pushPose();
         float f = getY(p_114162_, p_114164_);
         float f1 = ((float) p_114162_.getAge() * animSpeed + p_114164_) * 3.0F;
-        VertexConsumer vertexconsumer = p_114166_.getBuffer(RENDER_TYPE);
+        VertexConsumer vertexconsumer = p_114166_.getBuffer(RenderType.entityTranslucent(TEXTURE,true));
         p_114165_.pushPose();
         p_114165_.scale(1.0F, 1.0F, 1.0F);
         p_114165_.translate(0.0D, -0.25D, 0.0D);
@@ -60,11 +64,18 @@ public class FallenStarRenderer extends EntityRenderer<FallenStar> {
         p_114165_.mulPose(Vector3f.YP.rotationDegrees(f1));
         p_114165_.translate(0.0D, (double) (1.5F + f / 2.0F), 0.0D);
         p_114165_.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F, true));
-        this.glass.render(p_114165_, vertexconsumer, p_114167_, i);
+        this.glass.render(p_114165_, vertexconsumer, 6029544, i);
         p_114165_.scale(0.875F, 0.875F, 0.875F);
         p_114165_.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F, true));
         p_114165_.mulPose(Vector3f.YP.rotationDegrees(f1));
-        this.glass.render(p_114165_, vertexconsumer, p_114167_, i);
+        p_114165_.scale(0.65F, 0.65F, 0.65F);
+        // this.glass.render(p_114165_, vertexconsumer, 6029544, i);
+        this.cube.render(p_114165_, vertexconsumer, 6029544, i);
+
+        // p_114165_.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F, true));
+        // p_114165_.mulPose(Vector3f.YP.rotationDegrees(f1));
+        // p_114165_.scale(0.675F, 0.675F, 0.675F);
+
         p_114165_.popPose();
         p_114165_.popPose();
         

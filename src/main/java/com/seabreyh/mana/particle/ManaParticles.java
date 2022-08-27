@@ -16,7 +16,13 @@ public class ManaParticles {
         public static final RegistryObject<SimpleParticleType> MAGIC_PLOOM_PARTICLE_DEFAULT = PARTICLE_TYPES
                         .register("magic_ploom_particle_default", () -> new SimpleParticleType(true));
 
+        public static final RegistryObject<SimpleParticleType> MAGIC_PLOOM_PARTICLE_FALLING_STAR = PARTICLE_TYPES
+                        .register("magic_ploom_particle_falling_star", () -> new SimpleParticleType(true));
+
         public static final RegistryObject<SimpleParticleType> MAGIC_PLOOM_PARTICLE_FIRE = PARTICLE_TYPES
                         .register("magic_ploom_particle_fire", () -> new SimpleParticleType(true));
+
+        public static final RegistryObject<SimpleParticleType> TWINKLE_PARTICLE = PARTICLE_TYPES
+                        .register("twinkle_particle", () -> new SimpleParticleType(true));
 }
 

@@ -1,8 +1,10 @@
 package com.seabreyh.mana.event;
 
 import com.seabreyh.mana.particle.MagicPloomParticleDefault;
+import com.seabreyh.mana.particle.MagicPloomParticleFallingStar;
 import com.seabreyh.mana.particle.MagicPloomParticleFire;
 import com.seabreyh.mana.particle.ManaParticles;
+import com.seabreyh.mana.particle.TwinkleParticle;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
@@ -20,8 +22,13 @@ public class ManaEventBusEvents {
         Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_DEFAULT.get(),
                 MagicPloomParticleDefault.Provider::new);
 
+        Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_FALLING_STAR.get(),
+            MagicPloomParticleFallingStar.Provider::new);
+
         Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_FIRE.get(),
                 MagicPloomParticleFire.Provider::new);
-
+                
+        Minecraft.getInstance().particleEngine.register(ManaParticles.TWINKLE_PARTICLE.get(),
+                TwinkleParticle.Provider::new);
     }
 }

@@ -170,17 +170,17 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             double deltaZ = vec3.z;
             if (!this.isOnGround()) {
                 for (int i = 0; i < 4; ++i) {
-                    this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_DEFAULT.get(),
+                    this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_FALLING_STAR.get(),
                         this.getX() + deltaX * (double) i / 4.0D - deltaX * 1.5,
                         this.getY() + deltaY * (double) i / 4.0D - deltaY * 1.5,
                         this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 1.5, -deltaX,
                         -deltaY + 0.2D,
                         -deltaZ);
-            
-                    this.level.addParticle(ParticleTypes.GLOW, this.getX() + this.random.nextGaussian() * 0.5,
-                        this.getY() + this.random.nextGaussian() * 0.7,
+
+                    this.level.addParticle(ManaParticles.TWINKLE_PARTICLE.get(), this.getX() + this.random.nextGaussian() * 0.5,
+                        this.getY() + this.random.nextGaussian() * 0.7, 
                         this.getZ() + this.random.nextGaussian() * 0.5,
-                        0D, 0.4D, 0D); 
+                        0D, 0.4D, 0D);
                 }
 
                 if (this.age % 2 == 0)
@@ -231,6 +231,11 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                     this.getY() + 0.4 + this.random.nextGaussian() * 0.2,
                     this.getZ() + this.random.nextGaussian() * 0.5,
                     0D, 0.1D, 0D);
+
+                this.level.addParticle(ManaParticles.TWINKLE_PARTICLE.get(), this.getX() + this.random.nextGaussian() * 0.5,
+                    this.getY() + this.random.nextGaussian() * 0.7, 
+                    this.getZ() + this.random.nextGaussian() * 0.5,
+                    0D, 0.4D, 0D);
             }
             if(isInWater()){
                 this.level.addParticle(ParticleTypes.SMOKE, this.getX() + this.random.nextGaussian() * 0.2,
