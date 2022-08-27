@@ -45,7 +45,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     private EntityDimensions dimensions;
 
     private final SoundEvent HIT_SOUND = SoundEvents.AMETHYST_BLOCK_BREAK;
-    private final SoundEvent BOOM_SOUND = SoundEvents.AMBIENT_BASALT_DELTAS_MOOD;
+    private final SoundEvent BOOM_SOUND = SoundEvents.FIREWORK_ROCKET_LARGE_BLAST_FAR;
     private final SoundEvent FALL_SOUND = SoundEvents.AMETHYST_BLOCK_CHIME;
     private final SoundEvent BUBBLE = SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT;
 
@@ -62,9 +62,9 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     public void shoot(double p_37266_, double p_37267_, double p_37268_, float p_37269_, float p_37270_) {
         Vec3 vec3 = (new Vec3(p_37266_, p_37267_, p_37268_)).normalize()
                 .add(this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_,
-                    this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_,
-                    this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_)
-                    .scale((double) p_37269_);
+                        this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_,
+                        this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_)
+                .scale((double) p_37269_);
         this.setDeltaMovement(vec3);
         double d0 = vec3.horizontalDistance();
         this.setYRot((float) (Mth.atan2(vec3.x, vec3.z) * (double) (180F / (float) Math.PI)));
@@ -74,7 +74,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     }
 
     public void shootFromRotation(float p_37253_, float p_37254_, float p_37255_, float p_37256_,
-        float p_37257_) {
+            float p_37257_) {
         float f = -Mth.sin(p_37254_ * ((float) Math.PI / 180F)) * Mth.cos(p_37253_ * ((float) Math.PI / 180F));
         float f1 = -Mth.sin((p_37253_ + p_37255_) * ((float) Math.PI / 180F));
         float f2 = Mth.cos(p_37254_ * ((float) Math.PI / 180F)) * Mth.cos(p_37253_ * ((float) Math.PI / 180F));
@@ -132,7 +132,8 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             this.inGroundTime = 0;
             Vec3 vec32 = this.position();
             Vec3 vec33 = vec32.add(vec3);
-            HitResult hitresult = this.level.clip(new ClipContext(vec32, vec33, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+            HitResult hitresult = this.level
+                    .clip(new ClipContext(vec32, vec33, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
 
             if (hitresult.getType() != HitResult.Type.MISS) {
                 vec33 = hitresult.getLocation();
@@ -147,13 +148,15 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                 if (hitresult != null && hitresult.getType() == HitResult.Type.ENTITY) {
                     Entity entity = ((EntityHitResult) hitresult).getEntity();
                     Entity entity1 = this.getOwner();
-                    if (entity instanceof Player && entity1 instanceof Player && !((Player) entity1).canHarmPlayer((Player) entity)) {
+                    if (entity instanceof Player && entity1 instanceof Player
+                            && !((Player) entity1).canHarmPlayer((Player) entity)) {
                         hitresult = null;
                         entityhitresult = null;
                     }
                 }
 
-                if (hitresult != null && hitresult.getType() != HitResult.Type.MISS && !flag && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
+                if (hitresult != null && hitresult.getType() != HitResult.Type.MISS && !flag
+                        && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
                     this.onHit(hitresult);
                     this.hasImpulse = true;
                 }
@@ -171,20 +174,21 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             if (!this.isOnGround()) {
                 for (int i = 0; i < 4; ++i) {
                     this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_DEFAULT.get(),
-                        this.getX() + deltaX * (double) i / 4.0D - deltaX * 1.5,
-                        this.getY() + deltaY * (double) i / 4.0D - deltaY * 1.5,
-                        this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 1.5, -deltaX,
-                        -deltaY + 0.2D,
-                        -deltaZ);
-            
+                            this.getX() + deltaX * (double) i / 4.0D - deltaX * 1.5,
+                            this.getY() + deltaY * (double) i / 4.0D - deltaY * 1.5,
+                            this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 1.5, -deltaX,
+                            -deltaY + 0.2D,
+                            -deltaZ);
+
                     this.level.addParticle(ParticleTypes.GLOW, this.getX() + this.random.nextGaussian() * 0.5,
-                        this.getY() + this.random.nextGaussian() * 0.7,
-                        this.getZ() + this.random.nextGaussian() * 0.5,
-                        0D, 0.4D, 0D); 
+                            this.getY() + this.random.nextGaussian() * 0.7,
+                            this.getZ() + this.random.nextGaussian() * 0.5,
+                            0D, 0.4D, 0D);
                 }
 
                 if (this.age % 2 == 0)
-                    this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND, SoundSource.AMBIENT, 100.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
+                    this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND,
+                            SoundSource.AMBIENT, 100.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
             }
 
             double d7 = this.getX() + deltaX;
@@ -204,14 +208,17 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             float f1 = 0.05F;
             if (isInWater()) {
                 this.level.addParticle(ParticleTypes.CLOUD, this.getX() + this.random.nextGaussian() * 0.5,
-                    this.getY() + 0.4 + this.random.nextGaussian() * 0.2,
-                    this.getZ() + this.random.nextGaussian() * 0.5,
-                    0D, 0.1D, 0D);
-                this.level.addParticle(ParticleTypes.ASH, d7 - deltaX * 0.25D, d2 - deltaY * 0.25D,d3 - deltaZ * 0.25D, deltaX, deltaY, deltaZ);
-                this.level.addParticle(ParticleTypes.BUBBLE_POP, d7 - deltaX * 1.25D, d2 - deltaY * 1.25D,d3 - deltaZ * 1.25D, deltaX, deltaY, deltaZ);
+                        this.getY() + 0.4 + this.random.nextGaussian() * 0.2,
+                        this.getZ() + this.random.nextGaussian() * 0.5,
+                        0D, 0.1D, 0D);
+                this.level.addParticle(ParticleTypes.ASH, d7 - deltaX * 0.25D, d2 - deltaY * 0.25D, d3 - deltaZ * 0.25D,
+                        deltaX, deltaY, deltaZ);
+                this.level.addParticle(ParticleTypes.BUBBLE_POP, d7 - deltaX * 1.25D, d2 - deltaY * 1.25D,
+                        d3 - deltaZ * 1.25D, deltaX, deltaY, deltaZ);
                 for (int j = 0; j < 4; ++j) {
                     float f2 = 0.25F;
-                    this.level.addParticle(ParticleTypes.BUBBLE, d7 - deltaX * 0.25D, d2 - deltaY * 0.25D,d3 - deltaZ * 0.25D, deltaX, deltaY, deltaZ);
+                    this.level.addParticle(ParticleTypes.BUBBLE, d7 - deltaX * 0.25D, d2 - deltaY * 0.25D,
+                            d3 - deltaZ * 0.25D, deltaX, deltaY, deltaZ);
                 }
             }
 
@@ -226,30 +233,30 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         }
 
         if (this.level.isClientSide) {
-            if(this.age % 5 == 0){
+            if (this.age % 5 == 0) {
                 this.level.addParticle(ParticleTypes.END_ROD, this.getX() + this.random.nextGaussian() * 0.5,
-                    this.getY() + 0.4 + this.random.nextGaussian() * 0.2,
-                    this.getZ() + this.random.nextGaussian() * 0.5,
-                    0D, 0.1D, 0D);
+                        this.getY() + 0.4 + this.random.nextGaussian() * 0.2,
+                        this.getZ() + this.random.nextGaussian() * 0.5,
+                        0D, 0.1D, 0D);
             }
-            if(isInWater()){
+            if (isInWater()) {
                 this.level.addParticle(ParticleTypes.SMOKE, this.getX() + this.random.nextGaussian() * 0.2,
-                    this.getY() + 2 + this.random.nextGaussian() * 0.9,
-                    this.getZ() + this.random.nextGaussian() * 0.2,
-                    0D, 0.1D, 0D); 
+                        this.getY() + 2 + this.random.nextGaussian() * 0.9,
+                        this.getZ() + this.random.nextGaussian() * 0.2,
+                        0D, 0.1D, 0D);
             }
         }
 
         if (isInWater()) {
             this.level.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, this.getX() + this.random.nextGaussian() * 0.2,
-                this.getY() + 1 +this.random.nextGaussian() * 0.2,
-                this.getZ() + this.random.nextGaussian() * 0.2,
-                0D, 2D, 0D); 
-    
-            this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), BUBBLE, SoundSource.AMBIENT, 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
+                    this.getY() + 1 + this.random.nextGaussian() * 0.2,
+                    this.getZ() + this.random.nextGaussian() * 0.2,
+                    0D, 2D, 0D);
+
+            this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), BUBBLE, SoundSource.AMBIENT,
+                    1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
         }
     }
-
 
     private boolean shouldFall() {
         return this.inGround && this.level.noCollision((new AABB(this.position(), this.position())).inflate(0.06D));
@@ -258,7 +265,8 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     private void startFalling() {
         this.inGround = false;
         Vec3 vec3 = this.getDeltaMovement();
-        this.setDeltaMovement(vec3.multiply((double) (this.random.nextFloat() * 0.2F), (double) (this.random.nextFloat() * 0.2F), (double) (this.random.nextFloat() * 0.2F)));
+        this.setDeltaMovement(vec3.multiply((double) (this.random.nextFloat() * 0.2F),
+                (double) (this.random.nextFloat() * 0.2F), (double) (this.random.nextFloat() * 0.2F)));
         this.age = 0;
     }
 
@@ -295,8 +303,10 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                     livingentity.setArrowCount(livingentity.getArrowCount() + 1);
                 }
                 this.doPostHurtEffects(livingentity);
-                if (entity1 != null && livingentity != entity1 && livingentity instanceof Player && entity1 instanceof ServerPlayer && !this.isSilent()) {
-                    ((ServerPlayer) entity1).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
+                if (entity1 != null && livingentity != entity1 && livingentity instanceof Player
+                        && entity1 instanceof ServerPlayer && !this.isSilent()) {
+                    ((ServerPlayer) entity1).connection
+                            .send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
                 }
             }
 
@@ -333,8 +343,10 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     }
 
     private void playHitSound() {
-        this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), HIT_SOUND, SoundSource.AMBIENT, 4.0F, 1.4F / (this.random.nextFloat() * 0.2F + 0.9F));
-        this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), BOOM_SOUND, SoundSource.AMBIENT, 10.0F, 0.3F / (this.random.nextFloat() * 0.2F + 0.9F));
+        this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), HIT_SOUND, SoundSource.AMBIENT, 4.0F,
+                1.4F / (this.random.nextFloat() * 0.2F + 0.9F));
+        this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), BOOM_SOUND, SoundSource.AMBIENT,
+                10.0F, 0.2F / (this.random.nextFloat() * 0.5F + 0.9F));
     }
 
     @Override
@@ -375,46 +387,51 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
     @Override
     protected void doWaterSplashEffect() {
-        Entity entity = this.isVehicle() && this.getControllingPassenger() != null ? this.getControllingPassenger() : this;
+        Entity entity = this.isVehicle() && this.getControllingPassenger() != null ? this.getControllingPassenger()
+                : this;
         float f = entity == this ? 0.2F : 0.9F;
         Vec3 vec3 = entity.getDeltaMovement();
-        float f1 = Math.min(1.0F, (float)Math.sqrt(vec3.x * vec3.x * (double)0.2F + vec3.y * vec3.y + vec3.z * vec3.z * (double)0.2F) * f);
-        
+        float f1 = Math.min(1.0F,
+                (float) Math.sqrt(vec3.x * vec3.x * (double) 0.2F + vec3.y * vec3.y + vec3.z * vec3.z * (double) 0.2F)
+                        * f);
+
         if (f1 < 0.25F) {
-           this.playSound(this.getSwimSplashSound(), f1, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
+            this.playSound(this.getSwimSplashSound(), f1,
+                    1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
         } else {
-           this.playSound(this.getSwimHighSpeedSplashSound(), f1, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
+            this.playSound(this.getSwimHighSpeedSplashSound(), f1,
+                    1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
         }
 
-        double d2 = (this.random.nextDouble() * 2.0D - 1.0D) * (double)this.dimensions.width;
+        double d2 = (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.dimensions.width;
 
-        for(int i = 0; (float)i < 1.0F + this.dimensions.width * 20.0F; ++i) {
+        for (int i = 0; (float) i < 1.0F + this.dimensions.width * 20.0F; ++i) {
             this.level.addParticle(ParticleTypes.SPIT, this.getX() + d2,
-                this.getY() + this.random.nextGaussian() * 2.2,
-                this.getZ() + this.random.nextGaussian() * 0.5,
-                0D, 1.8D, 0D);
-                    
+                    this.getY() + this.random.nextGaussian() * 2.2,
+                    this.getZ() + this.random.nextGaussian() * 0.5,
+                    0D, 1.8D, 0D);
+
             this.level.addParticle(ParticleTypes.SPIT, this.getX() + d2,
-                this.getY() + this.random.nextGaussian() * 2.2,
-                this.getZ() + this.random.nextGaussian() * 0.5,
-                0D, 1.8D, 0D);
+                    this.getY() + this.random.nextGaussian() * 2.2,
+                    this.getZ() + this.random.nextGaussian() * 0.5,
+                    0D, 1.8D, 0D);
         }
 
-        for(int j = 0; (float)j < 1.0F + this.dimensions.width * 20.0F; ++j) {
+        for (int j = 0; (float) j < 1.0F + this.dimensions.width * 20.0F; ++j) {
             this.level.addParticle(ParticleTypes.SPIT, this.getX() + d2,
-                this.getY() + this.random.nextGaussian() * 1.2,
-                this.getZ() + this.random.nextGaussian() * 0.5,
-                0D, 0.9D, 0D);
+                    this.getY() + this.random.nextGaussian() * 1.2,
+                    this.getZ() + this.random.nextGaussian() * 0.5,
+                    0D, 0.9D, 0D);
 
             this.level.addParticle(ParticleTypes.SPIT, this.getX() + d2 + this.random.nextGaussian() * 0.5,
-                this.getY() + this.random.nextGaussian() * 0.7,
-                this.getZ() + this.random.nextGaussian() * 0.5,
-                0D, 0.4D, 0D);
+                    this.getY() + this.random.nextGaussian() * 0.7,
+                    this.getZ() + this.random.nextGaussian() * 0.5,
+                    0D, 0.4D, 0D);
 
             this.level.addParticle(ParticleTypes.SMOKE, this.getX() + d2,
-                this.getY() + this.random.nextGaussian() * 1.2,
-                this.getZ() + this.random.nextGaussian() * 0.5,
-                0D, 0.9D, 0D);
+                    this.getY() + this.random.nextGaussian() * 1.2,
+                    this.getZ() + this.random.nextGaussian() * 0.5,
+                    0D, 0.9D, 0D);
         }
 
         this.gameEvent(GameEvent.SPLASH);

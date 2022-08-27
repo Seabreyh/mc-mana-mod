@@ -39,6 +39,7 @@ public class AmethystStaff extends Item {
 
             // Handle depletion of player mana from use
             hasMana = PlayerManaEvent.consumeMana(player, 1);
+            hasMana |= player.isCreative();
             if (hasMana) {
                 LOGGER.info("*Use amethyst staff (server)*");
                 AmethystEnergyBall energyBall = new AmethystEnergyBall(world, player);
