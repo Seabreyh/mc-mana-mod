@@ -243,6 +243,7 @@ public class FallenStarOld extends ThrowableItemProjectile {
             float f = 0.99F;
             float f1 = 0.05F;
             if (this.isInWater()) {
+                
                 for (int j = 0; j < 4; ++j) {
                     float f2 = 0.25F;
                     this.level.addParticle(ParticleTypes.BUBBLE, d7 - d5 * 0.25D, d2 - d6 * 0.25D, d3 - d1 * 0.25D, d5,
@@ -280,7 +281,6 @@ public class FallenStarOld extends ThrowableItemProjectile {
         if (p_36749_ != MoverType.SELF && this.shouldFall()) {
             this.startFalling();
         }
-
     }
 
     protected void tickDespawn() {
@@ -288,7 +288,6 @@ public class FallenStarOld extends ThrowableItemProjectile {
         if (this.life >= 1200) {
             this.discard();
         }
-
     }
 
     private void resetPiercedEntities() {
@@ -299,7 +298,6 @@ public class FallenStarOld extends ThrowableItemProjectile {
         if (this.piercingIgnoreEntityIds != null) {
             this.piercingIgnoreEntityIds.clear();
         }
-
     }
 
     protected void onHitEntity(EntityHitResult p_36757_) {
@@ -307,7 +305,6 @@ public class FallenStarOld extends ThrowableItemProjectile {
         Entity entity = p_36757_.getEntity();
         float f = (float) this.getDeltaMovement().length();
         int i = Mth.ceil(Mth.clamp((double) f * this.baseDamage, 0.0D, 2.147483647E9D));
-
         int k = entity.getRemainingFireTicks();
         entity.setRemainingFireTicks(k);
         this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
@@ -317,7 +314,6 @@ public class FallenStarOld extends ThrowableItemProjectile {
             if (this.pickup == FallenStarOld.Pickup.ALLOWED) {
                 this.spawnAtLocation(this.getPickupItem(), 0.1F);
             }
-
             this.discard();
         }
     }
@@ -533,7 +529,6 @@ public class FallenStarOld extends ThrowableItemProjectile {
             if (p_36809_ < 0 || p_36809_ > values().length) {
                 p_36809_ = 0;
             }
-
             return values()[p_36809_];
         }
     }

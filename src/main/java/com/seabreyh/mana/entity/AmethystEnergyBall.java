@@ -21,11 +21,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 
-import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaEntities;
-
-import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
 
@@ -33,8 +30,6 @@ public class AmethystEnergyBall extends ThrowableProjectile {
     private int life;
     private boolean fireCharged;
     private int explosionPower = 2;
-
-    private static final Logger LOGGER = LogUtils.getLogger();
 
     public AmethystEnergyBall(Level world, LivingEntity player) {
         super(ManaEntities.AMETHYST_ENERGY_BALL.get(), player, world);
@@ -48,16 +43,6 @@ public class AmethystEnergyBall extends ThrowableProjectile {
 
     public AmethystEnergyBall(EntityType<? extends AmethystEnergyBall> p_37391_, Level p_37392_) {
         super(p_37391_, p_37392_);
-    }
-
-    protected AmethystEnergyBall(EntityType<? extends ThrowableProjectile> p_37456_, double p_37457_, double p_37458_,
-            double p_37459_, Level p_37460_) {
-        super(p_37456_, p_37457_, p_37458_, p_37459_, p_37460_);
-    }
-
-    protected AmethystEnergyBall(EntityType<? extends ThrowableProjectile> p_37462_, LivingEntity p_37463_,
-            Level p_37464_) {
-        super(p_37462_, p_37463_, p_37464_);
     }
 
     @Nonnull
@@ -200,7 +185,6 @@ public class AmethystEnergyBall extends ThrowableProjectile {
 
     protected void onHitBlock(BlockHitResult hitBlock) {
         BlockState blockstate = this.level.getBlockState(hitBlock.getBlockPos().above());
-        LOGGER.debug(blockstate.getBlock().toString());
 
         if (fireCharged || this.wasOnFire || blockstate.getBlock() == Blocks.FIRE
                 || blockstate.getBlock() == Blocks.SOUL_FIRE) {
