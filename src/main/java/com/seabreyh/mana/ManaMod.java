@@ -3,6 +3,7 @@ package com.seabreyh.mana;
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.client.ClientSetup;
 import com.seabreyh.mana.entity.FallenStar;
+import com.seabreyh.mana.networking.ManaMessages;
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaItems;
@@ -59,7 +60,9 @@ public class ManaMod {
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
-
+        event.enqueueWork(() -> {
+            ManaMessages.register();
+        });
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {

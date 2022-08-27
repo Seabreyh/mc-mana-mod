@@ -1,4 +1,4 @@
-package com.seabreyh.mana.world.events;
+package com.seabreyh.mana.event.world;
 
 import java.util.Random;
 
