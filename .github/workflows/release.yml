@@ -31,7 +31,7 @@ jobs:
           ./gradlew build
       - name: Rename
         run: |
-          mc ./build/libs/mana-${{ needs.setup.outputs.version }}.jar ./${{ env.RELEASE_NAME }}-${{ needs.setup.outputs.version }}.jar
+          mv ./build/libs/mana-${{ needs.setup.outputs.version }}.jar ./${{ env.RELEASE_NAME }}-${{ needs.setup.outputs.version }}.jar
       - name: Upload
         uses: softprops/action-gh-release@v1
         with:
