@@ -8,7 +8,6 @@ import com.seabreyh.mana.registry.ManaEntities;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -18,6 +17,5 @@ public class ClientSetup {
     public static void registerEntityRenderers(FMLClientSetupEvent event) {
         EntityRenderers.register(ManaEntities.AMETHYST_ENERGY_BALL.get(), AmethystEnergyBallRenderer::new);
         EntityRenderers.register(ManaEntities.FALLEN_STAR.get(), FallenStarRenderer::new);
-
     }
 }

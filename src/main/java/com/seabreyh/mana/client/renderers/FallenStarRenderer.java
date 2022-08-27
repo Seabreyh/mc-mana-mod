@@ -27,29 +27,26 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class FallenStarRenderer extends EntityRenderer<FallenStar> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(ManaMod.MOD_ID,
-            "textures/entity/fallen_star/fallen_star.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ManaMod.MOD_ID, "textures/entity/fallen_star/fallen_star.png");
     private static final RenderType RENDER_TYPE = RenderType.beaconBeam(TEXTURE, true);
     private static final float SIN_45 = (float) Math.sin((Math.PI / 4D));
     private final ModelPart glass;
 
-    public FallenStarRenderer(EntityRendererProvider.Context p_173970_) {
-        super(p_173970_);
+    public FallenStarRenderer(EntityRendererProvider.Context manager) {
+        super(manager);
         this.shadowRadius = 0.0F;
-        ModelPart modelpart = p_173970_.bakeLayer(ModelLayers.END_CRYSTAL);
+        ModelPart modelpart = manager.bakeLayer(ModelLayers.END_CRYSTAL);
         this.glass = modelpart.getChild("glass");
     }
 
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
-        partdefinition.addOrReplaceChild("glass",
-                CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
+        partdefinition.addOrReplaceChild("glass", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
         return LayerDefinition.create(meshdefinition, 64, 32);
     }
 
-    public void render(FallenStar p_114162_, float p_114163_, float p_114164_, PoseStack p_114165_,
-            MultiBufferSource p_114166_, int p_114167_) {
+    public void render(FallenStar p_114162_, float p_114163_, float p_114164_, PoseStack p_114165_, MultiBufferSource p_114166_, int p_114167_) {
         float animSpeed = 3.0F;
         p_114165_.pushPose();
         float f = getY(p_114162_, p_114164_);
@@ -70,7 +67,7 @@ public class FallenStarRenderer extends EntityRenderer<FallenStar> {
         this.glass.render(p_114165_, vertexconsumer, p_114167_, i);
         p_114165_.popPose();
         p_114165_.popPose();
-
+        
         super.render(p_114162_, p_114163_, p_114164_, p_114165_, p_114166_, p_114167_);
     }
 
