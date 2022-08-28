@@ -2,11 +2,11 @@ package com.seabreyh.mana;
 
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.client.ClientSetup;
-import com.seabreyh.mana.entity.FallenStar;
 import com.seabreyh.mana.networking.ManaMessages;
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaItems;
+import com.seabreyh.mana.sound.ManaSounds;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -42,6 +42,7 @@ public class ManaMod {
         ManaItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ManaEntities.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ManaParticles.PARTICLE_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ManaSounds.SOUND_EVENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
