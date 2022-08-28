@@ -1,6 +1,7 @@
 package com.seabreyh.mana.registry;
 
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.items.AmethystStaff;
 import com.seabreyh.mana.items.EmeraldStaff;
 import com.seabreyh.mana.items.FallenStarItem;
 
@@ -17,7 +18,7 @@ public class ManaItems {
             ManaMod.MOD_ID);
 
     public static final RegistryObject<Item> AMETHYST_STAFF = ITEMS.register("amethyst_staff",
-            () -> new EmeraldStaff(new Item.Properties()
+            () -> new AmethystStaff(new Item.Properties()
                     .tab(ModCreativeTab.instance)
                     .stacksTo(1)));
 

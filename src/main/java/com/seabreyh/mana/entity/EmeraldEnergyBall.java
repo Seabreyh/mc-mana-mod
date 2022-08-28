@@ -148,7 +148,8 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                             this.random.nextGaussian() * 0.05D);
 
                 } else {
-                    this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_GREEN.get(), this.getX(),
+                    this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_GREEN.get(),
+                            this.getX(),
                             this.getY(), this.getZ(),
                             this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
                             this.random.nextGaussian() * 0.1D);
