@@ -60,7 +60,7 @@ public class FallenStarRenderer extends EntityRenderer<FallenStar> {
         float f1 = ((float) p_114162_.getAge() * animSpeed + p_114164_) * 3.0F;
         VertexConsumer vertexconsumer = p_114166_.getBuffer(RenderType.entityTranslucent(TEXTURE, true));
         p_114165_.pushPose();
-        p_114165_.scale(1.0F, 1.0F, 1.0F);
+        p_114165_.scale(0.7F, 0.7F, 0.7F);
         p_114165_.translate(0.0D, -0.25D, 0.0D);
         int i = OverlayTexture.NO_OVERLAY;
 

@@ -240,16 +240,16 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         }
 
         if (this.level.isClientSide) {
-            if (this.age % 5 == 0) {
-                this.level.addParticle(ParticleTypes.END_ROD, this.getX() + this.random.nextGaussian() * 0.5,
-                        this.getY() + 0.4 + this.random.nextGaussian() * 0.2,
-                        this.getZ() + this.random.nextGaussian() * 0.5,
-                        0D, 0.1D, 0D);
+            if (this.age % 3 == 0) {
+                // this.level.addParticle(ParticleTypes.END_ROD, this.getX() + this.random.nextGaussian() * 0.5,
+                //         this.getY() + 0.4 + this.random.nextGaussian() * 0.2,
+                //         this.getZ() + this.random.nextGaussian() * 0.5,
+                //         0D, 0.1D, 0D);
                 this.level.addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
-                        this.getX() + this.random.nextGaussian() * 0.5,
-                        this.getY() + this.random.nextGaussian() * 0.7,
-                        this.getZ() + this.random.nextGaussian() * 0.5,
-                        0D, 0.4D, 0D);
+                        this.getX() + this.random.nextGaussian() * 0.3,
+                        this.getY() + 0.4 + this.random.nextGaussian() * 0.5,
+                        this.getZ() + this.random.nextGaussian() * 0.3,
+                        0D, 0D, 0D);
             }
             if (isInWater()) {
                 this.level.addParticle(ParticleTypes.SMOKE, this.getX() + this.random.nextGaussian() * 0.2,
