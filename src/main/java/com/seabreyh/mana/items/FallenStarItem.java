@@ -3,7 +3,6 @@ package com.seabreyh.mana.items;
 import java.util.Random;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.entity.AmethystEnergyBall;
 import com.seabreyh.mana.event.player.PlayerManaEvent;
 
 import net.minecraft.sounds.SoundEvents;

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaItems;
+import com.seabreyh.mana.sound.ManaSounds;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -12,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -43,10 +45,11 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     private BlockState lastState;
     private double baseDamage = 10.0D;
     private EntityDimensions dimensions;
+    float currentTime;
 
     private final SoundEvent HIT_SOUND = SoundEvents.AMETHYST_BLOCK_BREAK;
-    private final SoundEvent BOOM_SOUND = SoundEvents.AMBIENT_BASALT_DELTAS_MOOD;
     private final SoundEvent FALL_SOUND = SoundEvents.AMETHYST_BLOCK_CHIME;
+    // private final SoundEvent STAR_BOOM = ManaSounds.STAR_BOOM.get();
     private final SoundEvent BUBBLE = SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT;
 
     public FallenStar(EntityType<? extends FallenStar> getEntity, Level world) {
@@ -83,6 +86,19 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
     public void tick() {
         super.tick();
+        
+        currentTime = this.level.getTimeOfDay(1.0F);
+
+        if (currentTime > 0.75) {
+            this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
+            if (!this.level.isClientSide) { // qty spread velocity
+                ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1, 0D,
+                        0D, 0D, 0D);
+                ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(), 20,
+                        1D, 1D, 1D, 0.3D);
+            }
+            this.discard();
+        }
 
         if (this.age != -32768) {
             ++this.age;
@@ -168,8 +184,9 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             double deltaX = vec3.x;
             double deltaY = vec3.y;
             double deltaZ = vec3.z;
+            
             if (!this.isOnGround()) {
-                for (int i = 0; i < 4; ++i) {
+                for (int i = 0; i < 8; ++i) {
                     this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_FALLING_STAR.get(),
                         this.getX() + deltaX * (double) i / 4.0D - deltaX * 1.5,
                         this.getY() + deltaY * (double) i / 4.0D - deltaY * 1.5,
@@ -182,9 +199,11 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                         this.getZ() + this.random.nextGaussian() * 0.5,
                         0D, 0.4D, 0D);
                 }
+                
+                if(this.age % 2== 0){
+                    this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND, SoundSource.AMBIENT, 20.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
 
-                if (this.age % 2 == 0)
-                    this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND, SoundSource.AMBIENT, 100.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
+                }
             }
 
             double d7 = this.getX() + deltaX;
@@ -202,18 +221,6 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             this.setYRot(lerpRotation(this.yRotO, this.getYRot()));
             float f = 0.99F;
             float f1 = 0.05F;
-            if (isInWater()) {
-                this.level.addParticle(ParticleTypes.CLOUD, this.getX() + this.random.nextGaussian() * 0.5,
-                    this.getY() + 0.4 + this.random.nextGaussian() * 0.2,
-                    this.getZ() + this.random.nextGaussian() * 0.5,
-                    0D, 0.1D, 0D);
-                this.level.addParticle(ParticleTypes.ASH, d7 - deltaX * 0.25D, d2 - deltaY * 0.25D,d3 - deltaZ * 0.25D, deltaX, deltaY, deltaZ);
-                this.level.addParticle(ParticleTypes.BUBBLE_POP, d7 - deltaX * 1.25D, d2 - deltaY * 1.25D,d3 - deltaZ * 1.25D, deltaX, deltaY, deltaZ);
-                for (int j = 0; j < 4; ++j) {
-                    float f2 = 0.25F;
-                    this.level.addParticle(ParticleTypes.BUBBLE, d7 - deltaX * 0.25D, d2 - deltaY * 0.25D,d3 - deltaZ * 0.25D, deltaX, deltaY, deltaZ);
-                }
-            }
 
             this.setDeltaMovement(vec3.scale((double) f));
             if (!this.isNoGravity() && !flag) {
@@ -226,35 +233,32 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         }
 
         if (this.level.isClientSide) {
+
             if(this.age % 5 == 0){
                 this.level.addParticle(ParticleTypes.END_ROD, this.getX() + this.random.nextGaussian() * 0.5,
                     this.getY() + 0.4 + this.random.nextGaussian() * 0.2,
                     this.getZ() + this.random.nextGaussian() * 0.5,
                     0D, 0.1D, 0D);
-
                 this.level.addParticle(ManaParticles.TWINKLE_PARTICLE.get(), this.getX() + this.random.nextGaussian() * 0.5,
                     this.getY() + this.random.nextGaussian() * 0.7, 
                     this.getZ() + this.random.nextGaussian() * 0.5,
                     0D, 0.4D, 0D);
             }
+
             if(isInWater()){
                 this.level.addParticle(ParticleTypes.SMOKE, this.getX() + this.random.nextGaussian() * 0.2,
                     this.getY() + 2 + this.random.nextGaussian() * 0.9,
                     this.getZ() + this.random.nextGaussian() * 0.2,
                     0D, 0.1D, 0D); 
+                this.level.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, this.getX() + this.random.nextGaussian() * 0.2,
+                    this.getY() + 1 +this.random.nextGaussian() * 0.2,
+                    this.getZ() + this.random.nextGaussian() * 0.2,
+                    0D, 2D, 0D); 
+                this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), BUBBLE, SoundSource.AMBIENT, 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
+
             }
         }
-
-        if (isInWater()) {
-            this.level.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, this.getX() + this.random.nextGaussian() * 0.2,
-                this.getY() + 1 +this.random.nextGaussian() * 0.2,
-                this.getZ() + this.random.nextGaussian() * 0.2,
-                0D, 2D, 0D); 
-    
-            this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), BUBBLE, SoundSource.AMBIENT, 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
-        }
     }
-
 
     private boolean shouldFall() {
         return this.inGround && this.level.noCollision((new AABB(this.position(), this.position())).inflate(0.06D));
@@ -338,9 +342,8 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     }
 
     private void playHitSound() {
-        this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), HIT_SOUND, SoundSource.AMBIENT, 4.0F, 1.4F / (this.random.nextFloat() * 0.2F + 0.9F));
-        this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), BOOM_SOUND, SoundSource.AMBIENT, 10.0F, 0.3F / (this.random.nextFloat() * 0.2F + 0.9F));
-    }
+        this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), HIT_SOUND, SoundSource.AMBIENT, 3.5F, 2F / (this.random.nextFloat() * 0.2F + 0.9F));
+        }
 
     @Override
     public void playerTouch(Player player) {
@@ -374,7 +377,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     protected void tickDespawn() {
         ++this.age;
         if (this.age >= 3200) {
-            this.discard();
+            // this.discard();
         }
     }
 

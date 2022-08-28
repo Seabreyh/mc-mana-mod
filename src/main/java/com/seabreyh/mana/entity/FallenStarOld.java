@@ -11,7 +11,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -86,7 +85,6 @@ public class FallenStarOld extends ThrowableItemProjectile {
         if (p_36718_ instanceof Player) {
             this.pickup = FallenStarOld.Pickup.ALLOWED;
         }
-
     }
 
     public int getAge() {

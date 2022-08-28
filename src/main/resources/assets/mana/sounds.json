@@ -1,0 +1,14 @@
+{
+    "shooting_star": {
+      "subtitle": "sounds.mana.shooting_star",
+      "sounds": [
+        "mana:shooting_star"
+      ]
+    },
+    "star_boom": {
+        "subtitle": "sounds.mana.star_boom",
+        "sounds": [
+          "mana:star_boom"
+        ]
+      }
+  }
