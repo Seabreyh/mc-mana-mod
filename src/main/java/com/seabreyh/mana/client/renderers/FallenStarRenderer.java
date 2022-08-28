@@ -27,8 +27,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class FallenStarRenderer extends EntityRenderer<FallenStar> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(ManaMod.MOD_ID, "textures/entity/fallen_star/fallen_star.png");
-    private static final RenderType RENDER_TYPE = RenderType.entitySolid(TEXTURE);
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ManaMod.MOD_ID,
+            "textures/entity/fallen_star/fallen_star.png");
     private static final float SIN_45 = (float) Math.sin((Math.PI / 4D));
     private final ModelPart glass;
     private final ModelPart cube;
@@ -45,17 +45,20 @@ public class FallenStarRenderer extends EntityRenderer<FallenStar> {
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
-        partdefinition.addOrReplaceChild("glass", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
-        partdefinition.addOrReplaceChild("cube", CubeListBuilder.create().texOffs(32, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
+        partdefinition.addOrReplaceChild("glass",
+                CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
+        partdefinition.addOrReplaceChild("cube",
+                CubeListBuilder.create().texOffs(32, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
         return LayerDefinition.create(meshdefinition, 64, 32);
     }
 
-    public void render(FallenStar p_114162_, float p_114163_, float p_114164_, PoseStack p_114165_, MultiBufferSource p_114166_, int p_114167_) {
+    public void render(FallenStar p_114162_, float p_114163_, float p_114164_, PoseStack p_114165_,
+            MultiBufferSource p_114166_, int p_114167_) {
         float animSpeed = 3.0F;
         p_114165_.pushPose();
         float f = getY(p_114162_, p_114164_);
         float f1 = ((float) p_114162_.getAge() * animSpeed + p_114164_) * 3.0F;
-        VertexConsumer vertexconsumer = p_114166_.getBuffer(RenderType.entityTranslucent(TEXTURE,true));
+        VertexConsumer vertexconsumer = p_114166_.getBuffer(RenderType.entityTranslucent(TEXTURE, true));
         p_114165_.pushPose();
         p_114165_.scale(1.0F, 1.0F, 1.0F);
         p_114165_.translate(0.0D, -0.25D, 0.0D);
@@ -72,13 +75,14 @@ public class FallenStarRenderer extends EntityRenderer<FallenStar> {
         // this.glass.render(p_114165_, vertexconsumer, 6029544, i);
         this.cube.render(p_114165_, vertexconsumer, 6029544, i);
 
-        // p_114165_.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F, true));
+        // p_114165_.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F,
+        // true));
         // p_114165_.mulPose(Vector3f.YP.rotationDegrees(f1));
         // p_114165_.scale(0.675F, 0.675F, 0.675F);
 
         p_114165_.popPose();
         p_114165_.popPose();
-        
+
         super.render(p_114162_, p_114163_, p_114164_, p_114165_, p_114166_, p_114167_);
     }
 
