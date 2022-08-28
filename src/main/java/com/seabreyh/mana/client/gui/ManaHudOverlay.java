@@ -29,22 +29,22 @@ public class ManaHudOverlay {
         int i6 = Math.min(instance.player.getAirSupply(), l5);
         boolean mustShiftUp = instance.player.isEyeInFluid(FluidTags.WATER) || i6 < l5;
         int yOffset = mustShiftUp ? 10 : 0;
-        int x = width / 2 + 98;
-        int y = height + 2 - yOffset;
+        int x = width / 2 + 97;
+        int y = height - 2 - yOffset;
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, EMPTY_MANA);
         for (int i = 0; i < 10; i++) {
-            GuiComponent.blit(poseStack, x - 94 + (i * 9), y - 54, 0, 0, 12, 12,
-                    12, 12);
+            GuiComponent.blit(poseStack, x - 94 + (i * 8), y - 54, 0, 0, 22, 22,
+                    22, 22);
         }
 
         RenderSystem.setShaderTexture(0, FULL_MANA);
         for (int i = 0; i < 10; i++) {
             if (ClientManaStatData.getPlayerManaStat() > i) {
-                GuiComponent.blit(poseStack, x - 94 + (i * 9), y - 54, 0, 0, 12, 12,
-                        12, 12);
+                GuiComponent.blit(poseStack, x - 94 + (i * 8), y - 54, 0, 0, 22, 22,
+                        22, 22);
             } else {
                 break;
             }
