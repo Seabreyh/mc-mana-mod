@@ -3,7 +3,9 @@ package com.seabreyh.mana.client;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.client.gui.ManaHudOverlay;
 import com.seabreyh.mana.client.renderers.AmethystEnergyBallRenderer;
+import com.seabreyh.mana.client.renderers.EmeraldEnergyBallRenderer;
 import com.seabreyh.mana.client.renderers.FallenStarRenderer;
+import com.seabreyh.mana.entity.EmeraldEnergyBall;
 import com.seabreyh.mana.registry.ManaEntities;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,9 +25,9 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerEntityRenderers(FMLClientSetupEvent event) {
         EntityRenderers.register(ManaEntities.AMETHYST_ENERGY_BALL.get(), AmethystEnergyBallRenderer::new);
+        EntityRenderers.register(ManaEntities.EMERALD_ENERGY_BALL.get(), EmeraldEnergyBallRenderer::new);
         EntityRenderers.register(ManaEntities.FALLEN_STAR.get(), FallenStarRenderer::new);
-
-        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.FOOD_LEVEL_ELEMENT, "Mana Level",
+        OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Mana Level",
                 ManaHudOverlay.MANA_STAT_HUD);
     }
 }

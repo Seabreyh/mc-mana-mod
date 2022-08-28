@@ -27,24 +27,24 @@ import com.seabreyh.mana.registry.ManaEntities;
 
 import javax.annotation.Nonnull;
 
-public class AmethystEnergyBall extends ThrowableProjectile {
+public class EmeraldEnergyBall extends ThrowableProjectile {
     private int life;
     private boolean fireCharged;
     private int explosionPower = 2;
 
-    public AmethystEnergyBall(Level world, LivingEntity player) {
-        super(ManaEntities.AMETHYST_ENERGY_BALL.get(), player, world);
+    public EmeraldEnergyBall(Level world, LivingEntity player) {
+        super(ManaEntities.EMERALD_ENERGY_BALL.get(), player, world);
         double xPos = player.getX();
         double yPos = player.getEyeY() - 0.1D;
         double zPos = player.getZ();
         this.setPos(xPos, yPos, zPos);
         this.noPhysics = true;
         this.life = 0;
-        ManaMod.LOGGER.debug("### AMETHYST ENERGY BALL");
+        ManaMod.LOGGER.debug("### EMERALD ENERGY BALL");
 
     }
 
-    public AmethystEnergyBall(EntityType<? extends AmethystEnergyBall> p_37391_, Level p_37392_) {
+    public EmeraldEnergyBall(EntityType<? extends EmeraldEnergyBall> p_37391_, Level p_37392_) {
         super(p_37391_, p_37392_);
     }
 
@@ -148,10 +148,11 @@ public class AmethystEnergyBall extends ThrowableProjectile {
                             this.random.nextGaussian() * 0.05D);
 
                 } else {
-                    this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_DEFAULT.get(), this.getX(),
+                    this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_GREEN.get(), this.getX(),
                             this.getY(), this.getZ(),
                             this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
                             this.random.nextGaussian() * 0.1D);
+
                 }
 
                 vec3 = this.getDeltaMovement();

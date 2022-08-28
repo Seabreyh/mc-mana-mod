@@ -20,6 +20,9 @@ public class ManaEventBusEvents {
         Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_DEFAULT.get(),
                 MagicPloomParticleDefault.Provider::new);
 
+        Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_GREEN.get(),
+                MagicPloomParticleDefault.Provider::new);
+
         Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_FIRE.get(),
                 MagicPloomParticleFire.Provider::new);
 

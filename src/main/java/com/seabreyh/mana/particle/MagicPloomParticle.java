@@ -3,13 +3,14 @@ package com.seabreyh.mana.particle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 
-public class MagicPloomParticle extends SimpleAnimatedParticle {
+public abstract class MagicPloomParticle extends SimpleAnimatedParticle {
 
     public float fadeR;
     public float fadeG;
     public float fadeB;
-    
-    protected MagicPloomParticle(ClientLevel level, double xCoord, double yCoord, double zCoord, SpriteSet spriteSet, double xd, double yd, double zd) {
+
+    protected MagicPloomParticle(ClientLevel level, double xCoord, double yCoord, double zCoord, SpriteSet spriteSet,
+            double xd, double yd, double zd) {
         super(level, xCoord, yCoord, zCoord, spriteSet, 1.0F);
 
         this.gravity = 0.0F;
@@ -23,7 +24,7 @@ public class MagicPloomParticle extends SimpleAnimatedParticle {
 
         setFade();
         setCol();
-    
+
         this.alpha = 1.0f;
     }
 
@@ -39,15 +40,7 @@ public class MagicPloomParticle extends SimpleAnimatedParticle {
         this.bCol += (this.fadeB - this.bCol) * 0.1F;
     }
 
-    public void setCol(){
-        this.rCol = 1.0f;
-        this.gCol = 1.0f;
-        this.bCol = 1.0f;
-    }
+    public abstract void setCol();
 
-    public void setFade(){
-        this.fadeR = 204f / 255.0f;
-        this.fadeG = 102f / 255.0f;
-        this.fadeB = 255f / 255.0f;
-    }
+    public abstract void setFade();
 }

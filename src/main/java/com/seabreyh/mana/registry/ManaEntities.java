@@ -2,6 +2,7 @@ package com.seabreyh.mana.registry;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.entity.AmethystEnergyBall;
+import com.seabreyh.mana.entity.EmeraldEnergyBall;
 import com.seabreyh.mana.entity.FallenStar;
 
 import net.minecraft.world.entity.EntityType;
@@ -19,6 +20,11 @@ public class ManaEntities {
                         "amethyst_energy_ball",
                         () -> EntityType.Builder.<AmethystEnergyBall>of(AmethystEnergyBall::new, MobCategory.MISC)
                                         .build("amethyst_energy_ball"));
+
+        public static final RegistryObject<EntityType<EmeraldEnergyBall>> EMERALD_ENERGY_BALL = ENTITIES.register(
+                        "emerald_energy_ball",
+                        () -> EntityType.Builder.<EmeraldEnergyBall>of(EmeraldEnergyBall::new, MobCategory.MISC)
+                                        .build("emerald_energy_ball"));
 
         public static final RegistryObject<EntityType<FallenStar>> FALLEN_STAR = ENTITIES.register(
                         "fallen_star",

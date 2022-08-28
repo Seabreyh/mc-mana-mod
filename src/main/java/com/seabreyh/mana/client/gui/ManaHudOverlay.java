@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.client.gui.IIngameOverlay;
 
@@ -24,9 +25,12 @@ public class ManaHudOverlay {
         if (isMounted || instance.options.hideGui || !gui.shouldDrawSurvivalElements()) {
             return;
         }
-
-        int x = width / 2;
-        int y = height;
+        int l5 = instance.player.getMaxAirSupply();
+        int i6 = Math.min(instance.player.getAirSupply(), l5);
+        boolean mustShiftUp = instance.player.isEyeInFluid(FluidTags.WATER) || i6 < l5;
+        int yOffset = mustShiftUp ? 10 : 0;
+        int x = width / 2 + 98;
+        int y = height + 2 - yOffset;
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -47,4 +51,5 @@ public class ManaHudOverlay {
         }
 
     });
+
 }

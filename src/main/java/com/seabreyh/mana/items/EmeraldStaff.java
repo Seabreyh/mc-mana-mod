@@ -2,7 +2,7 @@ package com.seabreyh.mana.items;
 
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.entity.AmethystEnergyBall;
+import com.seabreyh.mana.entity.EmeraldEnergyBall;
 import com.seabreyh.mana.event.player.PlayerManaEvent;
 
 import java.util.Random;
@@ -20,10 +20,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class AmethystStaff extends Item {
+public class EmeraldStaff extends Item {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public AmethystStaff(Properties properties) {
+    public EmeraldStaff(Properties properties) {
         super(properties);
     }
 
@@ -34,7 +34,7 @@ public class AmethystStaff extends Item {
     @Override
     // Called when player right clicks staff
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-        ManaMod.LOGGER.debug("### USE AMETHYST STAFF");
+        ManaMod.LOGGER.debug("### USE EMERALD STAFF");
 
         ItemStack itemstack = player.getItemInHand(hand);
         boolean hasMana = false;
@@ -44,8 +44,7 @@ public class AmethystStaff extends Item {
             hasMana = PlayerManaEvent.consumeMana(player, 1);
             hasMana |= player.isCreative();
             if (hasMana) {
-                LOGGER.info("*Use amethyst staff (server)*");
-                AmethystEnergyBall energyBall = new AmethystEnergyBall(world, player);
+                EmeraldEnergyBall energyBall = new EmeraldEnergyBall(world, player);
                 energyBall.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
                 energyBall.setNoGravity(true);
                 world.addFreshEntity(energyBall);
