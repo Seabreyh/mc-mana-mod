@@ -27,6 +27,10 @@ public class ClientSetup {
         EntityRenderers.register(ManaEntities.AMETHYST_ENERGY_BALL.get(), AmethystEnergyBallRenderer::new);
         EntityRenderers.register(ManaEntities.EMERALD_ENERGY_BALL.get(), EmeraldEnergyBallRenderer::new);
         EntityRenderers.register(ManaEntities.FALLEN_STAR.get(), FallenStarRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerOverlays(FMLClientSetupEvent event) {
         OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Mana Level",
                 ManaHudOverlay.MANA_STAT_HUD);
     }

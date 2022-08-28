@@ -60,6 +60,7 @@ public class ManaMod {
 
     private void clientSetup(final FMLClientSetupEvent event) {
         ClientSetup.registerEntityRenderers(event);
+        ClientSetup.registerOverlays(event);
     }
 
     // private void enqueueIMC(final InterModEnqueueEvent event) {
