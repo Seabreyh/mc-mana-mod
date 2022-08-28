@@ -29,8 +29,8 @@ public class ManaHudOverlay {
         int i6 = Math.min(instance.player.getAirSupply(), l5);
         boolean mustShiftUp = instance.player.isEyeInFluid(FluidTags.WATER) || i6 < l5;
         int yOffset = mustShiftUp ? 10 : 0;
-        int x = width / 2 + 97;
-        int y = height - 2 - yOffset;
+        int x = width / 2 + 96;
+        int y = height - 3 - yOffset;
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -43,8 +43,8 @@ public class ManaHudOverlay {
         RenderSystem.setShaderTexture(0, FULL_MANA);
         for (int i = 0; i < 10; i++) {
             if (ClientManaStatData.getPlayerManaStat() > i) {
-                GuiComponent.blit(poseStack, x - 94 + (i * 8), y - 54, 0, 0, 22, 22,
-                        22, 22);
+                GuiComponent.blit(poseStack, x - 94 + (i * 8), y - 54, 0, 0, 21, 21,
+                        21, 21);
             } else {
                 break;
             }

@@ -12,7 +12,7 @@ credits="Thanks for this example mod goes to Java" #optional
 authors="Seabreyh Development Group - https://github.com/Seabreyh" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-A simple mod adding adding some magic items and mana, inspired by Terraria.
+A mod that introduces magic into Minecraft in amazing ways.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.mana]] #optional
