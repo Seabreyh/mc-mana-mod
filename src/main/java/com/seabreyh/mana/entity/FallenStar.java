@@ -4,7 +4,6 @@ import java.util.Random;
 
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaItems;
-import com.seabreyh.mana.sound.ManaSounds;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -57,8 +56,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         this.dimensions = getEntity.getDimensions();
     }
 
-    public static boolean canSpawn(EntityType<? extends AbstractArrow> p_27578_, LevelAccessor p_27579_,
-            MobSpawnType p_27580_, BlockPos p_27581_, Random p_27582_) {
+    public static boolean canSpawn(EntityType<? extends AbstractArrow> p_27578_, LevelAccessor p_27579_, MobSpawnType p_27580_, BlockPos p_27581_, Random p_27582_) {
         return true;
     }
 
@@ -76,8 +74,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         this.xRotO = this.getXRot();
     }
 
-    public void shootFromRotation(float p_37253_, float p_37254_, float p_37255_, float p_37256_,
-            float p_37257_) {
+    public void shootFromRotation(float p_37253_, float p_37254_, float p_37255_, float p_37256_, float p_37257_) {
         float f = -Mth.sin(p_37254_ * ((float) Math.PI / 180F)) * Mth.cos(p_37253_ * ((float) Math.PI / 180F));
         float f1 = -Mth.sin((p_37253_ + p_37255_) * ((float) Math.PI / 180F));
         float f2 = Mth.cos(p_37254_ * ((float) Math.PI / 180F)) * Mth.cos(p_37253_ * ((float) Math.PI / 180F));
@@ -90,16 +87,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         currentTime = this.level.getTimeOfDay(1.0F);
 
         if (currentTime > 0.75) {
-            this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
-            if (!this.level.isClientSide) { // qty spread velocity
-                ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1,
-                        0D,
-                        0D, 0D, 0D);
-                ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(),
-                        20,
-                        1D, 1D, 1D, 0.3D);
-            }
-            this.discard();
+            discardStar();
         }
 
         if (this.age != -32768) {
@@ -108,6 +96,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
         boolean flag = this.isNoPhysics();
         Vec3 vec3 = this.getDeltaMovement();
+
         if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
             double d0 = vec3.horizontalDistance();
             this.setYRot((float) (Mth.atan2(vec3.x, vec3.z) * (double) (180F / (float) Math.PI)));
@@ -118,6 +107,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
         BlockPos blockpos = this.blockPosition();
         BlockState blockstate = this.level.getBlockState(blockpos);
+
         if (!blockstate.isAir() && !flag) {
             VoxelShape voxelshape = blockstate.getCollisionShape(this.level, blockpos);
             if (!voxelshape.isEmpty()) {
@@ -150,8 +140,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             this.inGroundTime = 0;
             Vec3 vec32 = this.position();
             Vec3 vec33 = vec32.add(vec3);
-            HitResult hitresult = this.level
-                    .clip(new ClipContext(vec32, vec33, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+            HitResult hitresult = this.level.clip(new ClipContext(vec32, vec33, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
 
             if (hitresult.getType() != HitResult.Type.MISS) {
                 vec33 = hitresult.getLocation();
@@ -166,8 +155,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                 if (hitresult != null && hitresult.getType() == HitResult.Type.ENTITY) {
                     Entity entity = ((EntityHitResult) hitresult).getEntity();
                     Entity entity1 = this.getOwner();
-                    if (entity instanceof Player && entity1 instanceof Player
-                            && !((Player) entity1).canHarmPlayer((Player) entity)) {
+                    if (entity instanceof Player && entity1 instanceof Player && !((Player) entity1).canHarmPlayer((Player) entity)) {
                         hitresult = null;
                         entityhitresult = null;
                     }
@@ -182,6 +170,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                 if (entityhitresult == null || this.getPierceLevel() <= 0) {
                     break;
                 }
+
                 hitresult = null;
             }
 
@@ -217,6 +206,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             double d2 = this.getY() + deltaY;
             double d3 = this.getZ() + deltaZ;
             double d4 = vec3.horizontalDistance();
+
             if (flag) {
                 this.setYRot((float) (Mth.atan2(-deltaX, -deltaZ) * (double) (180F / (float) Math.PI)));
             } else {
@@ -227,9 +217,8 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             this.setXRot(lerpRotation(this.xRotO, this.getXRot()));
             this.setYRot(lerpRotation(this.yRotO, this.getYRot()));
             float f = 0.99F;
-            float f1 = 0.05F;
-
             this.setDeltaMovement(vec3.scale((double) f));
+
             if (!this.isNoGravity() && !flag) {
                 Vec3 vec34 = this.getDeltaMovement();
                 this.setDeltaMovement(vec34.x, vec34.y - (double) 0.05F, vec34.z);
@@ -240,30 +229,32 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         }
 
         if (this.level.isClientSide) {
+
             if (this.age % 3 == 0) {
-                // this.level.addParticle(ParticleTypes.END_ROD, this.getX() + this.random.nextGaussian() * 0.5,
-                //         this.getY() + 0.4 + this.random.nextGaussian() * 0.2,
-                //         this.getZ() + this.random.nextGaussian() * 0.5,
-                //         0D, 0.1D, 0D);
                 this.level.addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
                         this.getX() + this.random.nextGaussian() * 0.3,
                         this.getY() + 0.4 + this.random.nextGaussian() * 0.5,
                         this.getZ() + this.random.nextGaussian() * 0.3,
                         0D, 0D, 0D);
             }
+
             if (isInWater()) {
                 this.level.addParticle(ParticleTypes.SMOKE, this.getX() + this.random.nextGaussian() * 0.2,
                         this.getY() + 2 + this.random.nextGaussian() * 0.9,
                         this.getZ() + this.random.nextGaussian() * 0.2,
                         0D, 0.1D, 0D);
+                
                 this.level.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, this.getX() + this.random.nextGaussian() * 0.2,
                         this.getY() + 1 + this.random.nextGaussian() * 0.2,
                         this.getZ() + this.random.nextGaussian() * 0.2,
                         0D, 2D, 0D);
-                this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), BUBBLE, SoundSource.AMBIENT,
-                        1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
 
             }
+        }
+
+        if(isInWater() && this.age % 5  == 0){
+            this.level.playSound((Player) null, this.getOnPos(), BUBBLE, SoundSource.AMBIENT,
+                        1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
         }
     }
 
@@ -322,7 +313,6 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             playHitSound();
 
         } else {
-            // entity.setRemainingFireTicks(k);
             this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
             this.setYRot(this.getYRot() + 180.0F);
             this.yRotO += 180.0F;
@@ -378,37 +368,33 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         return ((float) this.getAge() + p_32009_) / 20.0F + this.bobOffs;
     }
 
-    @Override
-    public boolean test(EntityType<?> p_47107_, BlockPos p_47108_, ChunkAccess p_47109_) {
-        // TODO Auto-generated method stub
-        return false;
+    //Call this to remove the start from an environment situation, such as sunrise, or killing after old age.
+    public void discardStar(){
+        this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
+            if (!this.level.isClientSide) { // qty spread velocity
+                ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1,
+                        0D,
+                        0D, 0D, 0D);
+                ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(),
+                        20,
+                        1D, 1D, 1D, 0.3D);
+            }
+        this.discard();
     }
 
     @Override
     protected void tickDespawn() {
         ++this.age;
-        if (this.age >= 3200) {
-            // this.discard();
+        //After 23000 ticks, roughly a full day cycle, the star will be removed.
+        if (this.age >= 23000) {
+            discardStar();
         }
     }
 
     @Override
     protected void doWaterSplashEffect() {
-        Entity entity = this.isVehicle() && this.getControllingPassenger() != null ? this.getControllingPassenger()
-                : this;
-        float f = entity == this ? 0.2F : 0.9F;
-        Vec3 vec3 = entity.getDeltaMovement();
-        float f1 = Math.min(1.0F,
-                (float) Math.sqrt(vec3.x * vec3.x * (double) 0.2F + vec3.y * vec3.y + vec3.z * vec3.z * (double) 0.2F)
-                        * f);
-
-        if (f1 < 0.25F) {
-            this.playSound(this.getSwimSplashSound(), f1,
-                    1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
-        } else {
-            this.playSound(this.getSwimHighSpeedSplashSound(), f1,
-                    1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
-        }
+        this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_SPLASH_HIGH_SPEED, SoundSource.AMBIENT, 2.5F,
+        0.6F / (this.random.nextFloat() * 0.2F + 0.9F));
 
         double d2 = (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.dimensions.width;
 
@@ -443,4 +429,11 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
         this.gameEvent(GameEvent.SPLASH);
     }
+
+    @Override
+    public boolean test(EntityType<?> p_47107_, BlockPos p_47108_, ChunkAccess p_47109_) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }
