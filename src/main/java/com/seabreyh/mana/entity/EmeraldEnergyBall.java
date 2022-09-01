@@ -7,19 +7,29 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+
+import java.util.List;
+import java.util.function.Predicate;
+
+import javax.annotation.Nullable;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.particle.ManaParticles;
@@ -31,6 +41,11 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
     private int life;
     private boolean fireCharged;
     private int explosionPower = 2;
+    private Vec3 shootDir;
+    private LivingEntity owner;
+    private LivingEntity target;
+
+    private final TargetingConditions missileTargeting = TargetingConditions.forCombat().range(64.0D);
 
     public EmeraldEnergyBall(Level world, LivingEntity player) {
         super(ManaEntities.EMERALD_ENERGY_BALL.get(), player, world);
@@ -40,6 +55,8 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         this.setPos(xPos, yPos, zPos);
         this.noPhysics = true;
         this.life = 0;
+        this.shootDir = null;
+        this.owner = player;
         ManaMod.LOGGER.debug("### EMERALD ENERGY BALL");
 
     }
@@ -52,6 +69,27 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
     @Override
     public Packet<?> getAddEntityPacket() {
         return new ClientboundAddEntityPacket(this);
+    }
+
+    @Nullable
+    // Helper function for raycasting target entities
+    private static EntityHitResult getEntityHitResult(Entity p_37295_, Predicate<Entity> p_37296_, Vec3 rayDir) {
+        Level level = p_37295_.level;
+        Vec3 vec31 = p_37295_.position();
+        Vec3 vec32 = vec31.add(rayDir);
+        HitResult hitresult = level
+                .clip(new ClipContext(vec31, vec32, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, p_37295_));
+        if (hitresult.getType() != HitResult.Type.MISS) {
+            vec32 = hitresult.getLocation();
+        }
+
+        EntityHitResult hitresult1 = ProjectileUtil.getEntityHitResult(level, p_37295_, vec31, vec32,
+                p_37295_.getBoundingBox().expandTowards(rayDir).inflate(1.0D), p_37296_);
+        if (hitresult1 != null) {
+            hitresult = hitresult1;
+        }
+
+        return hitresult1;
     }
 
     @Override
@@ -67,6 +105,36 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         this.setXRot((float) (Mth.atan2(vec3.y, d0) * (double) (180F / (float) Math.PI)));
         this.yRotO = this.getYRot();
         this.xRotO = this.getXRot();
+
+        Vec3 shootDir = (new Vec3(p_37266_, p_37267_, p_37268_)).normalize();
+        this.shootDir = shootDir;
+
+    }
+
+    private void resolveEnemyTarget() {
+        // Handle entity target "homing"
+        AABB aabb = this.owner.getBoundingBox().inflate(64.0D, 24.0D, 64.0D);
+        List<? extends LivingEntity> candidates = this.level.getNearbyEntities(LivingEntity.class,
+                TargetingConditions.forCombat().range(64.0D),
+                this.owner, aabb);
+
+        LivingEntity foundTarget = null;
+        double shortestDist = Double.MAX_VALUE;
+        for (LivingEntity livingentity : candidates) {
+            Vec3 dirToEntity = livingentity.position().subtract(this.position()).normalize();
+            if (dirToEntity.dot(this.shootDir) >= 0.75) {
+                foundTarget = livingentity;
+                double distTo = foundTarget.position().subtract(this.position()).length();
+                if (distTo < shortestDist) {
+                    shortestDist = distTo;
+                    this.target = foundTarget;
+                }
+            }
+        }
+
+        if (this.target != null) {
+            ManaMod.LOGGER.debug("ball found target!");
+        }
     }
 
     @Override
@@ -78,6 +146,7 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         this.shoot((double) f, (double) f1, (double) f2, p_37256_, p_37257_);
         Vec3 vec3 = player.getDeltaMovement();
         this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, 0.0F, vec3.z));
+        this.resolveEnemyTarget();
     }
 
     @Override
@@ -94,6 +163,10 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
 
     protected float getWaterInertia() {
         return 0.99F;
+    }
+
+    protected boolean canHitEntity(Entity p_37341_) {
+        return super.canHitEntity(p_37341_) && !p_37341_.noPhysics;
     }
 
     public void tick() {
@@ -133,6 +206,15 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                 this.level.broadcastEntityEvent(this, (byte) 3);
                 this.discard();
             }
+
+            Vec3 delta = this.getDeltaMovement();
+            if (this.target != null) {
+                Vec3 dirToEntity = this.target.position().subtract(this.position()).normalize();
+                delta = delta.lerp(dirToEntity, 0.15);
+                ManaMod.LOGGER.debug("HOMING!");
+                this.setDeltaMovement(delta);
+            }
+
         } else {
             for (int i = 0; i < 4; ++i) {
 
@@ -155,6 +237,12 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                             this.random.nextGaussian() * 0.1D);
 
                 }
+                // double d6 = d1 - this.getX();
+                // double d7 = d2 - this.getY();
+                // double d4 = d3 - this.getZ();
+                // this.targetDeltaX = d6 / d5 * 0.15D;
+                // this.targetDeltaY = d7 / d5 * 0.15D;
+                // this.targetDeltaZ = d4 / d5 * 0.15D;
 
                 vec3 = this.getDeltaMovement();
                 double d5 = vec3.x;

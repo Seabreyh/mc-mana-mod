@@ -34,14 +34,12 @@ public class EmeraldStaff extends Item {
     @Override
     // Called when player right clicks staff
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-        ManaMod.LOGGER.debug("### USE EMERALD STAFF");
-
         ItemStack itemstack = player.getItemInHand(hand);
         boolean hasMana = false;
         if (!world.isClientSide) {
 
             // Handle depletion of player mana from use
-            hasMana = PlayerManaEvent.consumeMana(player, 1);
+            hasMana = PlayerManaEvent.consumeMana(player, 3);
             hasMana |= player.isCreative();
             if (hasMana) {
                 EmeraldEnergyBall energyBall = new EmeraldEnergyBall(world, player);
