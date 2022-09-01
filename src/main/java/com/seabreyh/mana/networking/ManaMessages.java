@@ -1,7 +1,7 @@
 package com.seabreyh.mana.networking;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.networking.packet.RegenManaC2SPacket;
+import com.seabreyh.mana.networking.packet.ChoseWishC2SPacket;
 import com.seabreyh.mana.networking.packet.ManaStatSyncS2CPacket;
 
 import net.minecraft.resources.ResourceLocation;
@@ -31,10 +31,10 @@ public class ManaMessages {
 
         INSTANCE = net;
 
-        net.messageBuilder(RegenManaC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(RegenManaC2SPacket::new)
-                .encoder(RegenManaC2SPacket::toBytes)
-                .consumer(RegenManaC2SPacket::handle)
+        net.messageBuilder(ChoseWishC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(ChoseWishC2SPacket::new)
+                .encoder(ChoseWishC2SPacket::toBytes)
+                .consumer(ChoseWishC2SPacket::handle)
                 .add();
 
         net.messageBuilder(ManaStatSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
@@ -46,5 +46,9 @@ public class ManaMessages {
 
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
+    }
+
+    public static <MSG> void sendToServer(MSG message) {
+        INSTANCE.sendToServer(message);
     }
 }

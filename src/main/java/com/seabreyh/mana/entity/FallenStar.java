@@ -3,6 +3,10 @@ package com.seabreyh.mana.entity;
 import java.util.Random;
 
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.event.player.PlayerWishEvent;
+import com.seabreyh.mana.event.player.PlayerWishEvent.WishType;
+import com.seabreyh.mana.items.GrantedWishItem;
+import com.seabreyh.mana.items.SealedWishItem;
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaItems;
 
@@ -48,6 +52,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     private EntityDimensions dimensions;
     float currentTime;
     private boolean isFalling = true;
+    private boolean playerWishedOn = false;
     private Player ownPlayer;
 
     private final SoundEvent HIT_SOUND = SoundEvents.AMETHYST_BLOCK_BREAK;
@@ -106,7 +111,8 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             ++this.age;
         }
 
-        if (this.isFalling && this.ownPlayer != null && this.ownPlayer.getUseItem().is(Items.SPYGLASS)) {
+        if (this.isFalling && this.ownPlayer != null && this.ownPlayer.getUseItem().is(Items.SPYGLASS)
+                && !this.playerWishedOn) {
 
             Vec3 dirPlayerToStar = this.position().subtract(this.ownPlayer.position());
             dirPlayerToStar = new Vec3(dirPlayerToStar.x, 0.0, dirPlayerToStar.z).normalize();
@@ -121,8 +127,10 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             Vec3 dirPlayerLooking = new Vec3(shootX, 0.0, shootZ).normalize();
 
             double playerSeesStar = dirPlayerToStar.dot(dirPlayerLooking);
-            if (playerSeesStar > 0.98) {
-                ManaMod.LOGGER.debug("PLAYER SEE STAR " + this.ownPlayer.getXRot());
+            if (playerSeesStar > 0.98 && playerRotX <= -15F) {
+                ManaMod.LOGGER.debug("PLAYER SPOTS STAR THROUGH SPYGLASS");
+                PlayerWishEvent.starGrantPlayerWish(this.ownPlayer, level);
+                playerWishedOn = true;
             }
         }
 
