@@ -1,7 +1,7 @@
 package com.seabreyh.mana;
 
 import com.mojang.logging.LogUtils;
-import com.seabreyh.mana.client.ClientSetup;
+import com.seabreyh.mana.event.ManaClientEvents;
 import com.seabreyh.mana.networking.ManaMessages;
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaEntities;
@@ -59,8 +59,8 @@ public class ManaMod {
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
-        ClientSetup.registerEntityRenderers(event);
-        ClientSetup.registerOverlays(event);
+        ManaClientEvents.registerEntityRenderers(event);
+        ManaClientEvents.registerOverlays(event);
     }
 
     // private void enqueueIMC(final InterModEnqueueEvent event) {

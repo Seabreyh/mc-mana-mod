@@ -1,4 +1,4 @@
-package com.seabreyh.mana.client;
+package com.seabreyh.mana.event;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.client.gui.ManaHudOverlay;
@@ -21,7 +21,7 @@ import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.OverlayRegistry;
 
 @Mod.EventBusSubscriber(modid = ManaMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class ClientSetup {
+public class ManaClientEvents {
     @SubscribeEvent
     public static void registerEntityRenderers(FMLClientSetupEvent event) {
         EntityRenderers.register(ManaEntities.AMETHYST_ENERGY_BALL.get(), AmethystEnergyBallRenderer::new);

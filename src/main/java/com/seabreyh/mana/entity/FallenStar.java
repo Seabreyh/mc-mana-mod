@@ -2,6 +2,7 @@ package com.seabreyh.mana.entity;
 
 import java.util.Random;
 
+import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaItems;
 
@@ -23,6 +24,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -45,18 +47,28 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     private double baseDamage = 10.0D;
     private EntityDimensions dimensions;
     float currentTime;
+    private boolean isFalling = true;
+    private Player ownPlayer;
 
     private final SoundEvent HIT_SOUND = SoundEvents.AMETHYST_BLOCK_BREAK;
     private final SoundEvent FALL_SOUND = SoundEvents.AMETHYST_BLOCK_CHIME;
     // private final SoundEvent STAR_BOOM = ManaSounds.STAR_BOOM.get();
     private final SoundEvent BUBBLE = SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT;
+    private final ItemStack SPYGLASS_ITEM = new ItemStack(Items.SPYGLASS);
 
     public FallenStar(EntityType<? extends FallenStar> getEntity, Level world) {
         super(getEntity, world);
+        this.isFalling = true;
         this.dimensions = getEntity.getDimensions();
     }
 
-    public static boolean canSpawn(EntityType<? extends AbstractArrow> p_27578_, LevelAccessor p_27579_, MobSpawnType p_27580_, BlockPos p_27581_, Random p_27582_) {
+    public FallenStar(EntityType<? extends FallenStar> getEntity, Level world, Player ownPlayer) {
+        this(getEntity, world);
+        this.ownPlayer = ownPlayer;
+    }
+
+    public static boolean canSpawn(EntityType<? extends AbstractArrow> p_27578_, LevelAccessor p_27579_,
+            MobSpawnType p_27580_, BlockPos p_27581_, Random p_27582_) {
         return true;
     }
 
@@ -92,6 +104,26 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
         if (this.age != -32768) {
             ++this.age;
+        }
+
+        if (this.isFalling && this.ownPlayer != null && this.ownPlayer.getUseItem().is(Items.SPYGLASS)) {
+
+            Vec3 dirPlayerToStar = this.position().subtract(this.ownPlayer.position());
+            dirPlayerToStar = new Vec3(dirPlayerToStar.x, 0.0, dirPlayerToStar.z).normalize();
+
+            float playerRotX = this.ownPlayer.getXRot();
+            float playerRotY = this.ownPlayer.getYRot();
+            float shootX = -Mth.sin(playerRotY * ((float) Math.PI / 180F))
+                    * Mth.cos(playerRotX * ((float) Math.PI / 180F));
+            float shootZ = Mth.cos(playerRotY * ((float) Math.PI / 180F))
+                    * Mth.cos(playerRotX * ((float) Math.PI / 180F));
+
+            Vec3 dirPlayerLooking = new Vec3(shootX, 0.0, shootZ).normalize();
+
+            double playerSeesStar = dirPlayerToStar.dot(dirPlayerLooking);
+            if (playerSeesStar > 0.98) {
+                ManaMod.LOGGER.debug("PLAYER SEE STAR " + this.ownPlayer.getXRot());
+            }
         }
 
         boolean flag = this.isNoPhysics();
@@ -140,7 +172,8 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             this.inGroundTime = 0;
             Vec3 vec32 = this.position();
             Vec3 vec33 = vec32.add(vec3);
-            HitResult hitresult = this.level.clip(new ClipContext(vec32, vec33, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+            HitResult hitresult = this.level
+                    .clip(new ClipContext(vec32, vec33, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
 
             if (hitresult.getType() != HitResult.Type.MISS) {
                 vec33 = hitresult.getLocation();
@@ -155,7 +188,8 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                 if (hitresult != null && hitresult.getType() == HitResult.Type.ENTITY) {
                     Entity entity = ((EntityHitResult) hitresult).getEntity();
                     Entity entity1 = this.getOwner();
-                    if (entity instanceof Player && entity1 instanceof Player && !((Player) entity1).canHarmPlayer((Player) entity)) {
+                    if (entity instanceof Player && entity1 instanceof Player
+                            && !((Player) entity1).canHarmPlayer((Player) entity)) {
                         hitresult = null;
                         entityhitresult = null;
                     }
@@ -243,7 +277,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                         this.getY() + 2 + this.random.nextGaussian() * 0.9,
                         this.getZ() + this.random.nextGaussian() * 0.2,
                         0D, 0.1D, 0D);
-                
+
                 this.level.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, this.getX() + this.random.nextGaussian() * 0.2,
                         this.getY() + 1 + this.random.nextGaussian() * 0.2,
                         this.getZ() + this.random.nextGaussian() * 0.2,
@@ -252,9 +286,9 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             }
         }
 
-        if(isInWater() && this.age % 5  == 0){
+        if (isInWater() && this.age % 5 == 0) {
             this.level.playSound((Player) null, this.getOnPos(), BUBBLE, SoundSource.AMBIENT,
-                        1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
+                    1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
         }
     }
 
@@ -281,6 +315,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
     @Override
     protected void onHitEntity(EntityHitResult p_36757_) {
+        this.isFalling = false;
         Entity entity = p_36757_.getEntity();
         float f = (float) this.getDeltaMovement().length();
         int i = Mth.ceil(Mth.clamp((double) f * this.baseDamage, 0.0D, 2.147483647E9D));
@@ -328,6 +363,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
     @Override
     protected void onHitBlock(BlockHitResult p_36755_) {
+        this.isFalling = false;
         this.lastState = this.level.getBlockState(p_36755_.getBlockPos());
         Vec3 vec3 = p_36755_.getLocation().subtract(this.getX(), this.getY(), this.getZ());
         this.setDeltaMovement(vec3);
@@ -368,24 +404,25 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         return ((float) this.getAge() + p_32009_) / 20.0F + this.bobOffs;
     }
 
-    //Call this to remove the start from an environment situation, such as sunrise, or killing after old age.
-    public void discardStar(){
+    // Call this to remove the start from an environment situation, such as sunrise,
+    // or killing after old age.
+    public void discardStar() {
         this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
-            if (!this.level.isClientSide) { // qty spread velocity
-                ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1,
-                        0D,
-                        0D, 0D, 0D);
-                ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(),
-                        20,
-                        1D, 1D, 1D, 0.3D);
-            }
+        if (!this.level.isClientSide) { // qty spread velocity
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1,
+                    0D,
+                    0D, 0D, 0D);
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(),
+                    20,
+                    1D, 1D, 1D, 0.3D);
+        }
         this.discard();
     }
 
     @Override
     protected void tickDespawn() {
         ++this.age;
-        //After 23000 ticks, roughly a full day cycle, the star will be removed.
+        // After 23000 ticks, roughly a full day cycle, the star will be removed.
         if (this.age >= 23000) {
             discardStar();
         }
@@ -393,8 +430,9 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
     @Override
     protected void doWaterSplashEffect() {
-        this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_SPLASH_HIGH_SPEED, SoundSource.AMBIENT, 2.5F,
-        0.6F / (this.random.nextFloat() * 0.2F + 0.9F));
+        this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_SPLASH_HIGH_SPEED,
+                SoundSource.AMBIENT, 2.5F,
+                0.6F / (this.random.nextFloat() * 0.2F + 0.9F));
 
         double d2 = (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.dimensions.width;
 
