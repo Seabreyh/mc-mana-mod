@@ -51,14 +51,6 @@ public class ManaMod {
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
 
-        ManaBlocks.register(eventBus);
-        ManaBlockEntities.register(eventBus);
-        ManaMenuTypes.register(eventBus);
-
-        // Add listeners
-        eventBus.addListener(this::setup);
-        eventBus.addListener(this::clientSetup);
-
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
