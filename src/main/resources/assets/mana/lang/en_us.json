@@ -1,6 +1,12 @@
 {
-    "itemGroup.mana": "Mana Mod Items",
+    "itemGroup.mana_items": "Mana Mod Items",
+    "itemGroup.mana_blocks": "Mana Mod Blocks",
+
     "item.mana.amethyst_staff": "Amethyst Staff",
     "item.mana.emerald_staff": "Emerald Staff",
-    "item.mana.fallen_star_item": "Fallen Star"
+    "item.mana.fallen_star_item": "Fallen Star",
+
+    "block.mana.star_catcher": "Star Catcher",
+
+    "itemGroup.manaModTab": "Mana"
 }

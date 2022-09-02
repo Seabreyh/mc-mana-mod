@@ -1,0 +1,8 @@
+{
+    "variants": {
+      "facing=north": { "model": "mana:block/star_catcher" },
+      "facing=east": { "model": "mana:block/star_catcher", "y": 90 },
+      "facing=south": { "model": "mana:block/star_catcher", "y": 180 },
+      "facing=west": { "model": "mana:block/star_catcher", "y": 270 }
+    }
+}
