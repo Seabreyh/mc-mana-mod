@@ -55,7 +55,8 @@ public class ManaItems {
                                         .stacksTo(64)));
 
         public static class ModCreativeTab extends CreativeModeTab {
-                public static final ModCreativeTab instance = new ModCreativeTab(CreativeModeTab.TABS.length, "mana");
+                public static final ModCreativeTab instance = new ModCreativeTab(CreativeModeTab.TABS.length,
+                                "mana_items");
 
                 private ModCreativeTab(int index, String label) {
                         super(index, label);

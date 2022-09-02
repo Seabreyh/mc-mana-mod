@@ -4,14 +4,19 @@ import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.event.ManaClientEvents;
 import com.seabreyh.mana.networking.ManaMessages;
 import com.seabreyh.mana.particle.ManaParticles;
+import com.seabreyh.mana.registry.ManaBlockEntities;
+import com.seabreyh.mana.registry.ManaBlocks;
 import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaItems;
+import com.seabreyh.mana.screen.ManaMenuTypes;
+import com.seabreyh.mana.screen.StarCatcherScreen;
 import com.seabreyh.mana.sound.ManaSounds;
 
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -29,30 +34,37 @@ public class ManaMod {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public ManaMod() {
-        // Register the setup method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
-        // Register the enqueueIMC method for modloading
-        // FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        // Register the processIMC method for modloading
-        // FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-        // FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
 
         // Register items
+        IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         ManaItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         ManaEntities.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ManaParticles.PARTICLE_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
         ManaSounds.SOUND_EVENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
+        ManaBlocks.register(eventBus);
+        ManaBlockEntities.register(eventBus);
+        ManaMenuTypes.register(eventBus);
+
+        // Add listeners
+        eventBus.addListener(this::setup);
+        eventBus.addListener(this::clientSetup);
+
+        ManaBlocks.register(eventBus);
+        ManaBlockEntities.register(eventBus);
+        ManaMenuTypes.register(eventBus);
+
+        // Add listeners
+        eventBus.addListener(this::setup);
+        eventBus.addListener(this::clientSetup);
+
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-
     }
 
     private void setup(final FMLCommonSetupEvent event) {
         // some preinit code
-        LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
         event.enqueueWork(() -> {
             ManaMessages.register();
         });
@@ -60,23 +72,11 @@ public class ManaMod {
 
     private void clientSetup(final FMLClientSetupEvent event) {
         ManaClientEvents.registerEntityRenderers(event);
+        ManaClientEvents.registerBlockRenderers(event);
         ManaClientEvents.registerOverlays(event);
+        // ClientSetup.registerMenuScreens(event);
+        MenuScreens.register(ManaMenuTypes.STAR_CATCHER_MENU.get(), StarCatcherScreen::new);
     }
-
-    // private void enqueueIMC(final InterModEnqueueEvent event) {
-    // // Some example code to dispatch IMC to another mod
-    // // InterModComms.sendTo("mana", "helloworld", () -> {
-    // // LOGGER.info("Hello world from the MDK");
-    // // return "Hello world";
-    // // });
-    // }
-
-    // private void processIMC(final InterModProcessEvent event) {
-    // // Some example code to receive and process InterModComms from other mods
-    // LOGGER.info("Got IMC {}",
-    // event.getIMCStream().map(m ->
-    // m.messageSupplier().get()).collect(Collectors.toList()));
-    // }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
@@ -85,9 +85,6 @@ public class ManaMod {
         // LOGGER.info("HELLO from server starting");
     }
 
-    // You can use EventBusSubscriber to automatically subscribe events on the
-    // contained class (this is subscribing to the MOD
-    // Event bus for receiving Registry Events)
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
         @SubscribeEvent
