@@ -5,7 +5,10 @@ import com.seabreyh.mana.items.AmethystStaff;
 import com.seabreyh.mana.items.EmeraldStaff;
 import com.seabreyh.mana.items.FallenStarItem;
 import com.seabreyh.mana.items.GrantedWishItem;
+import com.seabreyh.mana.items.ManaCapsule;
 import com.seabreyh.mana.items.ManaCrystal;
+import com.seabreyh.mana.items.ManaDust;
+import com.seabreyh.mana.items.ManaShard;
 import com.seabreyh.mana.items.SealedWishItem;
 import com.seabreyh.mana.items.StarDust;
 import com.seabreyh.mana.items.WishItem;
@@ -57,6 +60,21 @@ public class ManaItems {
 
         public static final RegistryObject<Item> STAR_DUST = ITEMS.register("star_dust",
                         () -> new StarDust(new Item.Properties()
+                                        .tab(ModCreativeTab.instance)
+                                        .stacksTo(64)));
+
+        public static final RegistryObject<Item> MANA_DUST = ITEMS.register("mana_dust",
+                         () -> new ManaDust(new Item.Properties()
+                                        .tab(ModCreativeTab.instance)
+                                        .stacksTo(64)));
+
+        public static final RegistryObject<Item> MANA_SHARD = ITEMS.register("mana_shard",
+                        () -> new ManaShard(new Item.Properties()
+                                        .tab(ModCreativeTab.instance)
+                                        .stacksTo(64)));
+
+        public static final RegistryObject<Item> MANA_CAPSULE = ITEMS.register("mana_capsule",
+                        () -> new ManaCapsule(new Item.Properties()
                                         .tab(ModCreativeTab.instance)
                                         .stacksTo(64)));
 

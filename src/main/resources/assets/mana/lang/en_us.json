@@ -1,6 +1,7 @@
 {
     "itemGroup.mana_items": "Mana Mod Items",
     "itemGroup.mana_blocks": "Mana Mod Blocks",
+
     "item.mana.amethyst_staff": "Amethyst Staff",
     "item.mana.emerald_staff": "Emerald Staff",
     "item.mana.star_dust": "Star Dust",
@@ -9,7 +10,13 @@
     "item.mana.sealed_wish_item": "Sealed Wish",
     "item.mana.granted_wish_item": "Granted Wish",
     "item.mana.mana_crystal": "Mana Crystal",
+    "item.mana.mana_shard": "Mana Shard",
+    "item.mana.mana_capsule": "Mana Capsule",
+    "item.mana.mana_dust": "Mana Dust",
+
     "gui.mana.select_wish": "Choose your wish",
+
     "block.mana.star_catcher": "Star Catcher",
+
     "itemGroup.manaModTab": "Mana"
 }
