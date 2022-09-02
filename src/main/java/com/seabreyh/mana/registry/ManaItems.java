@@ -7,6 +7,7 @@ import com.seabreyh.mana.items.FallenStarItem;
 import com.seabreyh.mana.items.GrantedWishItem;
 import com.seabreyh.mana.items.ManaCrystal;
 import com.seabreyh.mana.items.SealedWishItem;
+import com.seabreyh.mana.items.StarDust;
 import com.seabreyh.mana.items.WishItem;
 
 import net.minecraft.world.item.CreativeModeTab;
@@ -51,6 +52,11 @@ public class ManaItems {
 
         public static final RegistryObject<Item> MANA_CRYSTAL = ITEMS.register("mana_crystal",
                         () -> new ManaCrystal(new Item.Properties()
+                                        .tab(ModCreativeTab.instance)
+                                        .stacksTo(64)));
+
+        public static final RegistryObject<Item> STAR_DUST = ITEMS.register("star_dust",
+                        () -> new StarDust(new Item.Properties()
                                         .tab(ModCreativeTab.instance)
                                         .stacksTo(64)));
 
