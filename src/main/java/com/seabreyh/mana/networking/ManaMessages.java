@@ -3,6 +3,7 @@ package com.seabreyh.mana.networking;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.networking.packet.ChoseWishC2SPacket;
 import com.seabreyh.mana.networking.packet.ManaStatSyncS2CPacket;
+import com.seabreyh.mana.networking.packet.OpenWishS2CPacket;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -41,6 +42,12 @@ public class ManaMessages {
                 .decoder(ManaStatSyncS2CPacket::new)
                 .encoder(ManaStatSyncS2CPacket::toBytes)
                 .consumer(ManaStatSyncS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(OpenWishS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(OpenWishS2CPacket::new)
+                .encoder(OpenWishS2CPacket::toBytes)
+                .consumer(OpenWishS2CPacket::handle)
                 .add();
     }
 

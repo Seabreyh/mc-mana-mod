@@ -44,23 +44,18 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class WishViewScreen extends Screen {
     public static final int PAGE_INDICATOR_TEXT_Y_OFFSET = 16;
+    public static final int PAGE_COUNT = 3;
     public static final int PAGE_TEXT_X_OFFSET = 36;
     public static final int PAGE_TEXT_Y_OFFSET = 30;
-    public static final WishViewScreen.BookAccess EMPTY_ACCESS = new WishViewScreen.BookAccess() {
-        public int getPageCount() {
-            return 0;
-        }
 
-        public FormattedText getPageRaw(int p_98306_) {
-            return FormattedText.EMPTY;
-        }
-    };
     public static final ResourceLocation BOOK_LOCATION = new ResourceLocation("textures/gui/book.png");
+    private final List<String> MESSAGES = Arrays.asList("I wish for sunshine", "I wish for storms",
+            "I wish I had a friend");
+
     protected static final int TEXT_WIDTH = 114;
     protected static final int TEXT_HEIGHT = 128;
     protected static final int IMAGE_WIDTH = 192;
     protected static final int IMAGE_HEIGHT = 192;
-    private WishViewScreen.BookAccess bookAccess;
     private int currentPage;
     private List<FormattedCharSequence> cachedPageComponents = Collections.emptyList();
     private int cachedPage = -1;
@@ -69,29 +64,13 @@ public class WishViewScreen extends Screen {
     private PageButton backButton;
     private final boolean playTurnSound;
 
-    public WishViewScreen(WishViewScreen.BookAccess p_98264_) {
-        this(p_98264_, true);
-    }
-
     public WishViewScreen() {
-        this(EMPTY_ACCESS, false);
-    }
-
-    private WishViewScreen(WishViewScreen.BookAccess p_98266_, boolean p_98267_) {
         super(NarratorChatListener.NO_TITLE);
-        this.bookAccess = p_98266_;
-        this.playTurnSound = p_98267_;
-    }
-
-    public void setBookAccess(WishViewScreen.BookAccess p_98289_) {
-        this.bookAccess = p_98289_;
-        this.currentPage = Mth.clamp(this.currentPage, 0, p_98289_.getPageCount());
-        this.updateButtonVisibility();
-        this.cachedPage = -1;
+        this.playTurnSound = true;
     }
 
     public boolean setPage(int p_98276_) {
-        int i = Mth.clamp(p_98276_, 0, this.bookAccess.getPageCount() - 1);
+        int i = Mth.clamp(p_98276_, 0, this.PAGE_COUNT - 1);
         if (i != this.currentPage) {
             this.currentPage = i;
             this.updateButtonVisibility();
@@ -134,7 +113,7 @@ public class WishViewScreen extends Screen {
     }
 
     private int getNumPages() {
-        return this.bookAccess.getPageCount();
+        return this.PAGE_COUNT;
     }
 
     protected void pageBack() {
@@ -184,7 +163,7 @@ public class WishViewScreen extends Screen {
         int j = 2;
         this.blit(p_98282_, i, 2, 0, 0, 192, 192);
         if (this.cachedPage != this.currentPage) {
-            FormattedText formattedtext = this.bookAccess.getPage(this.currentPage);
+            FormattedText formattedtext = this.getPageRaw(this.currentPage);
             this.cachedPageComponents = this.font.split(formattedtext, 114);
             this.pageMsg = new TranslatableComponent("book.pageIndicator", this.currentPage + 1,
                     Math.max(this.getNumPages(), 1));
@@ -297,86 +276,18 @@ public class WishViewScreen extends Screen {
 
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public interface BookAccess {
-        int getPageCount();
+    public FormattedText getPageRaw(int p_98325_) {
+        String s = this.MESSAGES.get(p_98325_);
 
-        FormattedText getPageRaw(int p_98307_);
-
-        default FormattedText getPage(int p_98311_) {
-            return p_98311_ >= 0 && p_98311_ < this.getPageCount() ? this.getPageRaw(p_98311_) : FormattedText.EMPTY;
-        }
-
-        static WishViewScreen.BookAccess fromItem(ItemStack p_98309_) {
-            if (p_98309_.is(Items.WRITTEN_BOOK)) {
-                return new WishViewScreen.WrittenBookAccess(p_98309_);
-            } else {
-                return (WishViewScreen.BookAccess) (p_98309_.is(Items.WRITABLE_BOOK)
-                        ? new WishViewScreen.WritableBookAccess(p_98309_)
-                        : WishViewScreen.EMPTY_ACCESS);
+        try {
+            FormattedText formattedtext = Component.Serializer.fromJson(s);
+            if (formattedtext != null) {
+                return formattedtext;
             }
-        }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public static class WritableBookAccess implements WishViewScreen.BookAccess {
-        private final List<String> pages;
-
-        public WritableBookAccess(ItemStack p_98314_) {
-            this.pages = readPages(p_98314_);
+        } catch (Exception exception) {
         }
 
-        private static List<String> readPages(ItemStack p_98319_) {
-            CompoundTag compoundtag = p_98319_.getTag();
-            return (List<String>) (compoundtag != null ? WishViewScreen.loadPages(compoundtag) : ImmutableList.of());
-        }
-
-        public int getPageCount() {
-            return this.pages.size();
-        }
-
-        public FormattedText getPageRaw(int p_98317_) {
-            return FormattedText.of(this.pages.get(p_98317_));
-        }
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public static class WrittenBookAccess implements WishViewScreen.BookAccess {
-        private final List<String> pages;
-
-        public WrittenBookAccess(ItemStack p_98322_) {
-            this.pages = readPages(p_98322_);
-        }
-
-        private static List<String> readPages(ItemStack p_98327_) {
-            List<String> messages = Arrays.asList("I wish for sunshine", "I wish for storms", "I wish I had a friend");
-            return messages;
-            // CompoundTag compoundtag = p_98327_.getTag();
-            // return (List<String>) (compoundtag != null &&
-            // WrittenBookItem.makeSureTagIsValid(compoundtag)
-            // ? WishViewScreen.loadPages(compoundtag)
-            // : ImmutableList.of(Component.Serializer.toJson(
-            // (new
-            // TranslatableComponent("book.invalid.tag")).withStyle(ChatFormatting.DARK_RED))));
-        }
-
-        public int getPageCount() {
-            return this.pages.size();
-        }
-
-        public FormattedText getPageRaw(int p_98325_) {
-            String s = this.pages.get(p_98325_);
-
-            try {
-                FormattedText formattedtext = Component.Serializer.fromJson(s);
-                if (formattedtext != null) {
-                    return formattedtext;
-                }
-            } catch (Exception exception) {
-            }
-
-            return FormattedText.of(s);
-        }
+        return FormattedText.of(s);
     }
 
 }

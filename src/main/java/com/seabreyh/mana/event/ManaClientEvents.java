@@ -12,6 +12,7 @@ import com.seabreyh.mana.screen.ManaMenuTypes;
 import com.seabreyh.mana.screen.StarCatcherScreen;
 
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -28,8 +29,9 @@ import net.minecraftforge.client.gui.OverlayRegistry;
 
 @Mod.EventBusSubscriber(modid = ManaMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ManaClientEvents {
-    public static DistExecutor.SafeRunnable WishScreen(WishViewScreen screen) {
-        return () -> Minecraft.getInstance().setScreen(screen);
+
+    public static void WishScreen(WishViewScreen screen) {
+        Minecraft.getInstance().setScreen(screen);
     }
 
     @SubscribeEvent

@@ -3,7 +3,6 @@ package com.seabreyh.mana.event.player;
 import java.util.Random;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.client.gui.WishViewScreen;
 import com.seabreyh.mana.items.SealedWishItem;
 import com.seabreyh.mana.networking.ManaMessages;
 import com.seabreyh.mana.networking.packet.ChoseWishC2SPacket;

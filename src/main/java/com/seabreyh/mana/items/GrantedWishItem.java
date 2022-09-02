@@ -6,7 +6,6 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.client.gui.WishViewScreen;
 import com.seabreyh.mana.event.ManaClientEvents;
 import com.seabreyh.mana.event.player.PlayerManaEvent;
 import com.seabreyh.mana.event.player.PlayerWishEvent;
