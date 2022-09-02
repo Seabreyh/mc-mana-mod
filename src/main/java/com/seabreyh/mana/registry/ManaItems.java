@@ -5,6 +5,7 @@ import com.seabreyh.mana.items.AmethystStaff;
 import com.seabreyh.mana.items.EmeraldStaff;
 import com.seabreyh.mana.items.FallenStarItem;
 import com.seabreyh.mana.items.GrantedWishItem;
+import com.seabreyh.mana.items.ManaCrystal;
 import com.seabreyh.mana.items.SealedWishItem;
 import com.seabreyh.mana.items.WishItem;
 
@@ -47,6 +48,11 @@ public class ManaItems {
         public static final RegistryObject<Item> GRANTED_WISH_ITEM = ITEMS.register("granted_wish_item",
                         () -> new GrantedWishItem(new Item.Properties()
                                         .stacksTo(1)));
+
+        public static final RegistryObject<Item> MANA_CRYSTAL = ITEMS.register("mana_crystal",
+                        () -> new ManaCrystal(new Item.Properties()
+                                        .tab(ModCreativeTab.instance)
+                                        .stacksTo(64)));
 
         public static class ModCreativeTab extends CreativeModeTab {
                 public static final ModCreativeTab instance = new ModCreativeTab(CreativeModeTab.TABS.length, "mana");

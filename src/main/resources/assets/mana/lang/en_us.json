@@ -6,5 +6,6 @@
     "item.mana.wish_item": "Wish",
     "item.mana.sealed_wish_item": "Sealed Wish",
     "item.mana.granted_wish_item": "Granted Wish",
+    "item.mana.mana_crystal": "Mana Crystal",
     "gui.mana.select_wish": "Choose your wish"
 }

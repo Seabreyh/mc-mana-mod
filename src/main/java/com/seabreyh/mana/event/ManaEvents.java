@@ -55,9 +55,18 @@ public class ManaEvents {
 
     @SubscribeEvent
     public static void onPlayerCloned(PlayerEvent.Clone event) {
+        if (event.getPlayer().level.isClientSide()) {
+            return;
+        }
+        event.getOriginal().reviveCaps();
         if (event.isWasDeath()) {
+            ManaMod.LOGGER.debug("event WAS DEATH");
+
             event.getOriginal().getCapability(PlayerManaStatProvider.PLAYER_MANA_STAT).ifPresent(oldStore -> {
-                event.getOriginal().getCapability(PlayerManaStatProvider.PLAYER_MANA_STAT).ifPresent(newStore -> {
+                ManaMod.LOGGER.debug("event.getOriginal");
+
+                event.getPlayer().getCapability(PlayerManaStatProvider.PLAYER_MANA_STAT).ifPresent(newStore -> {
+                    ManaMod.LOGGER.debug("event.getPlayer: copyFrom oldStore");
                     newStore.copyFrom(oldStore);
                 });
             });
@@ -88,7 +97,8 @@ public class ManaEvents {
             if (event.getEntity() instanceof ServerPlayer player) {
                 player.getCapability(PlayerManaStatProvider.PLAYER_MANA_STAT).ifPresent(mana_stat -> {
                     ManaMod.LOGGER.debug("###SENDTOPLAYER onPlayerJoinWorld");
-                    ManaMessages.sendToPlayer(new ManaStatSyncS2CPacket(mana_stat.getManaValue()), player);
+                    ManaMessages.sendToPlayer(
+                            new ManaStatSyncS2CPacket(mana_stat.getManaValue(), mana_stat.getManaCapacity()), player);
                 });
             }
         }

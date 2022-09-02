@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class PlayerManaEvent {
     private static boolean hasMana;
-    private static boolean fullMana;
+    private static boolean maxCapacity;
 
     public static boolean consumeMana(Player player, int mana) {
 
@@ -25,7 +25,7 @@ public class PlayerManaEvent {
             ManaMod.LOGGER.debug("###SERVER_SUBTRACT_MANA " + mana);
 
             // Send packet with new player mana data to all the clients
-            ManaMessages.sendToPlayer(new ManaStatSyncS2CPacket(mana_stat.getManaValue()),
+            ManaMessages.sendToPlayer(new ManaStatSyncS2CPacket(mana_stat.getManaValue(), mana_stat.getManaCapacity()),
                     ((ServerPlayer) player));
 
         });
@@ -37,9 +37,9 @@ public class PlayerManaEvent {
         player.getCapability(PlayerManaStatProvider.PLAYER_MANA_STAT).ifPresent(mana_stat -> {
 
             if (mana_stat.isFull()) {
-                fullMana = true;
+                maxCapacity = true;
             } else {
-                fullMana = false;
+                maxCapacity = false;
             }
 
             mana_stat.addMana(mana);
@@ -47,10 +47,31 @@ public class PlayerManaEvent {
             ManaMod.LOGGER.debug("###SERVER_ADD_MANA " + mana);
 
             // Send packet with new player mana data to all the clients
-            ManaMessages.sendToPlayer(new ManaStatSyncS2CPacket(mana_stat.getManaValue()),
+            ManaMessages.sendToPlayer(new ManaStatSyncS2CPacket(mana_stat.getManaValue(), mana_stat.getManaCapacity()),
                     ((ServerPlayer) player));
         });
 
-        return fullMana;
+        return maxCapacity;
+    }
+
+    public static boolean increaseManaCapacity(Player player, int mana_increase) {
+        player.getCapability(PlayerManaStatProvider.PLAYER_MANA_STAT).ifPresent(mana_stat -> {
+
+            if (mana_stat.isAtMaxCapacity()) {
+                maxCapacity = true;
+            } else {
+                maxCapacity = false;
+            }
+
+            mana_stat.addManaCapacity(mana_increase);
+
+            ManaMod.LOGGER.debug("###SERVER_INCREASE_MANA_CAP " + mana_increase);
+
+            // Send packet with new player mana data to all the clients
+            ManaMessages.sendToPlayer(new ManaStatSyncS2CPacket(mana_stat.getManaValue(), mana_stat.getManaCapacity()),
+                    ((ServerPlayer) player));
+        });
+
+        return maxCapacity;
     }
 }

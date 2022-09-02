@@ -16,15 +16,15 @@ public class PlayerManaStatProvider implements ICapabilityProvider, INBTSerializ
             .get(new CapabilityToken<PlayerManaStat>() {
             });
 
-    private PlayerManaStat thirst = null;
+    private PlayerManaStat mana_stat = null;
     private final LazyOptional<PlayerManaStat> optional = LazyOptional.of(this::createPlayerManaStat);
 
     private PlayerManaStat createPlayerManaStat() {
-        if (this.thirst == null) {
-            this.thirst = new PlayerManaStat();
+        if (this.mana_stat == null) {
+            this.mana_stat = new PlayerManaStat();
         }
 
-        return this.thirst;
+        return this.mana_stat;
     }
 
     @Override

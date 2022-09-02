@@ -23,6 +23,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.npc.WanderingTrader;
+import net.minecraft.world.entity.npc.WanderingTraderSpawner;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -62,6 +65,10 @@ public class GrantedWishItem extends SealedWishItem {
 
                     // world.setThunderLevel(1f);
                     break;
+                case SUMMON_STAR_FRIEND:
+                    WanderingTrader wTrader = new WanderingTrader(EntityType.WANDERING_TRADER, world);
+                    wTrader.setPos(player.position());
+                    world.addFreshEntity(wTrader);
                 default:
                     break;
             }

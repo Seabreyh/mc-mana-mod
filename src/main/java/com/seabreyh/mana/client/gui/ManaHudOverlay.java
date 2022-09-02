@@ -35,16 +35,30 @@ public class ManaHudOverlay {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, EMPTY_MANA);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < ClientManaStatData.getPlayerManaCapacity() / 2; i++) {
             GuiComponent.blit(poseStack, x - 94 + (i * 8), y - 54, 0, 0, 22, 22,
                     22, 22);
         }
 
-        RenderSystem.setShaderTexture(0, FULL_MANA);
-        for (int i = 0; i < 10; i++) {
-            if (ClientManaStatData.getPlayerManaStat() > i) {
+        for (int i = 0; i < ClientManaStatData.getPlayerManaCapacity() / 2; i++) {
+            int j = i * 2;
+
+            if (ClientManaStatData.getPlayerManaStat() % 2 != 0 && (j == ClientManaStatData.getPlayerManaStat() - 1)) {
+                RenderSystem.setShaderTexture(0, new ResourceLocation(ManaMod.MOD_ID,
+                        "textures/gui/mana_star_half.png"));
                 GuiComponent.blit(poseStack, x - 94 + (i * 8), y - 54, 0, 0, 21, 21,
                         21, 21);
+            } else if (ClientManaStatData.getPlayerManaStat() > j) {
+                // if ((i == ClientManaStatData.getPlayerManaStat() - 1) && (i % 2 == 0)) {
+                // RenderSystem.setShaderTexture(0, new ResourceLocation(ManaMod.MOD_ID,
+                // "textures/gui/mana_star_half.png"));
+                // GuiComponent.blit(poseStack, x - 94 + (i * 8), y - 54, 0, 0, 21, 21,
+                // 21, 21);
+                // } else {
+                RenderSystem.setShaderTexture(0, FULL_MANA);
+                GuiComponent.blit(poseStack, x - 94 + (i * 8), y - 54, 0, 0, 21, 21,
+                        21, 21);
+                // }
             } else {
                 break;
             }

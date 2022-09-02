@@ -29,7 +29,6 @@ import javax.annotation.Nonnull;
 
 public class AmethystEnergyBall extends ThrowableProjectile {
     private int life;
-    private boolean fireCharged;
     private int explosionPower = 2;
 
     public AmethystEnergyBall(Level world, LivingEntity player) {
@@ -99,20 +98,7 @@ public class AmethystEnergyBall extends ThrowableProjectile {
     public void tick() {
         super.tick();
 
-        if (this.isOnFire()) {
-            if (!this.fireCharged) {
-                fireCharged = true;
-                this.playSound(SoundEvents.BLAZE_SHOOT, 3.0F, 0.3F);
-                this.playSound(SoundEvents.FIRECHARGE_USE, 3.0F, 1F);
-                this.playSound(SoundEvents.PUFFER_FISH_BLOW_OUT, 3.0F, 1F);
-            }
-        }
-
-        if (this.fireCharged) {
-            this.playSound(this.getPloofSound(), 2F, 0.2F);
-        } else {
-            this.playSound(this.getPloofSound(), 2F, 3F);
-        }
+        this.playSound(this.getPloofSound(), 2F, 3F);
 
         ++this.life;
 
@@ -136,23 +122,10 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         } else {
             for (int i = 0; i < 4; ++i) {
 
-                if (fireCharged) {
-                    this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_FIRE.get(), this.getX(),
-                            this.getY(), this.getZ(),
-                            this.random.nextGaussian() * 0.2D, this.random.nextGaussian() * 0.2D,
-                            this.random.nextGaussian() * 0.2D);
-
-                    this.level.addParticle(ParticleTypes.FLAME, this.getX(),
-                            this.getY(), this.getZ(),
-                            this.random.nextGaussian() * 0D, this.random.nextGaussian() * 0.02D,
-                            this.random.nextGaussian() * 0.05D);
-
-                } else {
-                    this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_DEFAULT.get(), this.getX(),
-                            this.getY(), this.getZ(),
-                            this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
-                            this.random.nextGaussian() * 0.1D);
-                }
+                this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_DEFAULT.get(), this.getX(),
+                        this.getY(), this.getZ(),
+                        this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
+                        this.random.nextGaussian() * 0.1D);
 
                 vec3 = this.getDeltaMovement();
                 double d5 = vec3.x;
@@ -189,7 +162,7 @@ public class AmethystEnergyBall extends ThrowableProjectile {
     protected void onHitBlock(BlockHitResult hitBlock) {
         BlockState blockstate = this.level.getBlockState(hitBlock.getBlockPos().above());
 
-        if (fireCharged || this.wasOnFire || blockstate.getBlock() == Blocks.FIRE
+        if (this.wasOnFire || blockstate.getBlock() == Blocks.FIRE
                 || blockstate.getBlock() == Blocks.SOUL_FIRE) {
             if (!this.level.isClientSide) {
                 boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level,
@@ -232,17 +205,6 @@ public class AmethystEnergyBall extends ThrowableProjectile {
                 ((ServerLevel) this.level).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 20,
                         0.15D,
                         0.15D, 0.15D, 0.2D);
-            }
-
-            if (fireCharged || this.wasOnFire) {
-                if (!this.level.isClientSide) {
-                    boolean flag2 = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level,
-                            this.getOwner());
-                    this.level.explode((Entity) null, this.getX(), this.getY(), this.getZ(),
-                            (float) this.explosionPower, flag2,
-                            flag2 ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
-                    this.discard();
-                }
             }
 
             this.discard();
