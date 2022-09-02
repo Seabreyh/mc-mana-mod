@@ -10,10 +10,10 @@
             "item": "minecraft:emerald_block"
         },
         "/": {
-            "item": "minecraft:copper_ingot"
+            "item": "minecraft:gold_ingot"
         }
     },
     "result": {
-        "item": "mana:amethyst_staff"
+        "item": "mana:emerald_staff"
     }
 }
