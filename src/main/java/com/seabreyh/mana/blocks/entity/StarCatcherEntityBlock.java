@@ -131,8 +131,10 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
     // double x = (double)pPos.getX();
     // double y = (double)pPos.getY();
     // double z = (double)pPos.getZ();
+        if(hasNotReachedStackLimit(pBlockEntity)) {
 
-    AABB area = pBlockEntity.getRenderBoundingBox().inflate(80.0D, 80.0D, 80.0D);
+
+            AABB area = pBlockEntity.getRenderBoundingBox().inflate(80.0D, 80.0D, 80.0D);
     List<FallenStar> fallenStars = plevel.getEntitiesOfClass(FallenStar.class, area);
 
     FallenStar foundTarget = null;
@@ -156,10 +158,23 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
                         ManaMod.LOGGER.debug(String.valueOf(distTo));
 
                         // for(int i = 0; i < 50; i++) {
-                            foundTarget.setPosRaw(foundTarget.position().x - dirToCatcher.x, foundTarget.position().y - dirToCatcher.y, foundTarget.position().z - dirToCatcher.z);
+                            // foundTarget.setPosRaw(foundTarget.position().x - dirToCatcher.x, foundTarget.position().y - dirToCatcher.y, foundTarget.position().z - dirToCatcher.z);
                         // }
+                        // foundTarget.setNoGravity(true);
+
+                            //take 5 seconds to get into jar
+                            //20 ticks per second - 100 ticks = 5 seconds
+
+                            dirToCatcher = foundTarget.position().subtract(new Vec3(bx, by, bz));
+
+                            // foundTarget.setDeltaMovement(1,1,1);
+                            // foundTarget.setDeltaMovement(foundTarget.getDeltaMovement().scale(0.75D).add(foundTarget.getDeltaMovement().normalize().scale(2)));
+                        
+
+                        
                         dirToCatcher = foundTarget.position().subtract(new Vec3(bx, by, bz));
                         if(dirToCatcher.x < 1 && dirToCatcher.y < 1 && dirToCatcher.z < 1){
+                            craftItem(pBlockEntity);
                             foundTarget.discardStar();
                         }
                     }
@@ -170,18 +185,21 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
             }else{
                 
             }
+
+        }
+    
             
     }
 
-    if (pBlockEntity.target != null && foundTarget instanceof FallenStar) {
-        // ManaMod.LOGGER.debug("ball found target!");
-        // ManaMod.LOGGER.debug(pBlockEntity.target.toString());
-        if(!pBlockEntity.target.getIsFalling()){
-            // pBlockEntity.target.discardStar();
-            pBlockEntity.target.setPosRaw(pBlockEntity.target.position().x + 0.5, pBlockEntity.target.position().y + 0.5, pBlockEntity.target.position().z + 0.5);
-        }
+    // if (pBlockEntity.target != null && foundTarget instanceof FallenStar) {
+    //     // ManaMod.LOGGER.debug("ball found target!");
+    //     // ManaMod.LOGGER.debug(pBlockEntity.target.toString());
+    //     if(!pBlockEntity.target.getIsFalling()){
+    //         // pBlockEntity.target.discardStar();
+    //         pBlockEntity.target.setPosRaw(pBlockEntity.target.position().x + 0.5, pBlockEntity.target.position().y + 0.5, pBlockEntity.target.position().z + 0.5);
+    //     }
     
-    }
+    // }
 }
 
 // private static void setTarget(LivingEntity pTarget) {
@@ -193,12 +211,8 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
 // }
 
    private static void craftItem(StarCatcherEntityBlock entity) {
-       entity.itemHandler.extractItem(0, 1, false);
-       entity.itemHandler.extractItem(1, 1, false);
-       entity.itemHandler.getStackInSlot(2).hurt(1, new Random(), null);
-
-       entity.itemHandler.setStackInSlot(3, new ItemStack(ManaItems.FALLEN_STAR_ITEM.get(),
-               entity.itemHandler.getStackInSlot(3).getCount() + 1));
+       entity.itemHandler.setStackInSlot(0, new ItemStack(ManaItems.FALLEN_STAR_ITEM.get(),
+               entity.itemHandler.getStackInSlot(0).getCount() + 1));
    }
 
    private static boolean hasRecipe(StarCatcherEntityBlock entity) {
@@ -210,6 +224,6 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
    }
 
    private static boolean hasNotReachedStackLimit(StarCatcherEntityBlock entity) {
-       return entity.itemHandler.getStackInSlot(3).getCount() < entity.itemHandler.getStackInSlot(3).getMaxStackSize();
+       return entity.itemHandler.getStackInSlot(0).getCount() < entity.itemHandler.getStackInSlot(0).getMaxStackSize();
    }
 }

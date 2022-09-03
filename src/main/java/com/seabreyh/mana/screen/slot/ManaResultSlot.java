@@ -11,6 +11,6 @@ public class ManaResultSlot extends SlotItemHandler {
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return true;
+        return false;
     }
 } 
