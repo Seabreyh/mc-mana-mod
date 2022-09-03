@@ -35,7 +35,6 @@ public class ShootingStarEvent {
 
                     Vec3 shootPos = thisPlayer.position().add(new Vec3(shootXOffset, shootYOffset, shootZOffset));
                     shootingStar.setPos(shootPos);
-                    ManaMod.LOGGER.debug("SHOOT STAR at " + shootPos);
 
                     float randShootDirAngle = random.nextFloat() * 360.0F;
                     float randShootSteepAngle = random.nextFloat() * -45.0F;

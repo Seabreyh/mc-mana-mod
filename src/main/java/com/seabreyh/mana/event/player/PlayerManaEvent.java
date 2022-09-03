@@ -22,7 +22,6 @@ public class PlayerManaEvent {
             }
 
             mana_stat.subMana(mana);
-            ManaMod.LOGGER.debug("###SERVER_SUBTRACT_MANA " + mana);
 
             // Send packet with new player mana data to all the clients
             ManaMessages.sendToPlayer(new ManaStatSyncS2CPacket(mana_stat.getManaValue(), mana_stat.getManaCapacity()),
@@ -43,8 +42,6 @@ public class PlayerManaEvent {
             }
 
             mana_stat.addMana(mana);
-
-            ManaMod.LOGGER.debug("###SERVER_ADD_MANA " + mana);
 
             // Send packet with new player mana data to all the clients
             ManaMessages.sendToPlayer(new ManaStatSyncS2CPacket(mana_stat.getManaValue(), mana_stat.getManaCapacity()),

@@ -5,6 +5,8 @@ import com.seabreyh.mana.registry.ManaBlockEntities;
 
 import javax.annotation.Nullable;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -108,4 +110,5 @@ public class StarCatcher extends BaseEntityBlock {
         return createTickerHelper(pBlockEntityType, ManaBlockEntities.STAR_CATCHER_ENTITY_BLOCK.get(),
         StarCatcherEntityBlock::tick);
     }
+
 }

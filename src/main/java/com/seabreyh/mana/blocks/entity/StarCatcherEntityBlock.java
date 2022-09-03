@@ -1,14 +1,20 @@
 package com.seabreyh.mana.blocks.entity;
 
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.entity.FallenStar;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaItems;
 import com.seabreyh.mana.screen.StarCatcherMenu;
 
+import it.unimi.dsi.fastutil.booleans.Boolean2CharFunction;
+
+import java.util.List;
 import java.util.Random;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.text.html.parser.Entity;
 
+import org.checkerframework.common.returnsreceiver.qual.This;
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.core.BlockPos;
@@ -19,12 +25,14 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraft.core.Direction;
@@ -39,7 +47,7 @@ import net.minecraftforge.items.IItemHandler;
 public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider {
     private Vec3 shootDir;
     private LivingEntity owner;
-    private LivingEntity target;
+    private FallenStar target;
     public int tickCount;
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(4) {
@@ -114,137 +122,74 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
         if(hasRecipe(pBlockEntity) && hasNotReachedStackLimit(pBlockEntity)) {
            craftItem(pBlockEntity);
         }
+
+        locateStars(pLevel, pBlockEntity, pPos, pState);
     }
 
-    // public static void clientTick(Level p_155404_, BlockPos p_155405_, BlockState p_155406_, StarCatcherEntityBlock p_155407_) {
-    //     ++p_155407_.tickCount;
-    //     long i = p_155404_.getGameTime();
-    // }
+   private static void locateStars(Level plevel, StarCatcherEntityBlock pBlockEntity, BlockPos pPos, BlockState pState) {
 
-    // public static void serverTick(Level p_155439_, BlockPos p_155440_, BlockState p_155441_, StarCatcherEntityBlock p_155442_) {
-    //     ++p_155442_.tickCount;
-    //     long i = p_155439_.getGameTime();
-    // }
+    // double x = (double)pPos.getX();
+    // double y = (double)pPos.getY();
+    // double z = (double)pPos.getZ();
 
-//  @Override
-//  public void tick() {
-//      super.tick();
-//      if (getSpeed() == 0)
-//          return;
+    AABB area = pBlockEntity.getRenderBoundingBox().inflate(80.0D, 80.0D, 80.0D);
+    List<FallenStar> fallenStars = plevel.getEntitiesOfClass(FallenStar.class, area);
 
+    FallenStar foundTarget = null;
+    for (FallenStar foundStar : fallenStars) {
+        foundTarget = foundStar;
+        //make sure star can only be targeted by one star catcher
+            if(foundTarget.getIsFalling() == false && foundTarget.getIsTargeted() == false) {
+                if (foundTarget != null && foundTarget instanceof FallenStar) {
+                    // ManaMod.LOGGER.debug("ball found target!");
+                    // ManaMod.LOGGER.debug(pBlockEntity.target.toString());
+                    if(foundTarget.getIsTargeted() == false){
+                        foundTarget.setIsTargeted(true);
 
-//      boolean isNatural = level.dimensionType().natural();
-//      int dayTime = (int) ((level.getDayTime() * (isNatural ? 1 : 24)) % 24000);
-//      int hours = (dayTime / 1000 + 6) % 24;
-//      int minutes = (dayTime % 1000) * 60 / 1000;
+                        double bx = (double)pPos.getX();
+                        double by = (double)pPos.getY();
+                        double bz = (double)pPos.getZ();
+                        //normalize ??????
+                        Vec3 dirToCatcher = foundTarget.position().subtract(new Vec3(bx, by, bz));
+                        double distTo = foundTarget.position().subtract(new Vec3(bx, by, bz)).length();
+                        ManaMod.LOGGER.debug(dirToCatcher.toString());
+                        ManaMod.LOGGER.debug(String.valueOf(distTo));
 
-//      if (!isNatural) {
-//          if (level.isClientSide) {
-//              moveHands(hours, minutes);
+                        // for(int i = 0; i < 50; i++) {
+                            foundTarget.setPosRaw(foundTarget.position().x - dirToCatcher.x, foundTarget.position().y - dirToCatcher.y, foundTarget.position().z - dirToCatcher.z);
+                        // }
+                        dirToCatcher = foundTarget.position().subtract(new Vec3(bx, by, bz));
+                        if(dirToCatcher.x < 1 && dirToCatcher.y < 1 && dirToCatcher.z < 1){
+                            foundTarget.discardStar();
+                        }
+                    }
+                    
+                }
 
-//              if (AnimationTickHolder.getTicks() % 6 == 0)
-//                  playSound(SoundEvents.NOTE_BLOCK_HAT, 1 / 16f, 2f);
-//              else if (AnimationTickHolder.getTicks() % 3 == 0)
-//                  playSound(SoundEvents.NOTE_BLOCK_HAT, 1 / 16f, 1.5f);
-//          }
-//          return;
-//      }
+                
+            }else{
+                
+            }
+            
+    }
 
-//      if (!level.isClientSide) {
-//          if (animationType == Animation.NONE) {
-//              if (hours == 12 && minutes < 5)
-//                  startAnimation(Animation.PIG);
-//              if (hours == 18 && minutes < 36 && minutes > 31)
-//                  startAnimation(Animation.CREEPER);
-//          } else {
-//              float value = animationProgress.getValue();
-//              animationProgress.setValue(value + 1);
-//              if (value > 100)
-//                  animationType = Animation.NONE;
+    if (pBlockEntity.target != null && foundTarget instanceof FallenStar) {
+        // ManaMod.LOGGER.debug("ball found target!");
+        // ManaMod.LOGGER.debug(pBlockEntity.target.toString());
+        if(!pBlockEntity.target.getIsFalling()){
+            // pBlockEntity.target.discardStar();
+            pBlockEntity.target.setPosRaw(pBlockEntity.target.position().x + 0.5, pBlockEntity.target.position().y + 0.5, pBlockEntity.target.position().z + 0.5);
+        }
+    
+    }
+}
 
-//              if (animationType == Animation.SURPRISE && Mth.equal(animationProgress.getValue(), 50)) {
-//                  Vec3 center = VecHelper.getCenterOf(worldPosition);
-//                  level.destroyBlock(worldPosition, false);
-//                  level.explode(null, CUCKOO_SURPRISE, null, center.x, center.y, center.z, 3, false,
-//                      Explosion.BlockInteraction.BREAK);
-//              }
+// private static void setTarget(LivingEntity pTarget) {
+//     target = pTarget;
+// }
 
-//          }
-//      }
-
-//      if (level.isClientSide) {
-//          moveHands(hours, minutes);
-
-//          if (animationType == Animation.NONE) {
-//              if (AnimationTickHolder.getTicks() % 32 == 0)
-//                  playSound(SoundEvents.NOTE_BLOCK_HAT, 1 / 16f, 2f);
-//              else if (AnimationTickHolder.getTicks() % 16 == 0)
-//                  playSound(SoundEvents.NOTE_BLOCK_HAT, 1 / 16f, 1.5f);
-//          } else {
-
-//              boolean isSurprise = animationType == Animation.SURPRISE;
-//              float value = animationProgress.getValue();
-//              animationProgress.setValue(value + 1);
-//              if (value > 100)
-//                  animationType = null;
-
-//              // sounds
-
-//              if (value == 1)
-//                  playSound(SoundEvents.NOTE_BLOCK_CHIME, 2, .5f);
-//              if (value == 21)
-//                  playSound(SoundEvents.NOTE_BLOCK_CHIME, 2, 0.793701f);
-
-//              if (value > 30 && isSurprise) {
-//                  Vec3 pos = VecHelper.offsetRandomly(VecHelper.getCenterOf(this.worldPosition), level.random, .5f);
-//                  level.addParticle(ParticleTypes.LARGE_SMOKE, pos.x, pos.y, pos.z, 0, 0, 0);
-//              }
-//              if (value == 40 && isSurprise)
-//                  playSound(SoundEvents.TNT_PRIMED, 1f, 1f);
-
-//              int step = isSurprise ? 3 : 15;
-//              for (int phase = 30; phase <= 60; phase += step) {
-//                  if (value == phase - step / 3)
-//                      playSound(SoundEvents.CHEST_OPEN, 1 / 16f, 2f);
-//                  if (value == phase) {
-//                      if (animationType == Animation.PIG)
-//                          playSound(SoundEvents.PIG_AMBIENT, 1 / 4f, 1f);
-//                      else
-//                          playSound(SoundEvents.CREEPER_HURT, 1 / 4f, 3f);
-//                  }
-//                  if (value == phase + step / 3)
-//                      playSound(SoundEvents.CHEST_CLOSE, 1 / 16f, 2f);
-
-//              }
-
-//          }
-
-//          return;
-//      }
-//  }
-
-//    private void resolveEnemyTarget() {
-//     // Handle entity target "homing"
-//     AABB aabb = this.owner.getBoundingBox().inflate(64.0D, 24.0D, 64.0D);
-//     List<? extends LivingEntity> candidates = this.level.getNearbyEntities(LivingEntity.class,
-//             TargetingConditions.forNonCombat().range(64.0D),
-//             this.owner, aabb);
-
-//     LivingEntity foundTarget = null;
-//     double shortestDist = Double.MAX_VALUE;
-//     for (LivingEntity livingentity : candidates) {
-
-//             foundTarget = livingentity;
-
-//             BlockPos catchPos = this.getBlockPos();
-//             Vec3 entityPos = foundTarget.position();
-//             this.target = foundTarget;
-        
-//     }
-
-//     if (this.target != null) {
-//         ManaMod.LOGGER.debug("ball found target!");
-//     }
+// private static LivingEntity getTarget(){
+//     return target;
 // }
 
    private static void craftItem(StarCatcherEntityBlock entity) {

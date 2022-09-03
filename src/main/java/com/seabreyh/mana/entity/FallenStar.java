@@ -54,6 +54,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     private boolean isFalling = true;
     private boolean playerWishedOn = false;
     private Player ownPlayer;
+    private boolean isTargeted = false;
 
     private final SoundEvent HIT_SOUND = SoundEvents.AMETHYST_BLOCK_BREAK;
     private final SoundEvent FALL_SOUND = SoundEvents.AMETHYST_BLOCK_CHIME;
@@ -65,6 +66,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         super(getEntity, world);
         this.isFalling = true;
         this.dimensions = getEntity.getDimensions();
+
     }
 
     public FallenStar(EntityType<? extends FallenStar> getEntity, Level world, Player ownPlayer) {
@@ -96,6 +98,18 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         float f1 = -Mth.sin((p_37253_ + p_37255_) * ((float) Math.PI / 180F));
         float f2 = Mth.cos(p_37254_ * ((float) Math.PI / 180F)) * Mth.cos(p_37253_ * ((float) Math.PI / 180F));
         this.shoot((double) f, (double) f1, (double) f2, p_37256_, p_37257_);
+    }
+
+    public boolean getIsFalling() {
+        return this.isFalling;
+    }
+
+    public boolean getIsTargeted() {
+        return this.isTargeted;
+    }
+
+    public void setIsTargeted(boolean isTargeted) {
+        this.isTargeted = isTargeted;
     }
 
     public void tick() {
