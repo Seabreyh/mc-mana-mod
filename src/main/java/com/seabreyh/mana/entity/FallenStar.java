@@ -441,6 +441,10 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         this.discard();
     }
 
+    public void toStarCatcher(){
+        
+    }
+
     @Override
     protected void tickDespawn() {
         ++this.age;

@@ -2,6 +2,7 @@ package com.seabreyh.mana.blocks.entity;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.entity.FallenStar;
+import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaItems;
 import com.seabreyh.mana.screen.StarCatcherMenu;
@@ -151,36 +152,35 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
                         double bx = (double)pPos.getX();
                         double by = (double)pPos.getY();
                         double bz = (double)pPos.getZ();
+
+                        double sx = foundTarget.getX();
+                        double sy = foundTarget.getY();
+                        double sz = foundTarget.getZ();
+                        
                         //normalize ??????
                         Vec3 dirToCatcher = foundTarget.position().subtract(new Vec3(bx, by, bz));
                         double distTo = foundTarget.position().subtract(new Vec3(bx, by, bz)).length();
                         ManaMod.LOGGER.debug(dirToCatcher.toString());
                         ManaMod.LOGGER.debug(String.valueOf(distTo));
 
-                        // for(int i = 0; i < 50; i++) {
+                        for(double i = distTo; i >= 0; i--) {
                             // foundTarget.setPosRaw(foundTarget.position().x - dirToCatcher.x, foundTarget.position().y - dirToCatcher.y, foundTarget.position().z - dirToCatcher.z);
-                        // }
-                        // foundTarget.setNoGravity(true);
-
-                            //take 5 seconds to get into jar
-                            //20 ticks per second - 100 ticks = 5 seconds
-
-                            dirToCatcher = foundTarget.position().subtract(new Vec3(bx, by, bz));
-
-                            // foundTarget.setDeltaMovement(1,1,1);
-                            // foundTarget.setDeltaMovement(foundTarget.getDeltaMovement().scale(0.75D).add(foundTarget.getDeltaMovement().normalize().scale(2)));
-                        
-
-                        
-                        dirToCatcher = foundTarget.position().subtract(new Vec3(bx, by, bz));
-                        if(dirToCatcher.x < 1 && dirToCatcher.y < 1 && dirToCatcher.z < 1){
-                            craftItem(pBlockEntity);
-                            foundTarget.discardStar();
+                            plevel.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_FALLING_STAR.get(), 
+                            sx - ((dirToCatcher.x - 0.5)/i),
+                            sy - ((dirToCatcher.y - 0.5)/i), 
+                            sz - ((dirToCatcher.z - 0.5)/i),
+                            0,0,0);
+                            
+                            sx = sx - ((dirToCatcher.x - 0.5)/i);
+                            sy = sy - ((dirToCatcher.y- 0.5) /i);
+                            sz = sz - ((dirToCatcher.z - 0.5)/i);
                         }
-                    }
-                    
-                }
 
+                    }
+                    craftItem(pBlockEntity);
+                    foundTarget.discardStar();
+                }
+               
                 
             }else{
                 
