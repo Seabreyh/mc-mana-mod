@@ -5,9 +5,6 @@ import java.util.Random;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.blocks.entity.StarCatcherEntityBlock;
 import com.seabreyh.mana.event.player.PlayerWishEvent;
-import com.seabreyh.mana.event.player.PlayerWishEvent.WishType;
-import com.seabreyh.mana.items.GrantedWishItem;
-import com.seabreyh.mana.items.SealedWishItem;
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaItems;
 
@@ -65,9 +62,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
     private final SoundEvent HIT_SOUND = SoundEvents.AMETHYST_BLOCK_BREAK;
     private final SoundEvent FALL_SOUND = SoundEvents.AMETHYST_BLOCK_CHIME;
-    // private final SoundEvent STAR_BOOM = ManaSounds.STAR_BOOM.get();
     private final SoundEvent BUBBLE = SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT;
-    private final ItemStack SPYGLASS_ITEM = new ItemStack(Items.SPYGLASS);
 
     public FallenStar(EntityType<? extends FallenStar> getEntity, Level world) {
         super(getEntity, world);
@@ -127,65 +122,64 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
     public void tick() {
 
+        //Star Catcher -------------------------------------
         //SPEED TO MOVE STAR
         double catchSpeed = 0.8D;
-        
         if(moveToCatcher){
             //Move to the star catcher
             this.pickup = AbstractArrow.Pickup.DISALLOWED;
             this.setNoPhysics(true);
             Vec3 vec3 = new Vec3(catcherPos.getX(), catcherPos.getY(), catcherPos.getZ()).subtract(this.position().x, this.position().y, this.position().z);
             this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.115D * (double)catchSpeed, this.getZ());
+
             if (this.level.isClientSide) {
                this.yOld = this.getY();
             }
 
             double d0 = 0.05D * (double)catchSpeed;
             this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vec3.normalize().scale(d0)));
+
             if (this.clientSideCatchStarTickCount == 0) {
-               this.playSound(SoundEvents.EVOKER_CAST_SPELL, 4.0F, 1.0F);
+               this.playSound(SoundEvents.EVOKER_CAST_SPELL, 3.0F, 1.0F);
             }
 
-            //If withing 0.5 blocks of catcher, catch.
+            //If within 0.7 blocks of catcher, catch.
             if(Math.abs(vec3.x) < 0.7 && Math.abs(vec3.y) < 0.7 && Math.abs(vec3.z) < 0.7){
-                this.playSound(SoundEvents.BOTTLE_FILL_DRAGONBREATH, 4.0F, 1.0F);
+                this.playSound(SoundEvents.BOTTLE_FILL_DRAGONBREATH, 2.0F, 1.0F);
                 StarCatcherEntityBlock.craftItem(pBlockEntity);
                 discardStar();
             }
 
             ++this.clientSideCatchStarTickCount;
         }
+        //End Star Catcher -------------------------------------
 
         //SUPER TICK ----------- <<<
         super.tick();
         //SUPER TICK ----------- <<<
 
         currentTime = this.level.getTimeOfDay(1.0F);
-
         if (currentTime > 0.75) {
             discardStar();
         }
-
         if (this.age != -32768) {
             ++this.age;
         }
 
-        if (this.isFalling && this.ownPlayer != null && this.ownPlayer.getUseItem().is(Items.SPYGLASS)
-                && !this.playerWishedOn) {
-
+        if (this.isFalling && this.ownPlayer != null && this.ownPlayer.getUseItem().is(Items.SPYGLASS) && !this.playerWishedOn) {
             Vec3 dirPlayerToStar = this.position().subtract(this.ownPlayer.position());
             dirPlayerToStar = new Vec3(dirPlayerToStar.x, 0.0, dirPlayerToStar.z).normalize();
-
             float playerRotX = this.ownPlayer.getXRot();
             float playerRotY = this.ownPlayer.getYRot();
+
             float shootX = -Mth.sin(playerRotY * ((float) Math.PI / 180F))
                     * Mth.cos(playerRotX * ((float) Math.PI / 180F));
             float shootZ = Mth.cos(playerRotY * ((float) Math.PI / 180F))
                     * Mth.cos(playerRotX * ((float) Math.PI / 180F));
 
             Vec3 dirPlayerLooking = new Vec3(shootX, 0.0, shootZ).normalize();
-
             double playerSeesStar = dirPlayerToStar.dot(dirPlayerLooking);
+
             if (playerSeesStar > 0.98 && playerRotX <= -15F) {
                 ManaMod.LOGGER.debug("PLAYER SPOTS STAR THROUGH SPYGLASS");
                 PlayerWishEvent.starGrantPlayerWish(this.ownPlayer, level);
@@ -235,12 +229,12 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                 this.tickDespawn();
             }
             ++this.inGroundTime;
+
         } else {
             this.inGroundTime = 0;
             Vec3 vec32 = this.position();
             Vec3 vec33 = vec32.add(vec3);
-            HitResult hitresult = this.level
-                    .clip(new ClipContext(vec32, vec33, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+            HitResult hitresult = this.level.clip(new ClipContext(vec32, vec33, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
 
             if (hitresult.getType() != HitResult.Type.MISS) {
                 vec33 = hitresult.getLocation();
@@ -294,30 +288,28 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                             this.getZ() + this.random.nextGaussian() * 0.5,
                             0D, 0.4D, 0D);
                 }
-
                 if (this.age % 2 == 0) {
                     this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND,
                             SoundSource.AMBIENT, 20.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
-
                 }
-            }else if(!this.isOnGround() && moveToCatcher){
-                for (int i = 0; i < 6; ++i) {    
-                    
-                //play star catcher particles
-                this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_FALLING_STAR.get(),
-                this.getX() + deltaX * (double) i / 4.0D - deltaX * 1.5,
-                this.getY() + deltaY * (double) i / 4.0D - deltaY * 1.5 + 0.48D,
-                this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 1.5, 
-                -deltaX,
-                -deltaY,
-                -deltaZ);
 
-                this.level.addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
+            }else if(!this.isOnGround() && moveToCatcher){
+                //play star catcher particles
+                for (int i = 0; i < 4; ++i) {    
+                    this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_STAR_CATCHER.get(),
+                        this.getX() + deltaX * (double) i / 4.0D - deltaX * 1.5,
+                        this.getY() + deltaY * (double) i / 4.0D - deltaY * 1.5 + 0.48D,
+                        this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 1.5, 
+                        -deltaX,
+                        -deltaY,
+                        -deltaZ);
+
+                    this.level.addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
                         this.getX() + this.random.nextGaussian() * 0.5,
                         this.getY() + this.random.nextGaussian() * 0.7,
                         this.getZ() + this.random.nextGaussian() * 0.5,
-                        0D, 0.4D, 0D);}
-
+                        0D, 0.4D, 0D);
+                }
                 if (this.age % 2 == 0) {
                     this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND,
                             SoundSource.AMBIENT, 5.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
@@ -352,7 +344,6 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         }
 
         if (this.level.isClientSide) {
-
             if (this.age % 3 == 0) {
                 this.level.addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
                         this.getX() + this.random.nextGaussian() * 0.3,
@@ -371,7 +362,6 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                         this.getY() + 1 + this.random.nextGaussian() * 0.2,
                         this.getZ() + this.random.nextGaussian() * 0.2,
                         0D, 2D, 0D);
-
             }
         }
 
@@ -562,8 +552,6 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
     @Override
     public boolean test(EntityType<?> p_47107_, BlockPos p_47108_, ChunkAccess p_47109_) {
-        // TODO Auto-generated method stub
         return false;
     }
-
 }

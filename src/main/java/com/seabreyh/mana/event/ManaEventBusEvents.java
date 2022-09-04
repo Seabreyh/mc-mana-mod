@@ -4,6 +4,7 @@ import com.seabreyh.mana.particle.MagicPloomParticleDefault;
 import com.seabreyh.mana.particle.MagicPloomParticleFallingStar;
 import com.seabreyh.mana.particle.MagicPloomParticleFire;
 import com.seabreyh.mana.particle.MagicPloomParticleGreen;
+import com.seabreyh.mana.particle.MagicPloomParticleStarCatcher;
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.particle.TwinkleParticle;
 
@@ -31,6 +32,9 @@ public class ManaEventBusEvents {
 
                 Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_FIRE.get(),
                                 MagicPloomParticleFire.Provider::new);
+
+                Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_STAR_CATCHER.get(),
+                                MagicPloomParticleStarCatcher.Provider::new);
 
                 Minecraft.getInstance().particleEngine.register(ManaParticles.TWINKLE_PARTICLE.get(),
                                 TwinkleParticle.Provider::new);
