@@ -1,6 +1,7 @@
 package com.seabreyh.mana.particle;
 
 import java.util.Random;
+
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;

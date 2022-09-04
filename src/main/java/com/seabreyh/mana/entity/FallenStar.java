@@ -1,12 +1,12 @@
 package com.seabreyh.mana.entity;
 
-import java.util.Random;
-
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.blocks.entity.StarCatcherEntityBlock;
 import com.seabreyh.mana.event.player.PlayerWishEvent;
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaItems;
+
+import java.util.Random;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -68,7 +68,6 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         super(getEntity, world);
         this.isFalling = true;
         this.dimensions = getEntity.getDimensions();
-
     }
 
     public FallenStar(EntityType<? extends FallenStar> getEntity, Level world, Player ownPlayer) {
@@ -146,6 +145,10 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                StarCatcherEntityBlock.setRotationSpeed(60.0F, pBlockEntity);
             }
 
+            if(pBlockEntity == null){
+                ManaMod.LOGGER.debug("pBlockEntity is null");
+            }
+
             //If within 0.7 blocks of catcher, catch.
             if(Math.abs(vec3.x) < 0.7 && Math.abs(vec3.y) < 0.7 && Math.abs(vec3.z) < 0.7){
                 StarCatcherEntityBlock.setRotationSpeed(10.0F, pBlockEntity);
@@ -153,8 +156,6 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                 StarCatcherEntityBlock.craftItem(pBlockEntity);
                 discardStar();
             }
-
-            
         }
         ++this.clientSideCatchStarTickCount;
         //End Star Catcher -------------------------------------

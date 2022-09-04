@@ -1,5 +1,16 @@
 package com.seabreyh.mana.entity;
 
+import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.particle.ManaParticles;
+import com.seabreyh.mana.registry.ManaEntities;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.function.Predicate;
+import javax.annotation.Nullable;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
+
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.util.Mth;
@@ -17,25 +28,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-
-import java.util.List;
-import java.util.function.Predicate;
-
-import javax.annotation.Nullable;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.level.ClipContext;
-
-import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.particle.ManaParticles;
-import com.seabreyh.mana.registry.ManaEntities;
-
-import javax.annotation.Nonnull;
 
 public class EmeraldEnergyBall extends ThrowableProjectile {
     private int life;
@@ -45,7 +42,7 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
     private LivingEntity owner;
     private LivingEntity target;
 
-    private final TargetingConditions missileTargeting = TargetingConditions.forCombat().range(64.0D);
+    // private final TargetingConditions missileTargeting = TargetingConditions.forCombat().range(64.0D);
 
     public EmeraldEnergyBall(Level world, LivingEntity player) {
         super(ManaEntities.EMERALD_ENERGY_BALL.get(), player, world);
@@ -57,7 +54,6 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         this.life = 0;
         this.shootDir = null;
         this.owner = player;
-        ManaMod.LOGGER.debug("### EMERALD ENERGY BALL");
 
     }
 
@@ -237,12 +233,6 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                             this.random.nextGaussian() * 0.1D);
 
                 }
-                // double d6 = d1 - this.getX();
-                // double d7 = d2 - this.getY();
-                // double d4 = d3 - this.getZ();
-                // this.targetDeltaX = d6 / d5 * 0.15D;
-                // this.targetDeltaY = d7 / d5 * 0.15D;
-                // this.targetDeltaZ = d4 / d5 * 0.15D;
 
                 vec3 = this.getDeltaMovement();
                 double d5 = vec3.x;

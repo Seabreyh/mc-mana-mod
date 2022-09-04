@@ -1,17 +1,13 @@
 package com.seabreyh.mana.items;
 
-import java.util.List;
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.event.player.PlayerManaEvent;
-import com.seabreyh.mana.event.player.PlayerWishEvent.WishType;
 import com.seabreyh.mana.mana_stat.PlayerManaStatProvider;
 
+import java.util.List;
+import java.util.Random;
+import javax.annotation.Nullable;
+
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
@@ -23,7 +19,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import com.seabreyh.mana.event.player.PlayerWishEvent;
 
 public class ManaCrystal extends Item {
 

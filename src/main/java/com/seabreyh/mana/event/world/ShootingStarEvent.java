@@ -1,10 +1,9 @@
 package com.seabreyh.mana.event.world;
 
-import java.util.Random;
-
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.entity.FallenStar;
 import com.seabreyh.mana.registry.ManaEntities;
+
+import java.util.Random;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;

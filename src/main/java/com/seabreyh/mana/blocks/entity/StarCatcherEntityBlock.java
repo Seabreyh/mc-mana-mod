@@ -6,11 +6,8 @@ import com.seabreyh.mana.registry.ManaItems;
 import com.seabreyh.mana.screen.StarCatcherMenu;
 
 import java.util.List;
-import java.util.Random;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.NotNull;
 import com.google.common.collect.Lists;
 
@@ -22,7 +19,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -30,10 +26,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -45,7 +39,6 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
     private float activeRotation;
     private float rotationSpeed = 6F;
     private final List<BlockPos> effectBlocks = Lists.newArrayList();
-
     
     private final ItemStackHandler itemHandler = new ItemStackHandler(4) {
         @Override
@@ -168,14 +161,6 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
        entity.itemHandler.setStackInSlot(0, new ItemStack(ManaItems.FALLEN_STAR_ITEM.get(),
                entity.itemHandler.getStackInSlot(0).getCount() + 1));
    }
-
-//    private static boolean hasRecipe(StarCatcherEntityBlock entity) {
-//        boolean hasItemInWaterSlot = PotionUtils.getPotion(entity.itemHandler.getStackInSlot(0)) == Potions.WATER;
-//        boolean hasItemInFirstSlot = entity.itemHandler.getStackInSlot(1).getItem() == ManaItems.FALLEN_STAR_ITEM.get();
-//        boolean hasItemInSecondSlot = entity.itemHandler.getStackInSlot(2).getItem() == ManaItems.FALLEN_STAR_ITEM.get();
-
-//        return hasItemInWaterSlot && hasItemInFirstSlot && hasItemInSecondSlot;
-//    }
 
    private static boolean hasNotReachedStackLimit(StarCatcherEntityBlock entity) {
        return entity.itemHandler.getStackInSlot(0).getCount() < entity.itemHandler.getStackInSlot(0).getMaxStackSize();

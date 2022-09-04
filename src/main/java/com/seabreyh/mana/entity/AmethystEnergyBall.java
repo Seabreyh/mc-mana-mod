@@ -1,5 +1,9 @@
 package com.seabreyh.mana.entity;
 
+import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.particle.ManaParticles;
+import com.seabreyh.mana.registry.ManaEntities;
+
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.util.Mth;
@@ -21,10 +25,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 
-import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.particle.ManaParticles;
-import com.seabreyh.mana.registry.ManaEntities;
-
 import javax.annotation.Nonnull;
 
 public class AmethystEnergyBall extends ThrowableProjectile {
@@ -40,7 +40,6 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         this.noPhysics = true;
         this.life = 0;
         ManaMod.LOGGER.debug("### AMETHYST ENERGY BALL");
-
     }
 
     public AmethystEnergyBall(EntityType<? extends AmethystEnergyBall> p_37391_, Level p_37392_) {
