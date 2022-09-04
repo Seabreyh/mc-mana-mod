@@ -3,6 +3,7 @@ package com.seabreyh.mana.entity;
 import java.util.Random;
 
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.blocks.entity.StarCatcherEntityBlock;
 import com.seabreyh.mana.event.player.PlayerWishEvent;
 import com.seabreyh.mana.event.player.PlayerWishEvent.WishType;
 import com.seabreyh.mana.items.GrantedWishItem;
@@ -55,6 +56,12 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     private boolean playerWishedOn = false;
     private Player ownPlayer;
     private boolean isTargeted = false;
+    public AbstractArrow.Pickup pickup = AbstractArrow.Pickup.ALLOWED;
+
+    private boolean moveToCatcher = false;
+    private int clientSideCatchStarTickCount;
+    private BlockPos catcherPos;
+    private StarCatcherEntityBlock pBlockEntity;
 
     private final SoundEvent HIT_SOUND = SoundEvents.AMETHYST_BLOCK_BREAK;
     private final SoundEvent FALL_SOUND = SoundEvents.AMETHYST_BLOCK_CHIME;
@@ -112,8 +119,46 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         this.isTargeted = isTargeted;
     }
 
+    public void toStarCatcher(BlockPos catcherPos, StarCatcherEntityBlock pBlockEntity) {
+        this.catcherPos = catcherPos;
+        this.pBlockEntity = pBlockEntity;
+        this.moveToCatcher = true;
+    }
+
     public void tick() {
+
+        //SPEED TO MOVE STAR
+        double catchSpeed = 0.8D;
+        
+        if(moveToCatcher){
+            //Move to the star catcher
+            this.pickup = AbstractArrow.Pickup.DISALLOWED;
+            this.setNoPhysics(true);
+            Vec3 vec3 = new Vec3(catcherPos.getX(), catcherPos.getY(), catcherPos.getZ()).subtract(this.position().x, this.position().y, this.position().z);
+            this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.115D * (double)catchSpeed, this.getZ());
+            if (this.level.isClientSide) {
+               this.yOld = this.getY();
+            }
+
+            double d0 = 0.05D * (double)catchSpeed;
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vec3.normalize().scale(d0)));
+            if (this.clientSideCatchStarTickCount == 0) {
+               this.playSound(SoundEvents.EVOKER_CAST_SPELL, 4.0F, 1.0F);
+            }
+
+            //If withing 0.5 blocks of catcher, catch.
+            if(Math.abs(vec3.x) < 0.7 && Math.abs(vec3.y) < 0.7 && Math.abs(vec3.z) < 0.7){
+                this.playSound(SoundEvents.BOTTLE_FILL_DRAGONBREATH, 4.0F, 1.0F);
+                StarCatcherEntityBlock.craftItem(pBlockEntity);
+                discardStar();
+            }
+
+            ++this.clientSideCatchStarTickCount;
+        }
+
+        //SUPER TICK ----------- <<<
         super.tick();
+        //SUPER TICK ----------- <<<
 
         currentTime = this.level.getTimeOfDay(1.0F);
 
@@ -235,14 +280,13 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             double deltaY = vec3.y;
             double deltaZ = vec3.z;
 
-            if (!this.isOnGround()) {
+            if (!this.isOnGround() && !moveToCatcher) {
+                //play normal falling particles
                 for (int i = 0; i < 8; ++i) {
                     this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_FALLING_STAR.get(),
                             this.getX() + deltaX * (double) i / 4.0D - deltaX * 1.5,
                             this.getY() + deltaY * (double) i / 4.0D - deltaY * 1.5,
-                            this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 1.5, -deltaX,
-                            -deltaY + 0.2D,
-                            -deltaZ);
+                            this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 1.5, -deltaX, -deltaY + 0.2D, -deltaZ);
 
                     this.level.addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
                             this.getX() + this.random.nextGaussian() * 0.5,
@@ -254,6 +298,29 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                 if (this.age % 2 == 0) {
                     this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND,
                             SoundSource.AMBIENT, 20.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
+
+                }
+            }else if(!this.isOnGround() && moveToCatcher){
+                for (int i = 0; i < 6; ++i) {    
+                    
+                //play star catcher particles
+                this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_FALLING_STAR.get(),
+                this.getX() + deltaX * (double) i / 4.0D - deltaX * 1.5,
+                this.getY() + deltaY * (double) i / 4.0D - deltaY * 1.5 + 0.48D,
+                this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 1.5, 
+                -deltaX,
+                -deltaY,
+                -deltaZ);
+
+                this.level.addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
+                        this.getX() + this.random.nextGaussian() * 0.5,
+                        this.getY() + this.random.nextGaussian() * 0.7,
+                        this.getZ() + this.random.nextGaussian() * 0.5,
+                        0D, 0.4D, 0D);}
+
+                if (this.age % 2 == 0) {
+                    this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND,
+                            SoundSource.AMBIENT, 5.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
 
                 }
             }
@@ -325,7 +392,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                 (double) (this.random.nextFloat() * 0.2F), (double) (this.random.nextFloat() * 0.2F)));
         this.age = 0;
     }
-
+    
     @Override
     protected ItemStack getPickupItem() {
         return new ItemStack(ManaItems.FALLEN_STAR_ITEM.get());
@@ -407,7 +474,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     @Override
     public void playerTouch(Player player) {
         if (!this.level.isClientSide && (this.inGround || this.isNoPhysics()) && this.shakeTime <= 0) {
-            if (this.tryPickup(player)) {
+            if (this.tryPickup(player) && this.pickup == AbstractArrow.Pickup.ALLOWED) {
                 player.take(this, 1);
                 this.discard();
             }
@@ -415,7 +482,10 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     }
 
     protected boolean tryPickup(Player player) {
-        return player.getInventory().add(this.getPickupItem());
+        if(this.pickup == AbstractArrow.Pickup.ALLOWED){
+            return player.getInventory().add(this.getPickupItem());
+        }
+        return false;
     }
 
     public int getAge() {
@@ -439,10 +509,6 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                     1D, 1D, 1D, 0.3D);
         }
         this.discard();
-    }
-
-    public void toStarCatcher(){
-        
     }
 
     @Override

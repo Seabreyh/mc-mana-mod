@@ -30,4 +30,11 @@ public class ManaEntities {
                         "fallen_star",
                         () -> EntityType.Builder.<FallenStar>of(FallenStar::new, MobCategory.MISC)
                                         .build("fallen_star"));
+
+        // public static Object CAUGHT_STAR;
+        
+        // public static final RegistryObject<EntityType<FallenStar>> CAUGHT_STAR = ENTITIES.register(
+        //                 "caught_star",
+        //                 () -> EntityType.Builder.<FallenStar>of(FallenStar::new, MobCategory.MISC)
+        //                                 .build("caught_star"));
 }

@@ -10,5 +10,11 @@
         "sounds": [
           "mana:star_boom"
         ]
-      }
+      },
+      "star_capture": {
+          "subtitle": "sounds.mana.star_capture",
+          "sounds": [
+            "mana:star_capture"
+          ]
+        }
   }
