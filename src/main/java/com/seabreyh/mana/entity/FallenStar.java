@@ -125,7 +125,9 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         //Star Catcher -------------------------------------
         //SPEED TO MOVE STAR
         double catchSpeed = 0.8D;
-        if(moveToCatcher){
+        int timeTillStartCatch = 130;
+
+        if(moveToCatcher && clientSideCatchStarTickCount >= timeTillStartCatch){
             //Move to the star catcher
             this.pickup = AbstractArrow.Pickup.DISALLOWED;
             this.setNoPhysics(true);
@@ -139,19 +141,22 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             double d0 = 0.05D * (double)catchSpeed;
             this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vec3.normalize().scale(d0)));
 
-            if (this.clientSideCatchStarTickCount == 0) {
-               this.playSound(SoundEvents.EVOKER_CAST_SPELL, 3.0F, 1.0F);
+            if (this.clientSideCatchStarTickCount == timeTillStartCatch) {
+               this.playSound(SoundEvents.EVOKER_CAST_SPELL, 2.0F, 1.0F);
+               StarCatcherEntityBlock.setRotationSpeed(60.0F, pBlockEntity);
             }
 
             //If within 0.7 blocks of catcher, catch.
             if(Math.abs(vec3.x) < 0.7 && Math.abs(vec3.y) < 0.7 && Math.abs(vec3.z) < 0.7){
+                StarCatcherEntityBlock.setRotationSpeed(10.0F, pBlockEntity);
                 this.playSound(SoundEvents.BOTTLE_FILL_DRAGONBREATH, 2.0F, 1.0F);
                 StarCatcherEntityBlock.craftItem(pBlockEntity);
                 discardStar();
             }
 
-            ++this.clientSideCatchStarTickCount;
+            
         }
+        ++this.clientSideCatchStarTickCount;
         //End Star Catcher -------------------------------------
 
         //SUPER TICK ----------- <<<

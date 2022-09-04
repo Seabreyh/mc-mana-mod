@@ -37,8 +37,6 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 @OnlyIn(Dist.CLIENT)
 public class CaughtStarRenderer implements BlockEntityRenderer<StarCatcherEntityBlock>{
 
-
-
     private static final ResourceLocation TEXTURE = new ResourceLocation(ManaMod.MOD_ID,
             "textures/entity/fallen_star/fallen_star.png");
     private static final float SIN_45 = (float) Math.sin((Math.PI / 4D));
@@ -65,38 +63,35 @@ public class CaughtStarRenderer implements BlockEntityRenderer<StarCatcherEntity
     @Override
     public void render(StarCatcherEntityBlock entityBlock, float partialTicks, PoseStack stack,
             MultiBufferSource buffer, int combinedOverlay, int packedLight) {
-                float animSpeed = 1.0F;
-                stack.pushPose();
-                float f = getY(entityBlock, partialTicks);
-                float f1 = (partialTicks * animSpeed) * 5.0F;
 
+                stack.pushPose();
+                float f1 = entityBlock.getActiveRotation(partialTicks) * (180F / (float)Math.PI);
+                
                 VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entityTranslucent(TEXTURE, true));
                 stack.pushPose();
                 stack.scale(0.5F, 0.5F, 0.5F);
                 stack.translate(1D, 0D, 1D);
-                int i = OverlayTexture.NO_OVERLAY;
-                stack.mulPose(Vector3f.YP.rotationDegrees(2));
-                stack.translate(0.0D, (double) (1.5F + f / 2.0F), 0.0D);
 
-                stack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F, true));
+                int i = OverlayTexture.NO_OVERLAY;
+                
+                stack.mulPose(Vector3f.YP.rotationDegrees(f1));
+
+                stack.translate(0D, 0.93D, 0D);
+
+                stack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 55.0F, true));
                 this.glass.render(stack, vertexconsumer, 6029544, i);
+                
                 stack.scale(0.875F, 0.875F, 0.875F);
                 stack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F, true));
-                stack.mulPose(Vector3f.YP.rotationDegrees(20));
-                stack.scale(0.65F, 0.65F, 0.65F);
-                this.cube.render(stack, vertexconsumer, 6029544, i);
-                stack.popPose();
-                stack.popPose();
+                stack.mulPose(Vector3f.YP.rotationDegrees(f1));
+                stack.scale(0.6F, 0.6F, 0.6F);
 
-              
-        
+                this.cube.render(stack, vertexconsumer, 6029544, i);
+
+                stack.popPose();
+                stack.popPose();
     }
-    public static float getY(StarCatcherEntityBlock p_114159_, float partialTicks) {
-        float f = (float) partialTicks + 2;
-        float f1 = Mth.sin(f * 0.2F) / 2.0F + 0.5F;
-        f1 = (f1 * f1 + f1) * 0.4F;
-        return f1 - 1.4F;
-    }
+    
     public ResourceLocation getTextureLocation(FallenStar p_114157_) {
         return TEXTURE;
     }
