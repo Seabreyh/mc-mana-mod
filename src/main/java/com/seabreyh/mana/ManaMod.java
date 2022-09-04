@@ -8,9 +8,9 @@ import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaBlocks;
 import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaItems;
+import com.seabreyh.mana.registry.ManaSounds;
 import com.seabreyh.mana.screen.ManaMenuTypes;
 import com.seabreyh.mana.screen.StarCatcherScreen;
-import com.seabreyh.mana.sound.ManaSounds;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.level.block.Block;
@@ -65,6 +65,7 @@ public class ManaMod {
     private void clientSetup(final FMLClientSetupEvent event) {
         ManaClientEvents.registerEntityRenderers(event);
         ManaClientEvents.registerBlockRenderers(event);
+        ManaClientEvents.registerBlockEntityRenderers(event);
         ManaClientEvents.registerOverlays(event);
         // ClientSetup.registerMenuScreens(event);
         MenuScreens.register(ManaMenuTypes.STAR_CATCHER_MENU.get(), StarCatcherScreen::new);

@@ -18,5 +18,7 @@
 
     "block.mana.star_catcher": "Star Catcher",
 
-    "itemGroup.manaModTab": "Mana"
+    "itemGroup.manaModTab": "Mana",
+
+    "sounds.mana.star_capture": "Caught star"
 }

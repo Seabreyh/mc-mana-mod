@@ -6,7 +6,6 @@ import com.seabreyh.mana.entity.AmethystEnergyBall;
 import com.seabreyh.mana.event.player.PlayerManaEvent;
 
 import java.util.Random;
-
 import org.slf4j.Logger;
 
 import net.minecraft.core.BlockPos;

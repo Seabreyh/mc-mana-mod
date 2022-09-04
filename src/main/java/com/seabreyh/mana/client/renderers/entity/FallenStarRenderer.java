@@ -1,11 +1,12 @@
-package com.seabreyh.mana.client.renderers;
+package com.seabreyh.mana.client.renderers.entity;
+
+import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.entity.FallenStar;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.entity.FallenStar;
 
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;

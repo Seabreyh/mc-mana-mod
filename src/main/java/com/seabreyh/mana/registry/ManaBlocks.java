@@ -1,8 +1,9 @@
 package com.seabreyh.mana.registry;
 
-import com.google.common.base.Supplier;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.blocks.StarCatcher;
+
+import com.google.common.base.Supplier;
 
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -24,7 +25,7 @@ public class ManaBlocks {
     //INFO: If you want to make a basic block, you dont need to create a class for that block, just replace new StarCatcher with Block
     public static final RegistryObject<Block> STAR_CATCHER =  registerBlock("star_catcher", 
     () -> new StarCatcher(BlockBehaviour.Properties.of(Material.STONE)
-    .strength(0.2f).destroyTime(0.2f).noOcclusion()), 
+    .strength(0.2f).destroyTime(0.2f).noOcclusion().lightLevel(BlockState -> 15)),
     ModCreativeTab.instance);
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab) {

@@ -5,7 +5,6 @@ import com.seabreyh.mana.ManaMod;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.registries.DeferredRegister;
-
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -27,4 +26,7 @@ public class ManaParticles {
 
         public static final RegistryObject<SimpleParticleType> TWINKLE_PARTICLE = PARTICLE_TYPES
                         .register("twinkle_particle", () -> new SimpleParticleType(true));
+
+        public static final RegistryObject<SimpleParticleType> MAGIC_PLOOM_PARTICLE_STAR_CATCHER = PARTICLE_TYPES
+                        .register("magic_ploom_particle_star_catcher", () -> new SimpleParticleType(true));
 }

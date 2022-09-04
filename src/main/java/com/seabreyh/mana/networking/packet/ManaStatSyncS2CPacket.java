@@ -1,18 +1,11 @@
 package com.seabreyh.mana.networking.packet;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.network.NetworkEvent;
+import com.seabreyh.mana.client.ClientManaStatData;
 
 import java.util.function.Supplier;
 
-import com.seabreyh.mana.client.ClientManaStatData;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 
 public class ManaStatSyncS2CPacket {
     private final int mana_stat;

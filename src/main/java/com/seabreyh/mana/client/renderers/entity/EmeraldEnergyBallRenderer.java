@@ -1,6 +1,6 @@
-package com.seabreyh.mana.client.renderers;
+package com.seabreyh.mana.client.renderers.entity;
 
-import com.seabreyh.mana.entity.AmethystEnergyBall;
+import com.seabreyh.mana.entity.EmeraldEnergyBall;
 
 import net.minecraft.client.model.ShulkerBulletModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -11,19 +11,19 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class AmethystEnergyBallRenderer extends EntityRenderer<AmethystEnergyBall> {
+public class EmeraldEnergyBallRenderer extends EntityRenderer<EmeraldEnergyBall> {
 
     private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/entity/shulker/spark.png");
     // private static final RenderType RENDER_TYPE =
     // RenderType.entityTranslucent(TEXTURE_LOCATION);
-    private final ShulkerBulletModel<AmethystEnergyBall> model;
+    private final ShulkerBulletModel<EmeraldEnergyBall> model;
 
-    public AmethystEnergyBallRenderer(EntityRendererProvider.Context manager) {
+    public EmeraldEnergyBallRenderer(EntityRendererProvider.Context manager) {
         super(manager);
         this.model = new ShulkerBulletModel<>(manager.bakeLayer(ModelLayers.SHULKER_BULLET));
     }
 
-    public ResourceLocation getTextureLocation(AmethystEnergyBall p_115860_) {
+    public ResourceLocation getTextureLocation(EmeraldEnergyBall p_115860_) {
         return TEXTURE_LOCATION;
     }
 }

@@ -1,10 +1,9 @@
 package com.seabreyh.mana.event.world;
 
-import java.util.Random;
-
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.entity.FallenStar;
 import com.seabreyh.mana.registry.ManaEntities;
+
+import java.util.Random;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -35,7 +34,6 @@ public class ShootingStarEvent {
 
                     Vec3 shootPos = thisPlayer.position().add(new Vec3(shootXOffset, shootYOffset, shootZOffset));
                     shootingStar.setPos(shootPos);
-                    ManaMod.LOGGER.debug("SHOOT STAR at " + shootPos);
 
                     float randShootDirAngle = random.nextFloat() * 360.0F;
                     float randShootSteepAngle = random.nextFloat() * -45.0F;

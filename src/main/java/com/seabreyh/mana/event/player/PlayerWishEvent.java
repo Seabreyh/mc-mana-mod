@@ -1,25 +1,21 @@
 package com.seabreyh.mana.event.player;
 
-import java.util.Random;
-
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.items.SealedWishItem;
 import com.seabreyh.mana.networking.ManaMessages;
 import com.seabreyh.mana.networking.packet.ChoseWishC2SPacket;
 import com.seabreyh.mana.registry.ManaItems;
 
-import net.minecraft.client.Minecraft;
+import java.util.Random;
+
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.DistExecutor;
 
 public class PlayerWishEvent {
-    private final static SoundEvent WISH_GRANTED_SOUND = SoundEvents.FIREWORK_ROCKET_LAUNCH;
 
     public enum WishType {
         WEATHER_CLEAR, WEATHER_STORM, SUMMON_STAR_FRIEND

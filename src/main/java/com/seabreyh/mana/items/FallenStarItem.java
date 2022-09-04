@@ -1,11 +1,10 @@
 package com.seabreyh.mana.items;
 
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.event.player.PlayerManaEvent;
+
+import java.util.Random;
+import javax.annotation.Nullable;
 
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

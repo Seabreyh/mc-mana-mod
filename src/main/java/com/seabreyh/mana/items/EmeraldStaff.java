@@ -1,13 +1,9 @@
 package com.seabreyh.mana.items;
 
-import com.mojang.logging.LogUtils;
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.entity.EmeraldEnergyBall;
 import com.seabreyh.mana.event.player.PlayerManaEvent;
 
 import java.util.Random;
-
-import org.slf4j.Logger;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -21,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class EmeraldStaff extends Item {
-    private static final Logger LOGGER = LogUtils.getLogger();
 
     public EmeraldStaff(Properties properties) {
         super(properties);

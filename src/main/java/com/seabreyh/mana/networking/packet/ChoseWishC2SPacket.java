@@ -1,32 +1,17 @@
 package com.seabreyh.mana.networking.packet;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.network.NetworkEvent;
+import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.event.player.PlayerWishEvent;
+import com.seabreyh.mana.event.player.PlayerWishEvent.WishType;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.event.player.PlayerWishEvent;
-import com.seabreyh.mana.event.player.PlayerWishEvent.WishType;
-import com.seabreyh.mana.items.SealedWishItem;
-import com.seabreyh.mana.mana_stat.PlayerManaStatProvider;
-import com.seabreyh.mana.networking.ManaMessages;
-import com.seabreyh.mana.registry.ManaItems;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.network.NetworkEvent;
 
 public class ChoseWishC2SPacket {
     private static final String MESSAGE_REGEN_MANA = "message.mana.regen_mana";

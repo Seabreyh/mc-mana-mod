@@ -1,8 +1,8 @@
 package com.seabreyh.mana.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.client.ClientManaStatData;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;

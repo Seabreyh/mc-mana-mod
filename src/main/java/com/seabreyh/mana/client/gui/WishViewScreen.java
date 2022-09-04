@@ -1,5 +1,7 @@
 package com.seabreyh.mana.client.gui;
 
+import com.seabreyh.mana.event.player.PlayerWishEvent;
+
 import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
@@ -8,8 +10,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.event.player.PlayerWishEvent;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,17 +17,12 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import javax.annotation.Nullable;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.chat.NarratorChatListener;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
@@ -35,9 +30,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.WrittenBookItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -102,7 +94,7 @@ public class WishViewScreen extends Screen {
 
     protected void createPageControlButtons() {
         int i = (this.width - 192) / 2;
-        int j = 2;
+        // int j = 2;
         this.forwardButton = this.addRenderableWidget(new PageButton(i + 116, 159, true, (p_98297_) -> {
             this.pageForward();
         }, this.playTurnSound));
@@ -160,7 +152,7 @@ public class WishViewScreen extends Screen {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, BOOK_LOCATION);
         int i = (this.width - 192) / 2;
-        int j = 2;
+        // int j = 2;
         this.blit(p_98282_, i, 2, 0, 0, 192, 192);
         if (this.cachedPage != this.currentPage) {
             FormattedText formattedtext = this.getPageRaw(this.currentPage);
