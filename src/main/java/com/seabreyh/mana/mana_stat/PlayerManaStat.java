@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 
 public class PlayerManaStat {
 
-    private final int STARTING_MAX_MANA = 10;
+    private final int STARTING_MAX_MANA = 2;
     private final int MIN_MANA_VAL = 0;
     private final int ABSOLUTE_MAX_MANA_VAL = 20;
 
