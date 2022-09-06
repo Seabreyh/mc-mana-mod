@@ -16,7 +16,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 
 
-version = 'v0.0.3'
+version = 'v0.0.4a'
 group = 'com.seabreyh.mana' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'mana'
 
