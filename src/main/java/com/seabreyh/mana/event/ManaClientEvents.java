@@ -39,7 +39,8 @@ public class ManaClientEvents {
 
     @SubscribeEvent
     public static void registerBlockRenderers(FMLClientSetupEvent event) {
-        ItemBlockRenderTypes.setRenderLayer(ManaBlocks.STAR_CATCHER.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ManaBlocks.STAR_CATCHER.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ManaBlocks.STAR_BOTTLE.get(), RenderType.cutout());
     }
 
     @SubscribeEvent 

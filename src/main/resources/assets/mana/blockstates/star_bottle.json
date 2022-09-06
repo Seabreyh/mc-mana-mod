@@ -1,0 +1,16 @@
+{
+    "variants": {
+      "hanging=false,waterlogged=false": {
+        "model": "mana:block/star_bottle"
+      },
+      "hanging=true,waterlogged=false": {
+        "model": "mana:block/star_bottle_hanging"
+      },
+      "hanging=false,waterlogged=true": {
+        "model": "mana:block/star_bottle"
+      },
+      "hanging=true,waterlogged=true": {
+        "model": "mana:block/star_bottle_hanging"
+      }
+    }
+}
