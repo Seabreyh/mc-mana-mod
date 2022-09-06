@@ -9,7 +9,6 @@ import com.google.common.base.Supplier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
@@ -28,14 +27,23 @@ public class ManaBlocks {
     //INFO: If you want to make a basic block, you dont need to create a class for that block, just replace new StarCatcher with Block
 
     public static final RegistryObject<Block> STAR_CATCHER =  registerBlock("star_catcher", 
-    () -> new StarCatcher(BlockBehaviour.Properties.of(Material.STONE)
-    .strength(0.2f).destroyTime(0.3f).noOcclusion().lightLevel(BlockState -> 15)),
-    ModCreativeTab.instance);
+        () -> new StarCatcher(BlockBehaviour.Properties
+            .of(Material.STONE)
+            .strength(0.2f)
+            .destroyTime(0.3f)
+            .noOcclusion()
+            .lightLevel(BlockState -> 15)),
+            ManaCreativeTabs.MANA_TAB_BLOCKS);
 
     public static final RegistryObject<Block> STAR_BOTTLE =  registerBlock("star_bottle", 
-    () -> new StarBottle(BlockBehaviour.Properties.of(Material.GLASS).sound(SoundType.GLASS)
-    .strength(0.2f).destroyTime(0.3f).noOcclusion().lightLevel(BlockState -> 15)),
-    ModCreativeTab.instance);
+        () -> new StarBottle(BlockBehaviour.Properties
+            .of(Material.GLASS)
+            .sound(SoundType.GLASS)
+            .strength(0.2f)
+            .destroyTime(0.3f)
+            .noOcclusion()
+            .lightLevel(BlockState -> 15)),
+            ManaCreativeTabs.MANA_TAB_BLOCKS);
 
     // End create blocks ----
 
@@ -52,17 +60,5 @@ public class ManaBlocks {
     public static void register(IEventBus eventBus){
         BLOCKS.register(eventBus);
     }
-
-    public static class ModCreativeTab extends CreativeModeTab {
-        public static final ModCreativeTab instance = new ModCreativeTab(CreativeModeTab.TABS.length, "mana_blocks");
-
-        private ModCreativeTab(int index, String label) {
-            super(index, label);
-        }
-
-        @Override
-        public ItemStack makeIcon() {
-            return new ItemStack(STAR_CATCHER.get());
-        }
-    }
+    
 }
