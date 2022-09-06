@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        " / ",
+        "   "
+    ],
+    "key": {
+        "#": {
+            "item": "mana:fallen_star_item"
+        },
+        "/": {
+            "item": "minecraft:glass_bottle"
+        }
+    },
+    "result": {
+        "item": "mana:star_bottle"
+    }
+}
