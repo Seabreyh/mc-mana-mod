@@ -13,9 +13,7 @@ import com.seabreyh.mana.items.SealedWishItem;
 import com.seabreyh.mana.items.StarDust;
 import com.seabreyh.mana.items.WishItem;
 
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -27,22 +25,22 @@ public class ManaItems {
 
         public static final RegistryObject<Item> AMETHYST_STAFF = ITEMS.register("amethyst_staff",
                         () -> new AmethystStaff(new Item.Properties()
-                                        .tab(ModCreativeTab.instance)
+                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
                                         .stacksTo(1)));
 
         public static final RegistryObject<Item> EMERALD_STAFF = ITEMS.register("emerald_staff",
                         () -> new EmeraldStaff(new Item.Properties()
-                                        .tab(ModCreativeTab.instance)
+                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
                                         .stacksTo(1)));
 
         public static final RegistryObject<Item> FALLEN_STAR_ITEM = ITEMS.register("fallen_star_item",
                         () -> new FallenStarItem(new Item.Properties()
-                                        .tab(ModCreativeTab.instance)
+                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
                                         .stacksTo(64)));
 
         public static final RegistryObject<Item> WISH_ITEM = ITEMS.register("wish_item",
                         () -> new WishItem(new Item.Properties()
-                                        .tab(ModCreativeTab.instance)
+                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
                                         .stacksTo(1)));
 
         public static final RegistryObject<Item> SEALED_WISH_ITEM = ITEMS.register("sealed_wish_item",
@@ -55,40 +53,27 @@ public class ManaItems {
 
         public static final RegistryObject<Item> MANA_CRYSTAL = ITEMS.register("mana_crystal",
                         () -> new ManaCrystal(new Item.Properties()
-                                        .tab(ModCreativeTab.instance)
+                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
                                         .stacksTo(64)));
 
         public static final RegistryObject<Item> STAR_DUST = ITEMS.register("star_dust",
                         () -> new StarDust(new Item.Properties()
-                                        .tab(ModCreativeTab.instance)
+                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
                                         .stacksTo(64)));
 
         public static final RegistryObject<Item> MANA_DUST = ITEMS.register("mana_dust",
                          () -> new ManaDust(new Item.Properties()
-                                        .tab(ModCreativeTab.instance)
+                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
                                         .stacksTo(64)));
 
         public static final RegistryObject<Item> MANA_SHARD = ITEMS.register("mana_shard",
                         () -> new ManaShard(new Item.Properties()
-                                        .tab(ModCreativeTab.instance)
+                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
                                         .stacksTo(64)));
 
         public static final RegistryObject<Item> MANA_CAPSULE = ITEMS.register("mana_capsule",
                         () -> new ManaCapsule(new Item.Properties()
-                                        .tab(ModCreativeTab.instance)
+                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
                                         .stacksTo(64)));
 
-        public static class ModCreativeTab extends CreativeModeTab {
-                public static final ModCreativeTab instance = new ModCreativeTab(CreativeModeTab.TABS.length,
-                                "mana_items");
-
-                private ModCreativeTab(int index, String label) {
-                        super(index, label);
-                }
-
-                @Override
-                public ItemStack makeIcon() {
-                        return new ItemStack(AMETHYST_STAFF.get());
-                }
-        }
 }
