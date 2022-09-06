@@ -33,7 +33,6 @@ public class AmethystStaff extends Item {
     @Override
     // Called when player right clicks staff
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-        ManaMod.LOGGER.debug("### USE AMETHYST STAFF");
 
         ItemStack itemstack = player.getItemInHand(hand);
         boolean hasMana = false;
@@ -43,7 +42,6 @@ public class AmethystStaff extends Item {
             hasMana = PlayerManaEvent.consumeMana(player, 1);
             hasMana |= player.isCreative();
             if (hasMana) {
-                LOGGER.info("*Use amethyst staff (server)*");
                 AmethystEnergyBall energyBall = new AmethystEnergyBall(world, player);
                 energyBall.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
                 energyBall.setNoGravity(true);
