@@ -2,6 +2,10 @@ package com.seabreyh.mana;
 
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.event.ManaClientEvents;
+import com.seabreyh.mana.items.brewing.ManaMobEffect;
+import com.seabreyh.mana.items.brewing.ManaMobEffects;
+import com.seabreyh.mana.items.brewing.ManaPotionBrewing;
+import com.seabreyh.mana.items.brewing.ManaPotions;
 import com.seabreyh.mana.networking.ManaMessages;
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaBlockEntities;
@@ -13,8 +17,10 @@ import com.seabreyh.mana.screen.ManaMenuTypes;
 import com.seabreyh.mana.screen.StarCatcherScreen;
 
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -47,6 +53,9 @@ public class ManaMod {
         ManaBlockEntities.register(eventBus);
         ManaMenuTypes.register(eventBus);
 
+        ManaMobEffects.register();
+        ManaPotions.register();
+        
         // Add listeners
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
@@ -59,7 +68,10 @@ public class ManaMod {
         // some preinit code
         event.enqueueWork(() -> {
             ManaMessages.register();
+
+            BrewingRecipeRegistry.addRecipe(new ManaPotionBrewing(Potions.THICK, ManaItems.MANA_DUST.get(), ManaPotions.STRONG_IRON_SKIN.get()));
         });
+        
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
