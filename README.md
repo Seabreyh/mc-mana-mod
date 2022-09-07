@@ -9,3 +9,10 @@ This mod introduces magic into Minecraft in amazing ways.
 
 ### Required mods
 * None
+
+### Current features
+* Falling Stars
+* Star Catchers
+* Star in a bottle
+* Mana bar
+* Magic Staff's
