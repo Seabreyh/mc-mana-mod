@@ -54,8 +54,8 @@ public class ManaMod {
         ManaMenuTypes.register(eventBus);
 
         ManaMobEffects.register();
-        ManaPotions.register();
-        
+        ManaPotions.POTIONS.register(FMLJavaModLoadingContext.get().getModEventBus());
+
         // Add listeners
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
@@ -69,7 +69,7 @@ public class ManaMod {
         event.enqueueWork(() -> {
             ManaMessages.register();
 
-            BrewingRecipeRegistry.addRecipe(new ManaPotionBrewing(Potions.THICK, ManaItems.MANA_DUST.get(), ManaPotions.STRONG_IRON_SKIN.get()));
+            BrewingRecipeRegistry.addRecipe(new ManaPotionBrewing(Potions.THICK, ManaItems.MANA_DUST.get(), ManaPotions.MANA_INSTANT.get()));
         });
         
     }
