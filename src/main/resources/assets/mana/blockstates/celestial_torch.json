@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "facing=up": {
+      "model": "mana:block/celestial_torch"
+    },
+    "facing=down": {
+      "model": "mana:block/celestial_torch"
+    },
+    "facing=east": {
+      "model": "mana:block/celestial_wall_torch"
+    },
+    "facing=north": {
+      "model": "mana:block/celestial_wall_torch",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "mana:block/celestial_wall_torch",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "mana:block/celestial_wall_torch",
+      "y": 180
+    }
+  }
+}

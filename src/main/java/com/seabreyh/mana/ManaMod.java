@@ -67,8 +67,12 @@ public class ManaMod {
         ManaClientEvents.registerBlockRenderers(event);
         ManaClientEvents.registerBlockEntityRenderers(event);
         ManaClientEvents.registerOverlays(event);
+
+        ManaClientEvents.registerMenuScreens(/* no event pls */);
+
         // ClientSetup.registerMenuScreens(event);
-        MenuScreens.register(ManaMenuTypes.STAR_CATCHER_MENU.get(), StarCatcherScreen::new);
+        // MenuScreens.register(ManaMenuTypes.STAR_CATCHER_MENU.get(),
+        // StarCatcherScreen::new);
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
