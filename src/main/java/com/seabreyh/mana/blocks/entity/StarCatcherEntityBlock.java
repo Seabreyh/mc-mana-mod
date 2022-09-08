@@ -1,5 +1,6 @@
 package com.seabreyh.mana.blocks.entity;
 
+import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.entity.FallenStar;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaItems;
@@ -8,6 +9,8 @@ import com.seabreyh.mana.screen.StarCatcherMenu;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.jetbrains.annotations.Debug;
 import org.jetbrains.annotations.NotNull;
 import com.google.common.collect.Lists;
 
@@ -39,7 +42,7 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
     private float activeRotation;
     private float rotationSpeed = 6F;
     private final List<BlockPos> effectBlocks = Lists.newArrayList();
-    
+
     private final ItemStackHandler itemHandler = new ItemStackHandler(4) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -61,6 +64,7 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
     public float getRotationSpeed() {
         return rotationSpeed;
     }
+
     public static void setRotationSpeed(float speed, StarCatcherEntityBlock entity) {
         entity.rotationSpeed = speed;
     }
@@ -88,7 +92,7 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
     }
 
     @Override
-    public void invalidateCaps()  {
+    public void invalidateCaps() {
         super.invalidateCaps();
         lazyItemHandler.invalidate();
     }
@@ -123,48 +127,60 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
         ++pBlockEntity.activeRotation;
     }
 
-
     private static void animationTick(Level p_155419_, BlockPos p_155420_, List<BlockPos> p_155421_, int p_155423_) {
-        double d0 = (double)(Mth.sin((float)(p_155423_ + 35) * 0.1F) / 2.0F + 0.5F);
-        d0 = (d0 * d0 + d0) * (double)0.3F;
-     }
+        double d0 = (double) (Mth.sin((float) (p_155423_ + 35) * 0.1F) / 2.0F + 0.5F);
+        d0 = (d0 * d0 + d0) * (double) 0.3F;
+    }
 
     public float getActiveRotation(float p_59198_) {
         return (this.activeRotation + p_59198_) * -0.0375F * getRotationSpeed();
     }
 
-   private static void locateStars(Level plevel, StarCatcherEntityBlock pBlockEntity, BlockPos pPos, BlockState pState) {
+    private static void locateStars(Level plevel, StarCatcherEntityBlock pBlockEntity, BlockPos pPos,
+            BlockState pState) {
         FallenStar foundTarget = null;
-        if(hasNotReachedStackLimit(pBlockEntity) && foundTarget == null) {
+        if (!plevel.isClientSide()) {
+            if (hasNotReachedStackLimit(pBlockEntity) && foundTarget == null) {
 
-        AABB area = pBlockEntity.getRenderBoundingBox().inflate(80.0D, 80.0D, 80.0D);
-        List<FallenStar> fallenStars = plevel.getEntitiesOfClass(FallenStar.class, area);
+                AABB area = pBlockEntity.getRenderBoundingBox().inflate(80.0D, 80.0D, 80.0D);
+                List<FallenStar> fallenStars = plevel.getEntitiesOfClass(FallenStar.class, area);
 
-        for (FallenStar foundStar : fallenStars) {
-            foundTarget = foundStar;
-            //make sure star can only be targeted by one star catcher
-                if(foundTarget.getIsFalling() == false && foundTarget.getIsTargeted() == false) {
-                    if (foundTarget != null && foundTarget instanceof FallenStar) {
-                        if(foundTarget.getIsTargeted() == false){
-                            foundTarget.setIsTargeted(true);
-                            foundTarget.toStarCatcher(pBlockEntity.getBlockPos(), pBlockEntity);
+                for (FallenStar foundStar : fallenStars) {
+                    foundTarget = foundStar;
+                    // make sure star can only be targeted by one star catcher
+                    if (foundTarget.getIsFalling() == false && foundTarget.getIsTargeted() == false) {
+                        if (foundTarget != null && foundTarget instanceof FallenStar) {
+                            if (foundTarget.getIsTargeted() == false) {
+                                foundTarget.setIsTargeted(true);
+                                foundTarget.toStarCatcher(pBlockEntity.getBlockPos(), pBlockEntity);
+                            }
+                            foundTarget = null;
                         }
-                        foundTarget = null;
-                    } 
-                    
+
+                    }
+                }
+            } else if (foundTarget == null) {
+                AABB area = pBlockEntity.getRenderBoundingBox().inflate(80.0D, 80.0D, 80.0D);
+                List<FallenStar> fallenStars = plevel.getEntitiesOfClass(FallenStar.class, area);
+
+                for (FallenStar foundStar : fallenStars) {
+                    if (foundStar.getIsTargeted()) {
+                        foundStar.stopStarCatch();
+                    }
                 }
             }
         }
     }
 
-   public static void craftItem(StarCatcherEntityBlock entity) {
-       entity.itemHandler.setStackInSlot(0, new ItemStack(ManaItems.FALLEN_STAR_ITEM.get(),
-               entity.itemHandler.getStackInSlot(0).getCount() + 1));
-   }
+    public static void craftItem(StarCatcherEntityBlock entity) {
+        if (hasNotReachedStackLimit(entity)) {
+            entity.itemHandler.setStackInSlot(0, new ItemStack(ManaItems.FALLEN_STAR_ITEM.get(),
+                    entity.itemHandler.getStackInSlot(0).getCount() + 1));
+        }
+    }
 
-   private static boolean hasNotReachedStackLimit(StarCatcherEntityBlock entity) {
-       return entity.itemHandler.getStackInSlot(0).getCount() < entity.itemHandler.getStackInSlot(0).getMaxStackSize();
-   }
-
+    private static boolean hasNotReachedStackLimit(StarCatcherEntityBlock entity) {
+        return entity.itemHandler.getStackInSlot(0).getCount() < entity.itemHandler.getStackInSlot(0).getMaxStackSize();
+    }
 
 }
