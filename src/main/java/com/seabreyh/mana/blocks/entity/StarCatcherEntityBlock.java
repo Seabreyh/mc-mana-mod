@@ -139,19 +139,24 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
 
         AABB area = pBlockEntity.getRenderBoundingBox().inflate(80.0D, 80.0D, 80.0D);
         List<FallenStar> fallenStars = plevel.getEntitiesOfClass(FallenStar.class, area);
+        List<Player> players = plevel.getEntitiesOfClass(Player.class, area);
 
-        for (FallenStar foundStar : fallenStars) {
-            foundTarget = foundStar;
-            //make sure star can only be targeted by one star catcher
-                if(foundTarget.getIsFalling() == false && foundTarget.getIsTargeted() == false) {
-                    if (foundTarget != null && foundTarget instanceof FallenStar) {
-                        if(foundTarget.getIsTargeted() == false){
-                            foundTarget.setIsTargeted(true);
-                            foundTarget.toStarCatcher(pBlockEntity.getBlockPos(), pBlockEntity);
-                        }
-                        foundTarget = null;
-                    } 
-                    
+        for (Player foundPlayer : players) {
+            if (Math.sqrt(pPos.distToCenterSqr(foundPlayer.position())) <= 48D)
+            for (FallenStar foundStar : fallenStars) {
+                foundTarget = foundStar;
+                if (foundStar.distanceTo(foundPlayer) < 48F)
+                //make sure star can only be targeted by one star catcher
+                    if(foundTarget.getIsFalling() == false && foundTarget.getIsTargeted() == false) {
+                        if (foundTarget != null && foundTarget instanceof FallenStar) {
+                            if(foundTarget.getIsTargeted() == false){
+                                foundTarget.setIsTargeted(true);
+                                foundTarget.toStarCatcher(pBlockEntity.getBlockPos(), pBlockEntity);
+                            }
+                            foundTarget = null;
+                        } 
+                        
+                    }
                 }
             }
         }

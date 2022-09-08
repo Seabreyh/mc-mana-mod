@@ -117,6 +117,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         this.catcherPos = catcherPos;
         this.pBlockEntity = pBlockEntity;
         this.moveToCatcher = true;
+        this.isFalling = false;
     }
 
     public void tick() {
