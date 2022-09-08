@@ -1,14 +1,14 @@
 package com.seabreyh.mana.blocks;
 
-import net.minecraft.core.particles.ParticleOptions;
+import com.seabreyh.mana.particle.ManaParticles;
+
+import java.util.Random;
+
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.TorchBlock;
-import java.util.Random;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -26,12 +26,11 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CelestialTorch extends Block implements SimpleWaterloggedBlock{
-    
-   protected final ParticleOptions flameParticle;
-   public static final DirectionProperty FACING = BlockStateProperties.FACING;
-   public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-   public static final IntegerProperty FLOWING_WATER = IntegerProperty.create("water_level", 1, 8);
+public class CelestialTorch extends Block implements SimpleWaterloggedBlock {
+
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final IntegerProperty FLOWING_WATER = IntegerProperty.create("water_level", 1, 8);
 
     private static final VoxelShape STANDING = Block.box(6.0D, 0.0D, 6.0D, 10.0D, 10.0D, 10.0D);
     private static final VoxelShape TORCH_NORTH = Block.box(5.5D, 3.0D, 11.0D, 10.5D, 13.0D, 16.0D);
@@ -39,113 +38,111 @@ public class CelestialTorch extends Block implements SimpleWaterloggedBlock{
     private static final VoxelShape TORCH_SOUTH = Block.box(5.5D, 3.0D, 0.0D, 10.5D, 13.0D, 5.0D);
     private static final VoxelShape TORCH_WEST = Block.box(11.0D, 3.0D, 5.5D, 16.0D, 13.0D, 10.5D);
 
-   public CelestialTorch(BlockBehaviour.Properties p_57491_, ParticleOptions p_57492_) {
-      super(p_57491_);
-      this.flameParticle = p_57492_;
-      this.registerDefaultState(this.getStateDefinition().any().setValue(WATERLOGGED, false));
-   }
-
-   public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext collisionContext) {
-    return switch (state.getValue(FACING)){
-        case EAST -> TORCH_EAST;
-        case WEST -> TORCH_WEST;
-        case SOUTH -> TORCH_SOUTH;
-        case NORTH -> TORCH_NORTH;
-        default -> STANDING;
-    };
-   }
-
-   public FluidState getFluidState(BlockState blockState) {
-    if (blockState.getValue(WATERLOGGED) && blockState.getValue(FLOWING_WATER) == 8) {
-        return Fluids.WATER.getSource(false);
-    } else if (blockState.getValue(WATERLOGGED) && blockState.getValue(FLOWING_WATER) != 8) {
-        return Fluids.WATER.getFlowing(blockState.getValue(FLOWING_WATER), false);
-    }
-    return Fluids.EMPTY.defaultFluidState();
+    public CelestialTorch(BlockBehaviour.Properties p_57491_) {
+        super(p_57491_);
+        this.registerDefaultState(this.getStateDefinition().any().setValue(WATERLOGGED, false));
     }
 
-   @SuppressWarnings("deprecation")
-   @Override
-   public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext collisionContext) {
+        return switch (state.getValue(FACING)) {
+            case EAST -> TORCH_EAST;
+            case WEST -> TORCH_WEST;
+            case SOUTH -> TORCH_SOUTH;
+            case NORTH -> TORCH_NORTH;
+            default -> STANDING;
+        };
+    }
+
+    public FluidState getFluidState(BlockState blockState) {
+        if (blockState.getValue(WATERLOGGED) && blockState.getValue(FLOWING_WATER) == 8) {
+            return Fluids.WATER.getSource(false);
+        } else if (blockState.getValue(WATERLOGGED) && blockState.getValue(FLOWING_WATER) != 8) {
+            return Fluids.WATER.getFlowing(blockState.getValue(FLOWING_WATER), false);
+        }
+        return Fluids.EMPTY.defaultFluidState();
+    }
+
+    @Override
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level,
+            BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.getValue(WATERLOGGED)) {
             level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-        }    
-    
-    // Check the state, if we have an up deal with the break check for standing torches (stole from Torchblock)
-        if (stateIn.getValue(FACING) == Direction.UP)
-        {
-            return facing == Direction.DOWN && !this.canSurvive(stateIn, level, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);
         }
-        // Otherwise we do a side check and act accordingly. (stole from WallTorchBlock)
-        else
-        {
-            return facing.getOpposite() == stateIn.getValue(FACING) && !stateIn.canSurvive(level, currentPos) ? Blocks.AIR.defaultBlockState() : stateIn;
-        }   
-}
 
+        // standing torch
+        if (stateIn.getValue(FACING) == Direction.UP) {
+            return facing == Direction.DOWN && !this.canSurvive(stateIn, level, currentPos)
+                    ? Blocks.AIR.defaultBlockState()
+                    : stateIn;
+        }
+        // wall torch
+        else {
+            return facing.getOpposite() == stateIn.getValue(FACING) && !stateIn.canSurvive(level, currentPos)
+                    ? Blocks.AIR.defaultBlockState()
+                    : stateIn;
+        }
+    }
 
-
-   public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
         Direction direction = state.getValue(FACING);
         BlockPos blockpos = pos.relative(direction.getOpposite());
         BlockState blockstate = level.getBlockState(blockpos);
 
-        return blockstate.isFaceSturdy(level, blockpos, direction);
-   }
+        if (direction == Direction.UP || direction == Direction.DOWN) {
+            // allows placement on things such as fences and walls.
+            return canSupportCenter(level, pos.below(), Direction.UP);
+        } else {
+            return blockstate.isFaceSturdy(level, blockpos, direction);
+        }
+    }
 
-   public void animateTick(BlockState p_57494_, Level p_57495_, BlockPos p_57496_, Random p_57497_) {
-      double d0 = (double)p_57496_.getX() + 0.5D;
-      double d1 = (double)p_57496_.getY() + 0.7D;
-      double d2 = (double)p_57496_.getZ() + 0.5D;
-      p_57495_.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-      p_57495_.addParticle(this.flameParticle, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-   }
+    public void animateTick(BlockState state, Level level, BlockPos pos, Random rand) {
+        Direction facing = state.getValue(FACING);
+        double x = (double) pos.getX() + 0.5D;
+        double y = (double) pos.getY() + 0.6D;
+        double z = (double) pos.getZ() + 0.5D;
 
-
-   public BlockState getStateForPlacement(BlockPlaceContext context)
-    {
-        // Set the blockstate to default.
-        BlockState blockstate = this.defaultBlockState();
-        // Gets world data?
-        Level level = context.getLevel();
-        // Get the pos we are working with.
-        BlockPos blockpos = context.getClickedPos();
-        // Return the direction the player was looking.
-        Direction[] adirection = context.getNearestLookingDirections();
-
-        // Loop over each direction
-        for (Direction direction : adirection)
-        {
-            // If that direction is a horizontal one.
-            if (direction.getAxis().isHorizontal())
-            {
-                // Flip the direction 180 to set on the wall.
-                Direction direction1 = direction.getOpposite();
-                // Change the blockstate to match the new direction.
-                blockstate = blockstate.setValue(FACING, direction1);
-                // If we have a valid spot to place the block, we place it.
-                if (blockstate.canSurvive(level, blockpos))
-                {
-                    return blockstate;
-                }
+        for (int i = 0; i < 20; i++) {
+            if (rand.nextInt(10) == 0) {
+                level.addParticle(ManaParticles.STAR_POWER.get(),
+                        x + 0.1D * (double) facing.getOpposite().getStepX(),
+                        y + 0.07D * (double) facing.getOpposite().getStepY(),
+                        z + 0.3D * (double) facing.getOpposite().getStepZ(),
+                        Math.sin(i * rand.nextDouble(10)) * 0.07d, Math.cos(i * rand.nextDouble(10)) * 0.07d,
+                        Math.sin(i * rand.nextDouble(10)) * 0.07d);
             }
-            // If the direction we get back isn't horizontal we place the torch like normal with the default state.
-           
-            else {
+        }
+    }
+
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState blockstate = this.defaultBlockState();
+        Level level = context.getLevel();
+        BlockPos blockpos = context.getClickedPos();
+        Direction[] adirection = context.getNearestLookingDirections();
+        FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
+        boolean flag = fluidstate.getType() == Fluids.WATER || fluidstate.getType() == Fluids.FLOWING_WATER;
+        boolean is_flowing = fluidstate.getType() == Fluids.FLOWING_WATER;
+
+        for (Direction direction : adirection) {
+            if (direction.getAxis().isHorizontal()) {
+                Direction direction1 = direction.getOpposite();
+                blockstate = blockstate.setValue(FACING, direction1);
+                if (blockstate.canSurvive(level, blockpos)) {
+                    return blockstate.setValue(WATERLOGGED, flag)
+                            .setValue(FLOWING_WATER, is_flowing ? fluidstate.getAmount() : 8);
+                }
+            } else {
                 blockstate = blockstate.setValue(FACING, Direction.UP);
 
-                return blockstate;
+                return blockstate.setValue(WATERLOGGED, flag)
+                        .setValue(FLOWING_WATER, is_flowing ? fluidstate.getAmount() : 8);
             }
         }
         return null;
     }
 
-    
-
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
-    {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, WATERLOGGED, FLOWING_WATER);
     }
-    
-}
 
+}
