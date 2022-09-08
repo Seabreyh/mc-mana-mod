@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        " / ",
+        "   "
+    ],
+    "key": {
+        "#": {
+            "item": "mana:star_dust"
+        },
+        "/": {
+            "item": "minecraft:stick"
+        }
+    },
+    "result": {
+        "item": "mana:celestial_torch"
+    }
+}
