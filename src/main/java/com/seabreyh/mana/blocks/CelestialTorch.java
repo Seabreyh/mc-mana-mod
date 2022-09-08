@@ -105,8 +105,8 @@ public class CelestialTorch extends Block implements SimpleWaterloggedBlock {
         for (int i = 0; i < 20; i++) {
             if (rand.nextInt(10) == 0) {
                 level.addParticle(ManaParticles.STAR_POWER.get(),
-                        x + 0.1D * (double) facing.getOpposite().getStepX(),
-                        y + 0.07D * (double) facing.getOpposite().getStepY(),
+                        x + 0.3D * (double) facing.getOpposite().getStepX(),
+                        y + 0.09D * (double) facing.getOpposite().getStepY(),
                         z + 0.3D * (double) facing.getOpposite().getStepZ(),
                         Math.sin(i * rand.nextDouble(10)) * 0.07d, Math.cos(i * rand.nextDouble(10)) * 0.07d,
                         Math.sin(i * rand.nextDouble(10)) * 0.07d);
