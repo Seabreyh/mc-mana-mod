@@ -1,16 +1,20 @@
 package com.seabreyh.mana.registry;
 
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.blocks.CelestialTorch;
+import com.seabreyh.mana.blocks.CelestialWallTorch;
 import com.seabreyh.mana.blocks.StarBottle;
 import com.seabreyh.mana.blocks.StarCatcher;
-
 import com.google.common.base.Supplier;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.TorchBlock;
+import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -45,6 +49,21 @@ public class ManaBlocks {
             .lightLevel(BlockState -> 15)),
             ManaCreativeTabs.MANA_TAB_BLOCKS);
 
+
+    public static final RegistryObject<Block> CELESTIAL_TORCH =  registerBlock("celestial_torch", 
+        () -> new CelestialTorch(BlockBehaviour.Properties
+            .of(Material.DECORATION).noCollission().instabreak().lightLevel(BlockState -> 15).sound(SoundType.WOOD), 
+            ParticleTypes.SNOWFLAKE),
+            ManaCreativeTabs.MANA_TAB_BLOCKS);
+
+        //     @SuppressWarnings("deprecation")
+        //     public static final RegistryObject<Block> CELESTIAL_WALL_TORCH =  registerBlock("celestial_wall_torch", 
+        // () -> new CelestialWallTorch(BlockBehaviour.Properties
+        //     .of(Material.DECORATION).noCollission().instabreak().lightLevel((p_152607_) -> {
+        //         return 15;
+        //      }).sound(SoundType.WOOD).dropsLike(CELESTIAL_TORCH.get()), 
+        //     ParticleTypes.SNOWFLAKE),
+        //     ManaCreativeTabs.MANA_TAB_BLOCKS);
     // End create blocks ----
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab) {

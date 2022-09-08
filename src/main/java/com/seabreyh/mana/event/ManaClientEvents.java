@@ -41,6 +41,8 @@ public class ManaClientEvents {
     public static void registerBlockRenderers(FMLClientSetupEvent event) {
         ItemBlockRenderTypes.setRenderLayer(ManaBlocks.STAR_CATCHER.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ManaBlocks.STAR_BOTTLE.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ManaBlocks.CELESTIAL_TORCH.get(), RenderType.cutout());
+        // ItemBlockRenderTypes.setRenderLayer(ManaBlocks.CELESTIAL_WALL_TORCH.get(), RenderType.cutout());
     }
 
     @SubscribeEvent 

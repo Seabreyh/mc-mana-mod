@@ -125,8 +125,7 @@ public class StarCatcher extends BaseEntityBlock implements SimpleWaterloggedBlo
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(FACING);
-        pBuilder.add(WATERLOGGED).add(FLOWING_WATER);
+        pBuilder.add(FACING, WATERLOGGED, FLOWING_WATER);
     }
 
     //Block entity
