@@ -180,10 +180,6 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                 this.playSound(this.getTargetedSound(), 2F, 2F);
             }
         }
-        // else {
-        // // Normal entity travel sound
-        // this.playSound(this.getPloofSound(), 2F, 3F);
-        // }
 
         ++this.life;
 
