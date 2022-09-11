@@ -16,3 +16,4 @@ This mod introduces magic into Minecraft in amazing ways.
 * Star in a bottle
 * Mana bar
 * Magic Staff's
+* Celestial Torches
