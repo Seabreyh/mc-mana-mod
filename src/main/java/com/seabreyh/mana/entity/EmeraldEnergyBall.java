@@ -66,13 +66,15 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         Level level = p_37295_.level;
         Vec3 vec31 = p_37295_.position();
         Vec3 vec32 = vec31.add(rayDir);
-        HitResult hitresult = level.clip(new ClipContext(vec31, vec32, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, p_37295_));
-        
+        HitResult hitresult = level
+                .clip(new ClipContext(vec31, vec32, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, p_37295_));
+
         if (hitresult.getType() != HitResult.Type.MISS) {
             vec32 = hitresult.getLocation();
         }
 
-        EntityHitResult hitresult1 = ProjectileUtil.getEntityHitResult(level, p_37295_, vec31, vec32, p_37295_.getBoundingBox().expandTowards(rayDir).inflate(1.0D), p_37296_);
+        EntityHitResult hitresult1 = ProjectileUtil.getEntityHitResult(level, p_37295_, vec31, vec32,
+                p_37295_.getBoundingBox().expandTowards(rayDir).inflate(1.0D), p_37296_);
 
         if (hitresult1 != null) {
             hitresult = hitresult1;
@@ -103,7 +105,8 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
     private void resolveEnemyTarget() {
         // Handle entity target "homing"
         AABB aabb = this.owner.getBoundingBox().inflate(64.0D, 24.0D, 64.0D);
-        List<? extends LivingEntity> candidates = this.level.getNearbyEntities(LivingEntity.class, TargetingConditions.forCombat().range(64.0D), this.owner, aabb);
+        List<? extends LivingEntity> candidates = this.level.getNearbyEntities(LivingEntity.class,
+                TargetingConditions.forCombat().range(64.0D), this.owner, aabb);
         LivingEntity foundTarget = null;
         double shortestDist = Double.MAX_VALUE;
 
@@ -122,11 +125,12 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
     }
 
     @Override
-    public void shootFromRotation(Entity player, float p_37253_, float p_37254_, float p_37255_, float p_37256_, float p_37257_) {
+    public void shootFromRotation(Entity player, float p_37253_, float p_37254_, float p_37255_, float p_37256_,
+            float p_37257_) {
         float f = -Mth.sin(p_37254_ * ((float) Math.PI / 180F)) * Mth.cos(p_37253_ * ((float) Math.PI / 180F));
         float f1 = -Mth.sin((p_37253_ + p_37255_) * ((float) Math.PI / 180F));
         float f2 = Mth.cos(p_37254_ * ((float) Math.PI / 180F)) * Mth.cos(p_37253_ * ((float) Math.PI / 180F));
-        
+
         this.shoot((double) f, (double) f1, (double) f2, p_37256_, p_37257_);
         Vec3 vec3 = player.getDeltaMovement();
         this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, 0.0F, vec3.z));
@@ -142,8 +146,16 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         return SoundEvents.AMETHYST_BLOCK_STEP;
     }
 
+    protected SoundEvent getTargetedSound() {
+        return SoundEvents.NOTE_BLOCK_BANJO;
+    }
+
     protected SoundEvent getHitSound() {
-        return SoundEvents.ZOMBIE_VILLAGER_CURE;
+        if (this.target != null) {
+            return SoundEvents.DRAGON_FIREBALL_EXPLODE;
+        } else {
+            return SoundEvents.ZOMBIE_VILLAGER_CURE;
+        }
     }
 
     protected float getWaterInertia() {
@@ -158,6 +170,20 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         super.tick();
 
         this.playSound(this.getPloofSound(), 2F, 3F);
+
+        if (this.target != null) {
+            // Target locked on travel sound
+            if (this.life % 4 == 0) {
+                this.playSound(this.getTargetedSound(), 2F, 1F);
+            }
+            if (this.life % 8 == 0) {
+                this.playSound(this.getTargetedSound(), 2F, 2F);
+            }
+        }
+        // else {
+        // // Normal entity travel sound
+        // this.playSound(this.getPloofSound(), 2F, 3F);
+        // }
 
         ++this.life;
 
@@ -193,9 +219,9 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         } else {
             for (int i = 0; i < 4; ++i) {
                 this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_GREEN.get(), this.getX(),
-                    this.getY(), this.getZ(),
-                    this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
-                    this.random.nextGaussian() * 0.1D);
+                        this.getY(), this.getZ(),
+                        this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
+                        this.random.nextGaussian() * 0.1D);
 
                 vec3 = this.getDeltaMovement();
                 double d5 = vec3.x;
@@ -230,10 +256,12 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
 
     protected void onHitBlock(BlockHitResult hitBlock) {
         this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
-        
+
         if (!this.level.isClientSide) { // qty spread velocity
-            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1, 0D, 0D, 0D, 0D);
-            ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(), 20, 1D, 1D, 1D, 0.3D);
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1, 0D,
+                    0D, 0D, 0D);
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(), 20,
+                    1D, 1D, 1D, 0.3D);
         }
 
         super.onHitBlock(hitBlock);
@@ -253,10 +281,15 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
 
         if (flag && entity != entity1) {
             this.doEnchantDamageEffects(livingentity, entity);
-            this.playSound(this.getHitSound(), 1.2F, 1.5F);
+            if (this.target != null) {
+                this.playSound(this.getHitSound(), 3F, 2F);
+            } else {
+                this.playSound(this.getHitSound(), 1.2F, 1.5F);
+            }
 
             if (!this.level.isClientSide) {
-                ((ServerLevel) this.level).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 20, 0.15D, 0.15D, 0.15D, 0.2D);
+                ((ServerLevel) this.level).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 20,
+                        0.15D, 0.15D, 0.15D, 0.2D);
             }
 
             this.discard();
