@@ -1,7 +1,6 @@
 package com.seabreyh.mana.items;
 
 import com.mojang.logging.LogUtils;
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.entity.AmethystEnergyBall;
 import com.seabreyh.mana.event.player.PlayerManaEvent;
 
