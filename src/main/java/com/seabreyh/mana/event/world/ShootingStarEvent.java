@@ -24,7 +24,8 @@ public class ShootingStarEvent {
             int timer = (int) (random.nextFloat() * 20.0F * SECONDS_BETWEEN_EVENT);
             timer = timer > 0 ? timer : 1;
             float currentTime = world.getTimeOfDay(1.0F);
-            if (worldTime % timer == 0 && currentTime > 0.3 && currentTime < 0.7 && !world.isRaining()) {
+            if (worldTime % timer == 0 && currentTime > 0.3 && currentTime < 0.7 && !world.isRaining()
+                    && world.dimension() == Level.OVERWORLD) {
                 if (!world.isClientSide) {
                     FallenStar shootingStar = new FallenStar(ManaEntities.FALLEN_STAR.get(), world, thisPlayer);
 
