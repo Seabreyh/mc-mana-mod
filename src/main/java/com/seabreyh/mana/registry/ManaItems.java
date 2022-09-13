@@ -24,14 +24,12 @@ public class ManaItems {
                         ManaMod.MOD_ID);
 
         public static final RegistryObject<Item> AMETHYST_STAFF = ITEMS.register("amethyst_staff",
-                        () -> new AmethystStaff(new Item.Properties()
-                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
-                                        .stacksTo(1)));
+                        () -> new AmethystStaff(new Item.Properties().durability(500)
+                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)));
 
         public static final RegistryObject<Item> EMERALD_STAFF = ITEMS.register("emerald_staff",
-                        () -> new EmeraldStaff(new Item.Properties()
-                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
-                                        .stacksTo(1)));
+                        () -> new EmeraldStaff(new Item.Properties().durability(500)
+                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)));
 
         public static final RegistryObject<Item> FALLEN_STAR_ITEM = ITEMS.register("fallen_star_item",
                         () -> new FallenStarItem(new Item.Properties()
@@ -62,7 +60,7 @@ public class ManaItems {
                                         .stacksTo(64)));
 
         public static final RegistryObject<Item> MANA_DUST = ITEMS.register("mana_dust",
-                         () -> new ManaDust(new Item.Properties()
+                        () -> new ManaDust(new Item.Properties()
                                         .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
                                         .stacksTo(64)));
 

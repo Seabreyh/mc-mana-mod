@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " # ",
+        " / ",
+        " * "
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:amethyst_block"
+        },
+        "/": {
+            "item": "mana:mana_dust"
+        },
+        "*": {
+            "item": "mana:amethyst_staff"
+        }
+    },
+    "result": {
+        "item": "mana:amethyst_staff"
+    }
+}
