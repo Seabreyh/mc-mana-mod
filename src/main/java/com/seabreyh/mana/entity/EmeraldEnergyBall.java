@@ -2,6 +2,7 @@ package com.seabreyh.mana.entity;
 
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaEntities;
+import com.seabreyh.mana.registry.ManaSounds;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -17,6 +18,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
@@ -34,7 +36,7 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
     private int life;
     private Vec3 shootDir;
     private LivingEntity owner;
-    private LivingEntity target;
+    private Mob target;
 
     public EmeraldEnergyBall(Level world, LivingEntity player) {
         super(ManaEntities.EMERALD_ENERGY_BALL.get(), player, world);
@@ -105,15 +107,15 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
     private void resolveEnemyTarget() {
         // Handle entity target "homing"
         AABB aabb = this.owner.getBoundingBox().inflate(64.0D, 24.0D, 64.0D);
-        List<? extends LivingEntity> candidates = this.level.getNearbyEntities(LivingEntity.class,
+        List<? extends Mob> candidates = this.level.getNearbyEntities(Mob.class,
                 TargetingConditions.forCombat().range(64.0D), this.owner, aabb);
-        LivingEntity foundTarget = null;
+        Mob foundTarget = null;
         double shortestDist = Double.MAX_VALUE;
 
-        for (LivingEntity livingentity : candidates) {
-            Vec3 dirToEntity = livingentity.position().subtract(this.position()).normalize();
-            if (dirToEntity.dot(this.shootDir) >= 0.75) {
-                foundTarget = livingentity;
+        for (Mob mobs : candidates) {
+            Vec3 dirToEntity = mobs.position().subtract(this.position()).normalize();
+            if (dirToEntity.dot(this.shootDir) >= 0.9) {
+                foundTarget = mobs;
                 double distTo = foundTarget.position().subtract(this.position()).length();
                 if (distTo < shortestDist) {
                     shortestDist = distTo;
@@ -121,7 +123,6 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                 }
             }
         }
-
     }
 
     @Override
@@ -147,7 +148,7 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
     }
 
     protected SoundEvent getTargetedSound() {
-        return SoundEvents.NOTE_BLOCK_BANJO;
+        return SoundEvents.FIREWORK_ROCKET_LAUNCH;
     }
 
     protected SoundEvent getHitSound() {
@@ -173,11 +174,8 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
 
         if (this.target != null) {
             // Target locked on travel sound
-            if (this.life % 4 == 0) {
-                this.playSound(this.getTargetedSound(), 2F, 1F);
-            }
-            if (this.life % 8 == 0) {
-                this.playSound(this.getTargetedSound(), 2F, 2F);
+            if (this.life % 3 == 0) {
+                this.playSound(this.getTargetedSound(), (float) Math.random(), (float) Math.random());
             }
         }
 
@@ -207,7 +205,7 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
             Vec3 delta = this.getDeltaMovement();
 
             if (this.target != null) {
-                Vec3 dirToEntity = this.target.position().subtract(this.position()).normalize();
+                Vec3 dirToEntity = this.target.getEyePosition().subtract(this.position()).normalize();
                 delta = delta.lerp(dirToEntity, 0.15);
                 this.setDeltaMovement(delta);
             }
