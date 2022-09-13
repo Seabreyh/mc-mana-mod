@@ -1,11 +1,9 @@
 package com.seabreyh.mana.items;
 
-import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.entity.AmethystEnergyBall;
 import com.seabreyh.mana.event.player.PlayerManaEvent;
 
 import java.util.Random;
-import org.slf4j.Logger;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -19,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class AmethystStaff extends Item {
-    private static final Logger LOGGER = LogUtils.getLogger();
 
     public AmethystStaff(Properties properties) {
         super(properties);
@@ -37,18 +34,23 @@ public class AmethystStaff extends Item {
         boolean hasMana = false;
         if (!world.isClientSide) {
 
-            // Handle depletion of player mana from use
-            hasMana = PlayerManaEvent.consumeMana(player, 1);
-            hasMana |= player.isCreative();
-            if (hasMana) {
+            if (this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
+                // Handle depletion of player mana from use
+                hasMana = PlayerManaEvent.consumeMana(player, 1);
+                hasMana |= player.isCreative();
+            }
+
+            if (hasMana && this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
                 AmethystEnergyBall energyBall = new AmethystEnergyBall(world, player);
                 energyBall.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
                 energyBall.setNoGravity(true);
                 world.addFreshEntity(energyBall);
             }
         }
-        if (hasMana) {
+        if (hasMana && this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
+
             this.playSound(world, player);
+            this.setDamage(itemstack, this.getDamage(itemstack) + 2);
             return InteractionResultHolder.success(itemstack);
         } else {
             return InteractionResultHolder.fail(itemstack);
