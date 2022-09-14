@@ -1,7 +1,7 @@
 # Mana Mod (Forge)
 
 ## About
-This mod introduces magic into Minecraft in amazing ways.
+A mod that introduces magic into Minecraft in amazing ways.
 
 ## Dependencies
 ### Recommended mods
