@@ -45,6 +45,7 @@ public class ManaClientEvents {
         ItemBlockRenderTypes.setRenderLayer(ManaBlocks.STAR_CATCHER.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ManaBlocks.STAR_BOTTLE.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(ManaBlocks.CELESTIAL_TORCH.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ManaBlocks.FLOWER_BUTTERCUP.get(), RenderType.cutout());
         // ItemBlockRenderTypes.setRenderLayer(ManaBlocks.CELESTIAL_WALL_TORCH.get(),
         // RenderType.cutout());
     }
