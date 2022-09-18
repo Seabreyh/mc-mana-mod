@@ -11,6 +11,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -57,11 +59,16 @@ public class ManaBlocks {
                                         .sound(SoundType.WOOD)),
                         ManaCreativeTabs.MANA_TAB_BLOCKS);
 
+        // FLOWERS - dont forget, to event register potted flowers in setup of main
         public static final RegistryObject<Block> FLOWER_BUTTERCUP = registerBlock("flower_buttercup",
                         () -> new Flower(BlockBehaviour.Properties.of(Material.PLANT).noCollission().instabreak()
                                         .sound(SoundType.GRASS)),
                         ManaCreativeTabs.MANA_TAB_BLOCKS);
 
+        public static final RegistryObject<Block> POTTED_FLOWER_BUTTERCUP = registerBlockWithoutBlockItem(
+                        "potted_flower_buttercup",
+                        () -> new FlowerPotBlock(null, ManaBlocks.FLOWER_BUTTERCUP,
+                                        BlockBehaviour.Properties.copy(Blocks.POTTED_DANDELION).noOcclusion()));
         // End create blocks ----
 
         private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block,
@@ -74,6 +81,11 @@ public class ManaBlocks {
         private static <T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block,
                         CreativeModeTab tab) {
                 return ManaItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties().tab(tab)));
+        }
+
+        private static <T extends Block> RegistryObject<T> registerBlockWithoutBlockItem(String name,
+                        Supplier<T> block) {
+                return BLOCKS.register(name, block);
         }
 
         public static void register(IEventBus eventBus) {

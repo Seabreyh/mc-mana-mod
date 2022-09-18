@@ -14,6 +14,8 @@ import com.seabreyh.mana.screen.StarCatcherScreen;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -59,6 +61,9 @@ public class ManaMod {
         // some preinit code
         event.enqueueWork(() -> {
             ManaMessages.register();
+
+            ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ManaBlocks.FLOWER_BUTTERCUP.getId(),
+                    ManaBlocks.POTTED_FLOWER_BUTTERCUP);
         });
     }
 
