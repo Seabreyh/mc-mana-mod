@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "mana:blocks/plant_lemonbalm"
+    "layer0": "mana:blocks/potted_plant_lemonbalm"
   }
 }
