@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "mana:blocks/plant_lemonbalm"
+  }
+}

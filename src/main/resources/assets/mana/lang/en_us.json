@@ -1,30 +1,31 @@
 {
-    "itemGroup.mana_items": "Mana Mod Items",
-    "itemGroup.mana_blocks": "Mana Mod Blocks",
+  "itemGroup.mana_items": "Mana Mod Items",
+  "itemGroup.mana_blocks": "Mana Mod Blocks",
 
-    "item.mana.amethyst_staff": "Amethyst Staff",
-    "item.mana.emerald_staff": "Emerald Staff",
-    "item.mana.star_dust": "Star Dust",
-    "item.mana.fallen_star_item": "Fallen Star",
-    "item.mana.wish_item": "Wish",
-    "item.mana.sealed_wish_item": "Sealed Wish",
-    "item.mana.granted_wish_item": "Granted Wish",
-    "item.mana.mana_crystal": "Mana Crystal",
-    "item.mana.mana_shard": "Mana Shard",
-    "item.mana.mana_capsule": "Mana Capsule",
-    "item.mana.mana_dust": "Mana Dust",
+  "item.mana.amethyst_staff": "Amethyst Staff",
+  "item.mana.emerald_staff": "Emerald Staff",
+  "item.mana.star_dust": "Star Dust",
+  "item.mana.fallen_star_item": "Fallen Star",
+  "item.mana.wish_item": "Wish",
+  "item.mana.sealed_wish_item": "Sealed Wish",
+  "item.mana.granted_wish_item": "Granted Wish",
+  "item.mana.mana_crystal": "Mana Crystal",
+  "item.mana.mana_shard": "Mana Shard",
+  "item.mana.mana_capsule": "Mana Capsule",
+  "item.mana.mana_dust": "Mana Dust",
 
-    "gui.mana.select_wish": "Choose your wish",
+  "gui.mana.select_wish": "Choose your wish",
 
-    "block.mana.star_catcher": "Star Catcher",
-    "block.mana.star_bottle": "Star in a Bottle",
-    "block.mana.celestial_torch": "Celestial Torch",
+  "block.mana.star_catcher": "Star Catcher",
+  "block.mana.star_bottle": "Star in a Bottle",
+  "block.mana.celestial_torch": "Celestial Torch",
 
+  "block.mana.flower_buttercup": "Buttercup",
+  "block.mana.potted_flower_buttercup": "Potted Buttercup",
+  "block.mana.plant_lemonbalm": "Lemon Balm",
+  "block.mana.potted_plant_lemonbalm": "Potted Lemon Balm",
 
-    "block.mana.flower_buttercup": "Buttercup",
-    "block.mana.potted_flower_buttercup": "Potted Buttercup",
+  "itemGroup.manaModTab": "Mana",
 
-    "itemGroup.manaModTab": "Mana",
-
-    "sounds.mana.star_capture": "Caught star"
+  "sounds.mana.star_capture": "Caught star"
 }

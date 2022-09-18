@@ -64,6 +64,9 @@ public class ManaMod {
 
             ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ManaBlocks.FLOWER_BUTTERCUP.getId(),
                     ManaBlocks.POTTED_FLOWER_BUTTERCUP);
+
+            ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ManaBlocks.PLANT_LEMONBALM.getId(),
+                    ManaBlocks.POTTED_PLANT_LEMONBALM);
         });
     }
 

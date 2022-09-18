@@ -69,6 +69,16 @@ public class ManaBlocks {
                         "potted_flower_buttercup",
                         () -> new FlowerPotBlock(null, ManaBlocks.FLOWER_BUTTERCUP,
                                         BlockBehaviour.Properties.copy(Blocks.POTTED_DANDELION).noOcclusion()));
+
+        public static final RegistryObject<Block> PLANT_LEMONBALM = registerBlock("plant_lemonbalm",
+                        () -> new Flower(BlockBehaviour.Properties.of(Material.PLANT).noCollission().instabreak()
+                                        .sound(SoundType.GRASS)),
+                        ManaCreativeTabs.MANA_TAB_BLOCKS);
+
+        public static final RegistryObject<Block> POTTED_PLANT_LEMONBALM = registerBlockWithoutBlockItem(
+                        "potted_plant_lemonbalm",
+                        () -> new FlowerPotBlock(null, ManaBlocks.PLANT_LEMONBALM,
+                                        BlockBehaviour.Properties.copy(Blocks.POTTED_DANDELION).noOcclusion()));
         // End create blocks ----
 
         private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block,
