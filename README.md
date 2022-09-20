@@ -19,6 +19,7 @@ A mod that introduces magic into Minecraft in amazing ways.
 * Celestial Torches
 * Mana Crystal
 * Star Dust
+* Wishes
 
 ### Current features
 * Mana bar
