@@ -153,7 +153,6 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
             if (this.clientSideCatchStarTickCount == timeTillStartCatch) {
                 this.playSound(SoundEvents.EVOKER_CAST_SPELL, 2.0F, 1.0F);
-                StarCatcherEntityBlock.setRotationSpeed(60.0F, pBlockEntity);
             }
 
             if (pBlockEntity == null) {
@@ -162,7 +161,6 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
             // If within 0.7 blocks of catcher, catch.
             if (Math.abs(vec3.x) < 0.7 && Math.abs(vec3.y) < 0.7 && Math.abs(vec3.z) < 0.7) {
-                StarCatcherEntityBlock.setRotationSpeed(10.0F, pBlockEntity);
                 this.playSound(SoundEvents.BOTTLE_FILL_DRAGONBREATH, 2.0F, 1.0F);
                 StarCatcherEntityBlock.craftItem(pBlockEntity);
                 discardStar();

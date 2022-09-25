@@ -39,6 +39,7 @@ import net.minecraftforge.items.IItemHandler;
 
 public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider {
     public int tickCount;
+    public int catchCount;
     private float activeRotation;
     private float rotationSpeed = 6F;
     private final List<BlockPos> effectBlocks = Lists.newArrayList();
@@ -119,6 +120,14 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, StarCatcherEntityBlock pBlockEntity) {
+        if (pLevel.isClientSide()) {
+            if (pBlockEntity.catchCount > 0) {
+                float modifier = Math.min((float) pBlockEntity.catchCount * 4.0f, 20.0f);
+                StarCatcherEntityBlock.setRotationSpeed(6.0f + modifier, pBlockEntity);
+            } else {
+                StarCatcherEntityBlock.setRotationSpeed(3.0F, pBlockEntity);
+            }
+        }
 
         locateStars(pLevel, pBlockEntity, pPos, pState);
 
@@ -138,36 +147,52 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
 
     private static void locateStars(Level plevel, StarCatcherEntityBlock pBlockEntity, BlockPos pPos,
             BlockState pState) {
-        FallenStar foundTarget = null;
+
         if (!plevel.isClientSide()) {
-            if (hasNotReachedStackLimit(pBlockEntity) && foundTarget == null) {
+            if (hasNotReachedStackLimit(pBlockEntity)) {
 
                 AABB area = pBlockEntity.getRenderBoundingBox().inflate(80.0D, 80.0D, 80.0D);
                 List<FallenStar> fallenStars = plevel.getEntitiesOfClass(FallenStar.class, area);
 
                 for (FallenStar foundStar : fallenStars) {
-                    foundTarget = foundStar;
                     // make sure star can only be targeted by one star catcher
-                    if (foundTarget.getIsFalling() == false && foundTarget.getIsTargeted() == false) {
-                        if (foundTarget != null && foundTarget instanceof FallenStar) {
-                            if (foundTarget.getIsTargeted() == false) {
-                                foundTarget.setIsTargeted(true);
-                                foundTarget.toStarCatcher(pBlockEntity.getBlockPos(), pBlockEntity);
+                    if (foundStar.getIsFalling() == false
+                            && foundStar.getIsTargeted() == false) {
+                        if (foundStar instanceof FallenStar) {
+                            if (foundStar.getIsTargeted() == false) {
+                                foundStar.setIsTargeted(true);
+                                foundStar.toStarCatcher(pBlockEntity.getBlockPos(), pBlockEntity);
+                                pBlockEntity.catchCount++;
                             }
-                            foundTarget = null;
                         }
 
                     }
                 }
-            } else if (foundTarget == null) {
+
+            } else {
                 AABB area = pBlockEntity.getRenderBoundingBox().inflate(80.0D, 80.0D, 80.0D);
                 List<FallenStar> fallenStars = plevel.getEntitiesOfClass(FallenStar.class, area);
 
                 for (FallenStar foundStar : fallenStars) {
                     if (foundStar.getIsTargeted()) {
                         foundStar.stopStarCatch();
+                        pBlockEntity.catchCount--;
                     }
                 }
+            }
+        } else {
+            // Client side only needs to keep track of how many stars are being caught
+            // in order to set the spin speed in the renderer
+
+            AABB area = pBlockEntity.getRenderBoundingBox().inflate(80.0D, 80.0D, 80.0D);
+            List<FallenStar> fallenStars = plevel.getEntitiesOfClass(FallenStar.class, area);
+
+            pBlockEntity.catchCount = 0;
+            for (FallenStar foundStar : fallenStars) {
+                pBlockEntity.catchCount++;
+
+                // Dummy statement to get linter to not complain about unused vars
+                foundStar.equals(foundStar);
             }
         }
     }
