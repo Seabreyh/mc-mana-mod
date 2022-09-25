@@ -1,6 +1,7 @@
 {
   "itemGroup.mana_items": "Mana Mod Items",
   "itemGroup.mana_blocks": "Mana Mod Blocks",
+  "itemGroup.manaModTab": "Mana",
 
   "item.mana.amethyst_staff": "Amethyst Staff",
   "item.mana.emerald_staff": "Emerald Staff",
@@ -25,7 +26,7 @@
   "block.mana.plant_lemonbalm": "Lemon Balm",
   "block.mana.potted_plant_lemonbalm": "Potted Lemon Balm",
 
-  "itemGroup.manaModTab": "Mana",
+  "entity.mana.fallen_star": "Fallen Star",
 
   "sounds.mana.star_capture": "Caught star"
 }
