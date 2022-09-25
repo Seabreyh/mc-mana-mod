@@ -133,7 +133,9 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         // SPEED TO MOVE STAR
         double catchSpeed = 0.8D;
         int timeTillStartCatch = 130;
-
+        if (moveToCatcher && pBlockEntity.isRemoved()) {
+            stopStarCatch();
+        }
         if (moveToCatcher && clientSideCatchStarTickCount >= timeTillStartCatch) {
             // Move to the star catcher
             this.pickup = AbstractArrow.Pickup.DISALLOWED;
