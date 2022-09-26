@@ -53,6 +53,8 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     private boolean playerWishedOn = false;
     private Player ownPlayer;
     private boolean isTargeted = false;
+    int failedProbability = random.nextInt(10);
+    private boolean isFailedLandingStar = false;
     public AbstractArrow.Pickup pickup = AbstractArrow.Pickup.ALLOWED;
 
     private boolean moveToCatcher = false;
@@ -61,18 +63,29 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     private StarCatcherEntityBlock pBlockEntity;
 
     private final SoundEvent HIT_SOUND = SoundEvents.AMETHYST_BLOCK_BREAK;
+    private final SoundEvent HIT_GROUND_FAIL = SoundEvents.DRAGON_FIREBALL_EXPLODE;
     private final SoundEvent FALL_SOUND = SoundEvents.AMETHYST_BLOCK_CHIME;
     private final SoundEvent BUBBLE = SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT;
 
     public FallenStar(EntityType<? extends FallenStar> getEntity, Level world) {
         super(getEntity, world);
+
         this.isFalling = true;
         this.dimensions = getEntity.getDimensions();
+
+        // determine stars probabiliy to land successfuly on the server side only.
+        if (!this.level.isClientSide) {
+            if (this.failedProbability < 3 && !isFailedLandingStar) {
+                isFailedLandingStar = true;
+            }
+        }
+
     }
 
     public FallenStar(EntityType<? extends FallenStar> getEntity, Level world, Player ownPlayer) {
         this(getEntity, world);
         this.ownPlayer = ownPlayer;
+
     }
 
     public static boolean canSpawn(EntityType<? extends AbstractArrow> p_27578_, LevelAccessor p_27579_,
@@ -197,7 +210,6 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             double playerSeesStar = dirPlayerToStar.dot(dirPlayerLooking);
 
             if (playerSeesStar > 0.98 && playerRotX <= -15F) {
-                ManaMod.LOGGER.debug("PLAYER SPOTS STAR THROUGH SPYGLASS");
                 PlayerWishEvent.starGrantPlayerWish(this.ownPlayer, level);
                 playerWishedOn = true;
             }
@@ -457,6 +469,10 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         }
     }
 
+    private boolean getIsFailedLandingStar() {
+        return this.isFailedLandingStar;
+    }
+
     @Override
     protected void onHitBlock(BlockHitResult p_36755_) {
         this.isFalling = false;
@@ -465,12 +481,37 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         this.setDeltaMovement(vec3);
         Vec3 vec31 = vec3.normalize().scale((double) 0.05F);
         this.setPosRaw(this.getX() - vec31.x, this.getY() - vec31.y, this.getZ() - vec31.z);
-        this.playHitSound();
+        if (!isFailedLandingStar) {
+            this.playHitSound();
+        }
         this.inGround = true;
         this.shakeTime = 7;
         this.setCritArrow(false);
         this.setPierceLevel((byte) 0);
         this.setShotFromCrossbow(false);
+
+        // Star has chance to not sucessfully hit ground and crumble.
+        if (getIsFailedLandingStar()) {
+            discardStarFailedLanding();
+        }
+
+    }
+
+    public void discardStarFailedLanding() {
+        this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 4.0F);
+        this.playSound(SoundEvents.FIREWORK_ROCKET_BLAST_FAR, 1F, 0.2F);
+        if (!this.level.isClientSide) { // qty spread velocity
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.SMOKE, this.getX(), this.getY(), this.getZ(),
+                    20, 0D, 0D, 0D, 0.7D);
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(),
+                    10, 0D, 0D, 0D, 0.1D);
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY(), this.getZ(),
+                    60, 0D, 0D, 0D, 0.7D);
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.SMALL_FLAME, this.getX(), this.getY(),
+                    this.getZ(),
+                    20, 0D, 0D, 0D, 0.3D);
+        }
+        this.discard();
     }
 
     private void playHitSound() {
