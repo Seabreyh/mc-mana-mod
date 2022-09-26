@@ -122,7 +122,7 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, StarCatcherEntityBlock pBlockEntity) {
         if (pLevel.isClientSide()) {
             if (pBlockEntity.catchCount > 0) {
-                float modifier = Math.min((float) pBlockEntity.catchCount * 4.0f, 20.0f);
+                float modifier = Math.min((float) pBlockEntity.catchCount * 10.0f, 20.0f);
                 StarCatcherEntityBlock.setRotationSpeed(6.0f + modifier, pBlockEntity);
             } else {
                 StarCatcherEntityBlock.setRotationSpeed(3.0F, pBlockEntity);
