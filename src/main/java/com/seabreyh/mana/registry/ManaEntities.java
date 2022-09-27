@@ -4,6 +4,7 @@ import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.entity.AmethystEnergyBall;
 import com.seabreyh.mana.entity.EmeraldEnergyBall;
 import com.seabreyh.mana.entity.FallenStar;
+import com.seabreyh.mana.entity.Meteor;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -31,10 +32,16 @@ public class ManaEntities {
                         () -> EntityType.Builder.<FallenStar>of(FallenStar::new, MobCategory.MISC)
                                         .build("fallen_star"));
 
+        public static final RegistryObject<EntityType<Meteor>> METEOR = ENTITIES.register(
+                        "meteor",
+                        () -> EntityType.Builder.<Meteor>of(Meteor::new, MobCategory.MISC)
+                                        .build("meteor"));
+
         // public static Object CAUGHT_STAR;
-        
-        // public static final RegistryObject<EntityType<FallenStar>> CAUGHT_STAR = ENTITIES.register(
-        //                 "caught_star",
-        //                 () -> EntityType.Builder.<FallenStar>of(FallenStar::new, MobCategory.MISC)
-        //                                 .build("caught_star"));
+
+        // public static final RegistryObject<EntityType<FallenStar>> CAUGHT_STAR =
+        // ENTITIES.register(
+        // "caught_star",
+        // () -> EntityType.Builder.<FallenStar>of(FallenStar::new, MobCategory.MISC)
+        // .build("caught_star"));
 }

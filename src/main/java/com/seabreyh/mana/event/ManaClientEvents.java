@@ -7,6 +7,7 @@ import com.seabreyh.mana.client.renderers.block_entity.CaughtStarRenderer;
 import com.seabreyh.mana.client.renderers.entity.AmethystEnergyBallRenderer;
 import com.seabreyh.mana.client.renderers.entity.EmeraldEnergyBallRenderer;
 import com.seabreyh.mana.client.renderers.entity.FallenStarRenderer;
+import com.seabreyh.mana.client.renderers.entity.MeteorRenderer;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaBlocks;
 import com.seabreyh.mana.registry.ManaEntities;
@@ -38,6 +39,7 @@ public class ManaClientEvents {
         EntityRenderers.register(ManaEntities.AMETHYST_ENERGY_BALL.get(), AmethystEnergyBallRenderer::new);
         EntityRenderers.register(ManaEntities.EMERALD_ENERGY_BALL.get(), EmeraldEnergyBallRenderer::new);
         EntityRenderers.register(ManaEntities.FALLEN_STAR.get(), FallenStarRenderer::new);
+        EntityRenderers.register(ManaEntities.METEOR.get(), MeteorRenderer::new);
     }
 
     @SubscribeEvent
