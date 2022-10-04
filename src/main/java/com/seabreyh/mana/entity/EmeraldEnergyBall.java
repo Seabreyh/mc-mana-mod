@@ -2,7 +2,6 @@ package com.seabreyh.mana.entity;
 
 import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaEntities;
-import com.seabreyh.mana.registry.ManaSounds;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -22,6 +21,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -34,7 +35,7 @@ import net.minecraft.sounds.SoundEvents;
 
 public class EmeraldEnergyBall extends ThrowableProjectile {
     private int life;
-    private Vec3 shootDir;
+    private Vec3 shootDir = new Vec3(0.0D, 0.0D, 0.0D); // not null, to allow constant mob searching.
     private LivingEntity owner;
     private Mob target;
 
@@ -48,7 +49,6 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         this.setPos(xPos, yPos, zPos);
         this.noPhysics = true;
         this.life = 0;
-        this.shootDir = null;
         this.owner = player;
     }
 
@@ -106,7 +106,9 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
 
     private void resolveEnemyTarget() {
         // Handle entity target "homing"
-        AABB aabb = this.owner.getBoundingBox().inflate(64.0D, 24.0D, 64.0D);
+        // get boudning box of the emerald ball entity, rather than players, this allows
+        // ball to target after shooting.
+        AABB aabb = this.getBoundingBox().inflate(64.0D, 24.0D, 64.0D);
         List<? extends Mob> candidates = this.level.getNearbyEntities(Mob.class,
                 TargetingConditions.forCombat().range(64.0D), this.owner, aabb);
         Mob foundTarget = null;
@@ -135,6 +137,7 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         this.shoot((double) f, (double) f1, (double) f2, p_37256_, p_37257_);
         Vec3 vec3 = player.getDeltaMovement();
         this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, 0.0F, vec3.z));
+        // initial target check
         this.resolveEnemyTarget();
     }
 
@@ -203,20 +206,33 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
             }
 
             Vec3 delta = this.getDeltaMovement();
+            int a = 1;
 
+            // MOVEMENT LOGIC - TARGETED
             if (this.target != null) {
                 Vec3 dirToEntity = this.target.getEyePosition().subtract(this.position()).normalize();
                 delta = delta.lerp(dirToEntity, 0.15);
                 this.setDeltaMovement(delta);
-            }
 
-        } else {
-            for (int i = 0; i < 4; ++i) {
-                this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_GREEN.get(), this.getX(),
-                        this.getY(), this.getZ(),
-                        this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
-                        this.random.nextGaussian() * 0.1D);
+                Vec3 vec32 = target.getEyePosition().subtract(this.position());
+                this.setPosRaw(this.getX(), this.getY() + vec32.y * 0.015D * (double) a, this.getZ());
+                if (this.level.isClientSide) {
+                    this.yOld = this.getY();
+                }
 
+                double d02 = 0.05D * (double) a;
+                this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vec32.normalize().scale(d02)));
+
+                // If target is dead, R.I.P., set target to null to allow ball entity to find a
+                // new target and continue moving.
+                if (this.target.isRemoved()) {
+                    this.target = null;
+                }
+
+                ++this.life;
+
+            } else {
+                // MOVEMENT LOGIC - NO TARGET.
                 vec3 = this.getDeltaMovement();
                 double d5 = vec3.x;
                 double d6 = vec3.y;
@@ -244,22 +260,43 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                 this.setDeltaMovement(vec3.scale((double) f));
                 this.setPos(d7, d2, d3);
                 this.checkInsideBlocks();
+
+                // constantly check for potential targets.
+                this.resolveEnemyTarget();
+
+            }
+
+        } else {
+
+            for (int i = 0; i < 4; ++i) {
+                this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_GREEN.get(), this.getX(),
+                        this.getY(), this.getZ(),
+                        this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
+                        this.random.nextGaussian() * 0.1D);
+
             }
         }
     }
 
     protected void onHitBlock(BlockHitResult hitBlock) {
-        this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
+        // discard entity on hitblock unless LEAVES, GLASS, or ICE
+        BlockState blockState = this.level.getBlockState(hitBlock.getBlockPos());
+        if (blockState.getMaterial() != Material.LEAVES && blockState.getMaterial() != Material.GLASS
+                && blockState.getMaterial() != Material.ICE) {
+            this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
 
-        if (!this.level.isClientSide) { // qty spread velocity
-            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1, 0D,
-                    0D, 0D, 0D);
-            ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(), 20,
-                    1D, 1D, 1D, 0.3D);
+            if (!this.level.isClientSide) { // qty spread velocity
+                ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1,
+                        0D,
+                        0D, 0D, 0D);
+                ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(),
+                        20,
+                        1D, 1D, 1D, 0.3D);
+            }
+
+            super.onHitBlock(hitBlock);
+            this.discard();
         }
-
-        super.onHitBlock(hitBlock);
-        this.discard();
     }
 
     protected void onHit(HitResult hitResult) {
