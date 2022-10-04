@@ -19,6 +19,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -210,14 +211,30 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
 
             // MOVEMENT LOGIC - TARGETED
             if (this.target != null) {
-                Vec3 dirToEntity = this.target.getEyePosition().subtract(this.position()).normalize();
-                delta = delta.lerp(dirToEntity, 0.15);
-                this.setDeltaMovement(delta);
+                Vec3 dirToEntity;
+                Vec3 vec32;
+                // if enderdragon, lower tracking to be able to hit it.
+                if (this.target instanceof EnderDragon) {
+                    dirToEntity = this.target.getPosition(1.0f).subtract(this.position()).normalize();
+                    delta = delta.lerp(dirToEntity, 0.15);
+                    this.setDeltaMovement(delta);
 
-                Vec3 vec32 = target.getEyePosition().subtract(this.position());
-                this.setPosRaw(this.getX(), this.getY() + vec32.y * 0.015D * (double) a, this.getZ());
-                if (this.level.isClientSide) {
-                    this.yOld = this.getY();
+                    vec32 = target.getPosition(1.0f).subtract(this.position());
+                    this.setPosRaw(this.getX(), this.getY() + vec32.y * 0.015D * (double) a, this.getZ());
+                    if (this.level.isClientSide) {
+                        this.yOld = this.getY();
+                    }
+
+                } else {
+                    dirToEntity = this.target.getEyePosition().subtract(this.position()).normalize();
+                    delta = delta.lerp(dirToEntity, 0.15);
+                    this.setDeltaMovement(delta);
+
+                    vec32 = target.getEyePosition().subtract(this.position());
+                    this.setPosRaw(this.getX(), this.getY() + vec32.y * 0.015D * (double) a, this.getZ());
+                    if (this.level.isClientSide) {
+                        this.yOld = this.getY();
+                    }
                 }
 
                 double d02 = 0.05D * (double) a;
