@@ -85,14 +85,6 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         //
     }
 
-    protected SoundEvent getPloofSound() {
-        return SoundEvents.AMETHYST_BLOCK_STEP;
-    }
-
-    protected SoundEvent getHitSound() {
-        return SoundEvents.ZOMBIE_VILLAGER_CURE;
-    }
-
     protected float getWaterInertia() {
         return 0.99F;
     }
@@ -110,9 +102,9 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         }
 
         if (this.fireCharged) {
-            this.playSound(this.getPloofSound(), 2F, 0.2F);
+            this.playSound(SoundEvents.AMETHYST_BLOCK_STEP, 2F, 0.2F);
         } else {
-            this.playSound(this.getPloofSound(), 2F, 3F);
+            this.playSound(SoundEvents.AMETHYST_BLOCK_STEP, 2F, 3F);
         }
 
         ++this.life;
@@ -223,7 +215,7 @@ public class AmethystEnergyBall extends ThrowableProjectile {
 
         if (flag && entity != entity1) {
             this.doEnchantDamageEffects(livingentity, entity);
-            this.playSound(this.getHitSound(), 1.2F, 1.5F);
+            this.playSound(SoundEvents.ZOMBIE_VILLAGER_CURE, 1.2F, 1.5F);
 
             if (!this.level.isClientSide) {
                 ((ServerLevel) this.level).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 20, 0.15D, 0.15D, 0.15D, 0.2D);

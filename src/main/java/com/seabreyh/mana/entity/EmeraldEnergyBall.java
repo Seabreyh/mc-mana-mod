@@ -36,7 +36,7 @@ import net.minecraft.sounds.SoundEvents;
 
 public class EmeraldEnergyBall extends ThrowableProjectile {
     private int life;
-    private Vec3 shootDir = new Vec3(0.0D, 0.0D, 0.0D); // not null, to allow constant mob searching.
+    private Vec3 shootDir = new Vec3(0.0D, 0.0D, 0.0D); //not null, to allow constant mob searching.
     private LivingEntity owner;
     private Mob target;
 
@@ -53,8 +53,8 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         this.owner = player;
     }
 
-    public EmeraldEnergyBall(EntityType<? extends EmeraldEnergyBall> p_37391_, Level p_37392_) {
-        super(p_37391_, p_37392_);
+    public EmeraldEnergyBall(EntityType<? extends EmeraldEnergyBall> entityType, Level entityLevel) {
+        super(entityType, entityLevel);
     }
 
     @Nonnull
@@ -63,50 +63,53 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         return new ClientboundAddEntityPacket(this);
     }
 
-    @Nullable
     // Helper function for raycasting target entities
-    private static EntityHitResult getEntityHitResult(Entity p_37295_, Predicate<Entity> p_37296_, Vec3 rayDir) {
-        Level level = p_37295_.level;
-        Vec3 vec31 = p_37295_.position();
-        Vec3 vec32 = vec31.add(rayDir);
+    @Nullable
+    private static EntityHitResult getEntityHitResult(Entity entity, Predicate<Entity> entityPredicate, Vec3 rayDir) {
+        Level level = entity.level;
+        Vec3 vecEntityPos = entity.position();
+        Vec3 vecRayDir = vecEntityPos.add(rayDir);
         HitResult hitresult = level
-                .clip(new ClipContext(vec31, vec32, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, p_37295_));
+                .clip(new ClipContext(vecEntityPos, vecRayDir, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
 
         if (hitresult.getType() != HitResult.Type.MISS) {
-            vec32 = hitresult.getLocation();
+            vecRayDir = hitresult.getLocation();
         }
 
-        EntityHitResult hitresult1 = ProjectileUtil.getEntityHitResult(level, p_37295_, vec31, vec32,
-                p_37295_.getBoundingBox().expandTowards(rayDir).inflate(1.0D), p_37296_);
+        EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(level, entity, vecEntityPos, vecRayDir,
+                entity.getBoundingBox().expandTowards(rayDir).inflate(1.0D), entityPredicate);
 
-        if (hitresult1 != null) {
-            hitresult = hitresult1;
+        if (entityHitResult != null) {
+            hitresult = entityHitResult;
         }
 
-        return hitresult1;
+        return entityHitResult;
     }
 
     @Override
-    public void shoot(double p_37266_, double p_37267_, double p_37268_, float p_37269_, float p_37270_) {
-        Vec3 vec3 = (new Vec3(p_37266_, p_37267_, p_37268_)).normalize()
-                .add(this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_,
-                        this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_,
-                        this.random.nextGaussian() * (double) 0.0075F * (double) p_37270_)
-                .scale((double) p_37269_);
+    public void shoot(double shootX, double shootY, double shootZ, float scale, float muliplier) {
+        Vec3 vec3 = (new Vec3(shootX, shootY, shootZ)).normalize()
+                .add(this.random.nextGaussian() * (double) 0.0075F * (double) muliplier,
+                        this.random.nextGaussian() * (double) 0.0075F * (double) muliplier,
+                        this.random.nextGaussian() * (double) 0.0075F * (double) muliplier)
+                .scale((double) scale);
 
         this.setDeltaMovement(vec3);
+
         double d0 = vec3.horizontalDistance();
+
         this.setYRot((float) (Mth.atan2(vec3.x, vec3.z) * (double) (180F / (float) Math.PI)));
         this.setXRot((float) (Mth.atan2(vec3.y, d0) * (double) (180F / (float) Math.PI)));
+
         this.yRotO = this.getYRot();
         this.xRotO = this.getXRot();
 
-        Vec3 shootDir = (new Vec3(p_37266_, p_37267_, p_37268_)).normalize();
+        Vec3 shootDir = (new Vec3(shootX, shootY, shootZ)).normalize();
         this.shootDir = shootDir;
     }
 
+    // Handle entity target "homing"
     private void resolveEnemyTarget() {
-        // Handle entity target "homing"
         // get boudning box of the emerald ball entity, rather than players, this allows
         // ball to target after shooting.
         AABB aabb = this.getBoundingBox().inflate(64.0D, 24.0D, 64.0D);
@@ -138,21 +141,12 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         this.shoot((double) f, (double) f1, (double) f2, p_37256_, p_37257_);
         Vec3 vec3 = player.getDeltaMovement();
         this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, 0.0F, vec3.z));
-        // initial target check
-        this.resolveEnemyTarget();
+        this.resolveEnemyTarget(); // initial target check
     }
 
     @Override
     protected void defineSynchedData() {
         //
-    }
-
-    protected SoundEvent getPloofSound() {
-        return SoundEvents.AMETHYST_BLOCK_STEP;
-    }
-
-    protected SoundEvent getTargetedSound() {
-        return SoundEvents.FIREWORK_ROCKET_LAUNCH;
     }
 
     protected SoundEvent getHitSound() {
@@ -167,19 +161,19 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         return 0.99F;
     }
 
-    protected boolean canHitEntity(Entity p_37341_) {
-        return super.canHitEntity(p_37341_) && !p_37341_.noPhysics;
+    protected boolean canHitEntity(Entity entity) {
+        return super.canHitEntity(entity) && !entity.noPhysics;
     }
 
     public void tick() {
         super.tick();
 
-        this.playSound(this.getPloofSound(), 2F, 3F);
+        this.playSound(SoundEvents.AMETHYST_BLOCK_STEP, 2F, 3F);
 
         if (this.target != null) {
-            // Target locked on travel sound
+            // Target-found traveling sound
             if (this.life % 3 == 0) {
-                this.playSound(this.getTargetedSound(), (float) Math.random(), (float) Math.random());
+                this.playSound(SoundEvents.FIREWORK_ROCKET_LAUNCH, (float) Math.random(), (float) Math.random());
             }
         }
 
@@ -207,38 +201,36 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
             }
 
             Vec3 delta = this.getDeltaMovement();
-            int a = 1;
+            int multiplier = 1;
 
             // MOVEMENT LOGIC - TARGETED
             if (this.target != null) {
                 Vec3 dirToEntity;
-                Vec3 vec32;
+                Vec3 moveToTarget;
+
                 // if enderdragon, lower tracking to be able to hit it.
                 if (this.target instanceof EnderDragon) {
                     dirToEntity = this.target.getPosition(1.0f).subtract(this.position()).normalize();
                     delta = delta.lerp(dirToEntity, 0.15);
                     this.setDeltaMovement(delta);
-
-                    vec32 = target.getPosition(1.0f).subtract(this.position());
-                    this.setPosRaw(this.getX(), this.getY() + vec32.y * 0.015D * (double) a, this.getZ());
+                    moveToTarget = target.getPosition(1.0f).subtract(this.position());
+                    this.setPosRaw(this.getX(), this.getY() + moveToTarget.y * 0.015D * (double) multiplier, this.getZ());
                     if (this.level.isClientSide) {
                         this.yOld = this.getY();
                     }
-
                 } else {
                     dirToEntity = this.target.getEyePosition().subtract(this.position()).normalize();
                     delta = delta.lerp(dirToEntity, 0.15);
                     this.setDeltaMovement(delta);
-
-                    vec32 = target.getEyePosition().subtract(this.position());
-                    this.setPosRaw(this.getX(), this.getY() + vec32.y * 0.015D * (double) a, this.getZ());
+                    moveToTarget = target.getEyePosition().subtract(this.position());
+                    this.setPosRaw(this.getX(), this.getY() + moveToTarget.y * 0.015D * (double) multiplier, this.getZ());
                     if (this.level.isClientSide) {
                         this.yOld = this.getY();
                     }
                 }
 
-                double d02 = 0.05D * (double) a;
-                this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vec32.normalize().scale(d02)));
+                double d02 = 0.05D * (double) multiplier;
+                this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(moveToTarget.normalize().scale(d02)));
 
                 // If target is dead, R.I.P., set target to null to allow ball entity to find a
                 // new target and continue moving.
@@ -278,13 +270,12 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                 this.setPos(d7, d2, d3);
                 this.checkInsideBlocks();
 
-                // constantly check for potential targets.
+                // check for potential targets.
                 this.resolveEnemyTarget();
-
             }
 
         } else {
-
+            // trail particles
             for (int i = 0; i < 4; ++i) {
                 this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_GREEN.get(), this.getX(),
                         this.getY(), this.getZ(),
@@ -323,11 +314,11 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
     protected void onHitEntity(EntityHitResult hitEntity) {
         super.onHitEntity(hitEntity);
         Entity entity = hitEntity.getEntity();
-        Entity entity1 = this.getOwner();
-        LivingEntity livingentity = entity1 instanceof LivingEntity ? (LivingEntity) entity1 : null;
+        Entity owner = this.getOwner();
+        LivingEntity livingentity = owner instanceof LivingEntity ? (LivingEntity) owner : null;
         boolean flag = entity.hurt(DamageSource.indirectMobAttack(this, livingentity).setProjectile(), 2F);
 
-        if (flag && entity != entity1) {
+        if (flag && entity != owner) {
             this.doEnchantDamageEffects(livingentity, entity);
             if (this.target != null) {
                 this.playSound(this.getHitSound(), 3F, 2F);
