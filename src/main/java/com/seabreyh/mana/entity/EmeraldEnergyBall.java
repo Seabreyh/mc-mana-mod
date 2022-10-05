@@ -5,11 +5,7 @@ import com.seabreyh.mana.registry.ManaEntities;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.function.Predicate;
-import javax.annotation.Nullable;
 
-import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.util.Mth;
@@ -36,9 +32,10 @@ import net.minecraft.sounds.SoundEvents;
 
 public class EmeraldEnergyBall extends ThrowableProjectile {
     private int life;
-    private Vec3 shootDir = new Vec3(0.0D, 0.0D, 0.0D); //not null, to allow constant mob searching.
+    private Vec3 shootDir = new Vec3(0.0D, 0.0D, 0.0D); // not null, to allow constant mob searching.
     private LivingEntity owner;
     private Mob target;
+    private boolean hasDoneInitialTargetSearch = false;
 
     public EmeraldEnergyBall(Level world, LivingEntity player) {
         super(ManaEntities.EMERALD_ENERGY_BALL.get(), player, world);
@@ -63,28 +60,34 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         return new ClientboundAddEntityPacket(this);
     }
 
-    // Helper function for raycasting target entities
-    @Nullable
-    private static EntityHitResult getEntityHitResult(Entity entity, Predicate<Entity> entityPredicate, Vec3 rayDir) {
-        Level level = entity.level;
-        Vec3 vecEntityPos = entity.position();
-        Vec3 vecRayDir = vecEntityPos.add(rayDir);
-        HitResult hitresult = level
-                .clip(new ClipContext(vecEntityPos, vecRayDir, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
+    // function was never implemented, assumed to see if target is in line of sight.
 
-        if (hitresult.getType() != HitResult.Type.MISS) {
-            vecRayDir = hitresult.getLocation();
-        }
+    // // Helper function for raycasting target entities
+    // @Nullable
+    // private static EntityHitResult getEntityHitResult(Entity entity,
+    // Predicate<Entity> entityPredicate, Vec3 rayDir) {
+    // Level level = entity.level;
+    // Vec3 vecEntityPos = entity.position();
+    // Vec3 vecRayDir = vecEntityPos.add(rayDir);
+    // HitResult hitresult = level
+    // .clip(new ClipContext(vecEntityPos, vecRayDir, ClipContext.Block.COLLIDER,
+    // ClipContext.Fluid.NONE, entity));
 
-        EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(level, entity, vecEntityPos, vecRayDir,
-                entity.getBoundingBox().expandTowards(rayDir).inflate(1.0D), entityPredicate);
+    // if (hitresult.getType() != HitResult.Type.MISS) {
+    // vecRayDir = hitresult.getLocation();
+    // }
 
-        if (entityHitResult != null) {
-            hitresult = entityHitResult;
-        }
+    // EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(level,
+    // entity, vecEntityPos, vecRayDir,
+    // entity.getBoundingBox().expandTowards(rayDir).inflate(1.0D),
+    // entityPredicate);
 
-        return entityHitResult;
-    }
+    // if (entityHitResult != null) {
+    // hitresult = entityHitResult;
+    // }
+
+    // return entityHitResult;
+    // }
 
     @Override
     public void shoot(double shootX, double shootY, double shootZ, float scale, float muliplier) {
@@ -119,8 +122,18 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         double shortestDist = Double.MAX_VALUE;
 
         for (Mob mobs : candidates) {
+            // If initial search for target (shot by player), use a degree restraint on
+            // target search. Otherwise, use no degree restraint when searching for target
+            // in bullet travel. This allows the non discarded bullets to bounce to other
+            // targets after the previous target dies.
+
+            // As it did before, this will still target mobs undergound (not in line of
+            // sight) only if there is not target within the degree restraint of initial
+            // target search on player shoot. To correct this, implement a raycast line of
+            // sight.
             Vec3 dirToEntity = mobs.position().subtract(this.position()).normalize();
-            if (dirToEntity.dot(this.shootDir) >= 0.9) {
+            if ((dirToEntity.dot(this.shootDir) >= 0.9 && !hasDoneInitialTargetSearch)
+                    || (hasDoneInitialTargetSearch)) {
                 foundTarget = mobs;
                 double distTo = foundTarget.position().subtract(this.position()).length();
                 if (distTo < shortestDist) {
@@ -142,6 +155,7 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         Vec3 vec3 = player.getDeltaMovement();
         this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, 0.0F, vec3.z));
         this.resolveEnemyTarget(); // initial target check
+        hasDoneInitialTargetSearch = true;
     }
 
     @Override
@@ -214,7 +228,8 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                     delta = delta.lerp(dirToEntity, 0.15);
                     this.setDeltaMovement(delta);
                     moveToTarget = target.getPosition(1.0f).subtract(this.position());
-                    this.setPosRaw(this.getX(), this.getY() + moveToTarget.y * 0.015D * (double) multiplier, this.getZ());
+                    this.setPosRaw(this.getX(), this.getY() + moveToTarget.y * 0.015D * (double) multiplier,
+                            this.getZ());
                     if (this.level.isClientSide) {
                         this.yOld = this.getY();
                     }
@@ -223,7 +238,8 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                     delta = delta.lerp(dirToEntity, 0.15);
                     this.setDeltaMovement(delta);
                     moveToTarget = target.getEyePosition().subtract(this.position());
-                    this.setPosRaw(this.getX(), this.getY() + moveToTarget.y * 0.015D * (double) multiplier, this.getZ());
+                    this.setPosRaw(this.getX(), this.getY() + moveToTarget.y * 0.015D * (double) multiplier,
+                            this.getZ());
                     if (this.level.isClientSide) {
                         this.yOld = this.getY();
                     }
@@ -300,10 +316,10 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                 ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(),
                         20,
                         1D, 1D, 1D, 0.3D);
-            }
 
+                this.discard(); // discard needs to be server-side
+            }
             super.onHitBlock(hitBlock);
-            this.discard();
         }
     }
 
@@ -329,9 +345,9 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
             if (!this.level.isClientSide) {
                 ((ServerLevel) this.level).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 20,
                         0.15D, 0.15D, 0.15D, 0.2D);
-            }
 
-            this.discard();
+                this.discard(); // discard needs to be server-side
+            }
         }
     }
 }
