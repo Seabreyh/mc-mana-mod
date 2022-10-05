@@ -20,17 +20,17 @@ public class ManaEntities {
         public static final RegistryObject<EntityType<AmethystEnergyBall>> AMETHYST_ENERGY_BALL = ENTITIES.register(
                         "amethyst_energy_ball",
                         () -> EntityType.Builder.<AmethystEnergyBall>of(AmethystEnergyBall::new, MobCategory.MISC)
-                                        .build("amethyst_energy_ball"));
+                                        .sized(0.3f, 0.3f).build("amethyst_energy_ball"));
 
         public static final RegistryObject<EntityType<EmeraldEnergyBall>> EMERALD_ENERGY_BALL = ENTITIES.register(
                         "emerald_energy_ball",
                         () -> EntityType.Builder.<EmeraldEnergyBall>of(EmeraldEnergyBall::new, MobCategory.MISC)
-                                        .build("emerald_energy_ball"));
+                                        .sized(0.3f, 0.3f).build("emerald_energy_ball"));
 
         public static final RegistryObject<EntityType<FallenStar>> FALLEN_STAR = ENTITIES.register(
                         "fallen_star",
                         () -> EntityType.Builder.<FallenStar>of(FallenStar::new, MobCategory.MISC)
-                                        .build("fallen_star"));
+                                        .sized(0.5f, 0.7f).build("fallen_star"));
 
         public static final RegistryObject<EntityType<Meteor>> METEOR = ENTITIES.register(
                         "meteor",
