@@ -125,12 +125,12 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         for (Mob mobs : candidates) {
             // If initial search for target (shot by player), use a degree restraint on
             // target search. Otherwise, use no degree restraint when searching for target
-            // in bullet travel AND the first target has died. This allows the non discarded
+            // in bullet travel AND the first found target obtained by the degree restraint has died. This allows the non discarded
             // bullets to bounce to other targets after the previous target dies.
 
             // As it did before, this will still target mobs undergound (not in line of
             // sight) only if there is not target within the degree restraint of initial
-            // target search on player shoot. To correct this, implement a raycast line of
+            // target search on player shoot and first target has died. To correct this, implement a raycast line of
             // sight.
             Vec3 dirToEntity = mobs.position().subtract(this.position()).normalize();
             if ((dirToEntity.dot(this.shootDir) >= 0.9 && !hasDoneInitialTargetSearch)
