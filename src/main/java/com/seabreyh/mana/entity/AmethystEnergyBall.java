@@ -33,11 +33,11 @@ public class AmethystEnergyBall extends ThrowableProjectile {
 
     public AmethystEnergyBall(Level world, LivingEntity player) {
         super(ManaEntities.AMETHYST_ENERGY_BALL.get(), player, world);
-        
+
         double xPos = player.getX();
         double yPos = player.getEyeY() - 0.1D;
         double zPos = player.getZ();
-        
+
         this.setPos(xPos, yPos, zPos);
         this.noPhysics = true;
         this.life = 0;
@@ -70,11 +70,12 @@ public class AmethystEnergyBall extends ThrowableProjectile {
     }
 
     @Override
-    public void shootFromRotation(Entity player, float p_37253_, float p_37254_, float p_37255_, float p_37256_, float p_37257_) {
+    public void shootFromRotation(Entity player, float p_37253_, float p_37254_, float p_37255_, float p_37256_,
+            float p_37257_) {
         float f = -Mth.sin(p_37254_ * ((float) Math.PI / 180F)) * Mth.cos(p_37253_ * ((float) Math.PI / 180F));
         float f1 = -Mth.sin((p_37253_ + p_37255_) * ((float) Math.PI / 180F));
         float f2 = Mth.cos(p_37254_ * ((float) Math.PI / 180F)) * Mth.cos(p_37253_ * ((float) Math.PI / 180F));
-        
+
         this.shoot((double) f, (double) f1, (double) f2, p_37256_, p_37257_);
         Vec3 vec3 = player.getDeltaMovement();
         this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, 0.0F, vec3.z));
@@ -133,20 +134,20 @@ public class AmethystEnergyBall extends ThrowableProjectile {
             for (int i = 0; i < 4; ++i) {
                 if (fireCharged) {
                     this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_FIRE.get(), this.getX(),
-                        this.getY(), this.getZ(),
-                        this.random.nextGaussian() * 0.2D, this.random.nextGaussian() * 0.2D,
-                        this.random.nextGaussian() * 0.2D);
+                            this.getY(), this.getZ(),
+                            this.random.nextGaussian() * 0.2D, this.random.nextGaussian() * 0.2D,
+                            this.random.nextGaussian() * 0.2D);
 
                     this.level.addParticle(ParticleTypes.FLAME, this.getX(),
-                        this.getY(), this.getZ(),
-                        this.random.nextGaussian() * 0D, this.random.nextGaussian() * 0.02D,
-                        this.random.nextGaussian() * 0.05D);
+                            this.getY(), this.getZ(),
+                            this.random.nextGaussian() * 0D, this.random.nextGaussian() * 0.02D,
+                            this.random.nextGaussian() * 0.05D);
                 } else {
                     this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_DEFAULT.get(),
-                        this.getX(),
-                        this.getY(), this.getZ(),
-                        this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
-                        this.random.nextGaussian() * 0.1D);
+                            this.getX(),
+                            this.getY(), this.getZ(),
+                            this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
+                            this.random.nextGaussian() * 0.1D);
                 }
 
                 vec3 = this.getDeltaMovement();
@@ -183,10 +184,13 @@ public class AmethystEnergyBall extends ThrowableProjectile {
     protected void onHitBlock(BlockHitResult hitBlock) {
         BlockState blockstate = this.level.getBlockState(hitBlock.getBlockPos().above());
 
-        if (fireCharged || this.wasOnFire || blockstate.getBlock() == Blocks.FIRE || blockstate.getBlock() == Blocks.SOUL_FIRE) {
+        if (fireCharged || this.wasOnFire || blockstate.getBlock() == Blocks.FIRE
+                || blockstate.getBlock() == Blocks.SOUL_FIRE) {
             if (!this.level.isClientSide) {
-                boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this.getOwner());
-                this.level.explode((Entity) null, this.getX(), this.getY(), this.getZ(), (float) this.explosionPower, flag, flag ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
+                boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level,
+                        this.getOwner());
+                this.level.explode((Entity) null, this.getX(), this.getY(), this.getZ(), (float) this.explosionPower,
+                        flag, flag ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
                 this.discard();
             }
         } else {
@@ -194,12 +198,16 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         }
 
         if (!this.level.isClientSide) { // qty spread velocity
-            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1, 0D, 0D, 0D, 0D);
-            ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(), 20, 1D, 1D, 1D, 0.3D);
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1, 0D,
+                    0D, 0D, 0D);
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(), 20,
+                    1D, 1D, 1D, 0.3D);
+
+            this.discard();
         }
 
         super.onHitBlock(hitBlock);
-        this.discard();
+
     }
 
     protected void onHit(HitResult hitResult) {
@@ -218,18 +226,23 @@ public class AmethystEnergyBall extends ThrowableProjectile {
             this.playSound(SoundEvents.ZOMBIE_VILLAGER_CURE, 1.2F, 1.5F);
 
             if (!this.level.isClientSide) {
-                ((ServerLevel) this.level).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 20, 0.15D, 0.15D, 0.15D, 0.2D);
+                ((ServerLevel) this.level).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 20,
+                        0.15D, 0.15D, 0.15D, 0.2D);
             }
 
             if (fireCharged || this.wasOnFire) {
                 if (!this.level.isClientSide) {
-                    boolean flag2 = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this.getOwner());
-                    this.level.explode((Entity) null, this.getX(), this.getY(), this.getZ(), (float) this.explosionPower, flag2, flag2 ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
+                    boolean flag2 = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level,
+                            this.getOwner());
+                    this.level.explode((Entity) null, this.getX(), this.getY(), this.getZ(),
+                            (float) this.explosionPower, flag2,
+                            flag2 ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
                     this.discard();
                 }
             }
-
-            this.discard();
+            if (!this.level.isClientSide) {
+                this.discard();
+            }
         }
     }
 }
