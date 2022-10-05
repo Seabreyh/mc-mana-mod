@@ -568,6 +568,10 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         }
     }
 
+    protected float getWaterInertia() {
+        return 0.99F;
+    }
+
     @Override
     protected void doWaterSplashEffect() {
         this.level.playSound((Player) null, this.getX(), this.getY(), this.getZ(), SoundEvents.PLAYER_SPLASH_HIGH_SPEED,
