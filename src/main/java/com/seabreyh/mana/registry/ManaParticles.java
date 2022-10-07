@@ -1,4 +1,4 @@
-package com.seabreyh.mana.particle;
+package com.seabreyh.mana.registry;
 
 import com.seabreyh.mana.ManaMod;
 
@@ -11,12 +11,14 @@ import net.minecraftforge.registries.RegistryObject;
 public class ManaParticles {
         public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES = DeferredRegister
                         .create(ForgeRegistries.PARTICLE_TYPES, ManaMod.MOD_ID);
+        // ------------------------------------------------------------
+        // DONT FORGET TO REGISTER PARTICLE IN ManaEventBusEvents.java
+        // ------------------------------------------------------------
+        public static final RegistryObject<SimpleParticleType> MAGIC_PLOOM_PARTICLE_AMETHYST = PARTICLE_TYPES
+                        .register("magic_ploom_particle_amethyst", () -> new SimpleParticleType(true));
 
-        public static final RegistryObject<SimpleParticleType> MAGIC_PLOOM_PARTICLE_DEFAULT = PARTICLE_TYPES
-                        .register("magic_ploom_particle_default", () -> new SimpleParticleType(true));
-
-        public static final RegistryObject<SimpleParticleType> MAGIC_PLOOM_PARTICLE_GREEN = PARTICLE_TYPES
-                        .register("magic_ploom_particle_green", () -> new SimpleParticleType(true));
+        public static final RegistryObject<SimpleParticleType> MAGIC_PLOOM_PARTICLE_EMERALD = PARTICLE_TYPES
+                        .register("magic_ploom_particle_emerald", () -> new SimpleParticleType(true));
 
         public static final RegistryObject<SimpleParticleType> MAGIC_PLOOM_PARTICLE_FALLING_STAR = PARTICLE_TYPES
                         .register("magic_ploom_particle_falling_star", () -> new SimpleParticleType(true));

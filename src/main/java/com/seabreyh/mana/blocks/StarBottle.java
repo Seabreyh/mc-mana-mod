@@ -3,10 +3,9 @@ package com.seabreyh.mana.blocks;
 import java.util.Random;
 import java.util.stream.Stream;
 
-import com.seabreyh.mana.particle.ManaParticles;
+import com.seabreyh.mana.registry.ManaParticles;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;

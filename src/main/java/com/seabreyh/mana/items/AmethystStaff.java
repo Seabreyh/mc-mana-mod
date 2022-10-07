@@ -5,6 +5,7 @@ import com.seabreyh.mana.event.player.PlayerManaEvent;
 
 import java.util.Random;
 
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -15,6 +16,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.TooltipFlag;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class AmethystStaff extends Item {
 
@@ -62,5 +69,15 @@ public class AmethystStaff extends Item {
         level.playSound((Player) null, player.getX(), player.getY(), player.getZ(), SoundEvents.FIRECHARGE_USE,
                 SoundSource.BLOCKS, 1.0F,
                 (random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents,
+            TooltipFlag pIsAdvanced) {
+        if (Screen.hasShiftDown()) {
+            pTooltipComponents.add(new TranslatableComponent("tooltip.mana.amethyst_staff.tooltip"));
+        } else {
+            pTooltipComponents.add(new TranslatableComponent("tooltip.mana.lshift.tooltip"));
+        }
     }
 }

@@ -14,8 +14,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class EmeraldEnergyBallRenderer extends EntityRenderer<EmeraldEnergyBall> {
 
     private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/entity/shulker/spark.png");
-    // private static final RenderType RENDER_TYPE =
-    // RenderType.entityTranslucent(TEXTURE_LOCATION);
     private final ShulkerBulletModel<EmeraldEnergyBall> model;
 
     public EmeraldEnergyBallRenderer(EntityRendererProvider.Context manager) {

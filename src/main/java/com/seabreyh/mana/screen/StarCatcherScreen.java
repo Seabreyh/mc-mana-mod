@@ -11,11 +11,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class StarCatcherScreen extends AbstractContainerScreen<StarCatcherMenu> {
-    private static final ResourceLocation TEXTURE =
-            new ResourceLocation(ManaMod.MOD_ID, "textures/gui/star_catcher_gui.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ManaMod.MOD_ID,
+            "textures/gui/star_catcher_gui.png");
+
+    protected int imageWidth = 176;
+    protected int imageHeight = 176;
 
     public StarCatcherScreen(StarCatcherMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
+    }
+
+    protected void init() {
+        super.init();
+        this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     }
 
     @Override
@@ -25,8 +33,15 @@ public class StarCatcherScreen extends AbstractContainerScreen<StarCatcherMenu> 
         RenderSystem.setShaderTexture(0, TEXTURE);
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
-
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
+    }
+
+    @Override
+    protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
+        this.font.draw(p_97808_, this.title, (float) this.titleLabelX, (float) 6,
+                4210752);
+        this.font.draw(p_97808_, this.playerInventoryTitle, (float) 8, (float) this.imageHeight - 98,
+                4210752);
     }
 
     @Override

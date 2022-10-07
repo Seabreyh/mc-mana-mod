@@ -3,16 +3,14 @@ package com.seabreyh.mana;
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.event.ManaClientEvents;
 import com.seabreyh.mana.networking.ManaMessages;
-import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaBlocks;
 import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaItems;
+import com.seabreyh.mana.registry.ManaParticles;
 import com.seabreyh.mana.registry.ManaSounds;
 import com.seabreyh.mana.screen.ManaMenuTypes;
-import com.seabreyh.mana.screen.StarCatcherScreen;
 
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;

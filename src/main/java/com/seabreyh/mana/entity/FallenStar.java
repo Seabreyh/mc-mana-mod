@@ -3,8 +3,8 @@ package com.seabreyh.mana.entity;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.blocks.entity.StarCatcherEntityBlock;
 import com.seabreyh.mana.event.player.PlayerWishEvent;
-import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaItems;
+import com.seabreyh.mana.registry.ManaParticles;
 
 import java.util.Random;
 

@@ -1,7 +1,7 @@
 package com.seabreyh.mana.entity;
 
-import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaEntities;
+import com.seabreyh.mana.registry.ManaParticles;
 
 import javax.annotation.Nonnull;
 
@@ -16,6 +16,7 @@ import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.level.Explosion;
@@ -23,13 +24,13 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 
 public class AmethystEnergyBall extends ThrowableProjectile {
     private int life;
     private int explosionPower = 2;
     private boolean fireCharged;
+    private Double speedModifier = 8.0D;
 
     public AmethystEnergyBall(Level world, LivingEntity player) {
         super(ManaEntities.AMETHYST_ENERGY_BALL.get(), player, world);
@@ -113,15 +114,13 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         boolean flag = this.noPhysics;
         Vec3 vec3 = this.getDeltaMovement();
 
-        // (double)3 changes the underwater speed.
-        this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.015D * (double) 3, this.getZ());
+        this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.015D * speedModifier, this.getZ());
 
         if (this.level.isClientSide) {
             this.yOld = this.getY();
         }
 
-        // (double)3 changes the underwater speed.
-        double d0 = 0.05D * (double) 3;
+        double d0 = 0.05D * speedModifier;
         this.setDeltaMovement(this.getDeltaMovement().scale(0.75D).add(vec3.normalize().scale(d0)));
 
         if (!this.level.isClientSide) {
@@ -143,7 +142,7 @@ public class AmethystEnergyBall extends ThrowableProjectile {
                             this.random.nextGaussian() * 0D, this.random.nextGaussian() * 0.02D,
                             this.random.nextGaussian() * 0.05D);
                 } else {
-                    this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_DEFAULT.get(),
+                    this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_AMETHYST.get(),
                             this.getX(),
                             this.getY(), this.getZ(),
                             this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
@@ -182,32 +181,41 @@ public class AmethystEnergyBall extends ThrowableProjectile {
     }
 
     protected void onHitBlock(BlockHitResult hitBlock) {
-        BlockState blockstate = this.level.getBlockState(hitBlock.getBlockPos().above());
+        BlockState blockstateAbove = this.level.getBlockState(hitBlock.getBlockPos().above());
 
-        if (fireCharged || this.wasOnFire || blockstate.getBlock() == Blocks.FIRE
-                || blockstate.getBlock() == Blocks.SOUL_FIRE) {
-            if (!this.level.isClientSide) {
-                boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level,
-                        this.getOwner());
-                this.level.explode((Entity) null, this.getX(), this.getY(), this.getZ(), (float) this.explosionPower,
-                        flag, flag ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
+        // discard entity on hitblock unless LEAVES, GLASS, or ICE
+        BlockState blockState = this.level.getBlockState(hitBlock.getBlockPos());
+        if (blockState.getMaterial() != Material.LEAVES && blockState.getMaterial() != Material.GLASS
+                && blockState.getMaterial() != Material.ICE) {
+
+            if (fireCharged || this.wasOnFire || blockstateAbove.getBlock() == Blocks.FIRE
+                    || blockstateAbove.getBlock() == Blocks.SOUL_FIRE) {
+                if (!this.level.isClientSide) {
+                    boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level,
+                            this.getOwner());
+                    this.level.explode((Entity) null, this.getX(), this.getY(), this.getZ(),
+                            (float) this.explosionPower,
+                            flag, flag ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.NONE);
+                    this.discard();
+                }
+            } else {
+                this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
+            }
+
+            if (!this.level.isClientSide) { // qty spread velocity
+                ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1,
+                        0D,
+                        0D, 0D, 0D);
+                ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(),
+                        20,
+                        1D, 1D, 1D, 0.3D);
+
                 this.discard();
             }
-        } else {
-            this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
+
+            super.onHitBlock(hitBlock);
+
         }
-
-        if (!this.level.isClientSide) { // qty spread velocity
-            ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1, 0D,
-                    0D, 0D, 0D);
-            ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(), 20,
-                    1D, 1D, 1D, 0.3D);
-
-            this.discard();
-        }
-
-        super.onHitBlock(hitBlock);
-
     }
 
     protected void onHit(HitResult hitResult) {

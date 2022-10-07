@@ -1,6 +1,5 @@
 package com.seabreyh.mana.blocks.entity;
 
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.entity.FallenStar;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaItems;
@@ -10,7 +9,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.jetbrains.annotations.Debug;
 import org.jetbrains.annotations.NotNull;
 import com.google.common.collect.Lists;
 
