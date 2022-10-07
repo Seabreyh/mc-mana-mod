@@ -1,14 +1,16 @@
 package com.seabreyh.mana.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.*;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class MagicPloomParticleStarCatcher extends MagicPloomParticle {
-    protected MagicPloomParticleStarCatcher(ClientLevel level, double xCoord, double yCoord, double zCoord, SpriteSet spriteSet, double xd, double yd, double zd) {
-
+public class MagicPloomParticleStarCatcher extends BaseMagicPloomParticle {
+    protected MagicPloomParticleStarCatcher(ClientLevel level, double xCoord, double yCoord, double zCoord,
+            SpriteSet spriteSet, double xd, double yd, double zd) {
         super(level, xCoord, yCoord, zCoord, spriteSet, xd, yd, zd);
 
         this.gravity = 0.0F;
@@ -19,22 +21,21 @@ public class MagicPloomParticleStarCatcher extends MagicPloomParticle {
         this.quadSize *= 1F;
         this.lifetime = 10;
         this.setSpriteFromAge(spriteSet);
-
-        setFade();
-        setCol();
-    
         this.alpha = 1.0f;
+
+        setFadeCol();
+        setCol();
     }
 
     @Override
-    public void setCol(){
-        this.rCol = 1.0f;
-        this.gCol = 1.0f;
-        this.bCol = 1.0f;
+    public void setCol() {
+        this.rCol = 255f / 255.0f;
+        this.gCol = 255f / 255.0f;
+        this.bCol = 255f / 255.0f;
     }
 
     @Override
-    public void setFade(){
+    public void setFadeCol() {
         this.fadeR = 87f / 255.0f;
         this.fadeG = 56f / 255.0f;
         this.fadeB = 235f / 255.0f;
@@ -48,8 +49,7 @@ public class MagicPloomParticleStarCatcher extends MagicPloomParticle {
             this.sprites = spriteSet;
         }
 
-        public Particle createParticle(SimpleParticleType particleType, ClientLevel level,
-                double x, double y, double z,
+        public Particle createParticle(SimpleParticleType particleType, ClientLevel level, double x, double y, double z,
                 double dx, double dy, double dz) {
             return new MagicPloomParticleStarCatcher(level, x, y, z, this.sprites, dx, dy, dz);
         }

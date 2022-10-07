@@ -27,6 +27,12 @@
   "block.mana.potted_plant_lemonbalm": "Potted Lemon Balm",
 
   "entity.mana.fallen_star": "Fallen Star",
+  "entity.mana.amethyst_energy_ball": "Amethyst Magic",
+  "entity.mana.emerald_energy_ball": "Emerald Magic",
 
-  "sounds.mana.star_capture": "Caught star"
+  "sounds.mana.star_capture": "Caught star",
+
+  "tooltip.mana.amethyst_staff.tooltip": "§7Does not react well to fire... or does it?",
+  "tooltip.mana.emerald_staff.tooltip": "§7Auto targeted magic",
+  "tooltip.mana.lshift.tooltip": "§7Hold §8[§bLSHIFT§8] §7for more info"
 }

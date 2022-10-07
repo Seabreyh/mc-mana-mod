@@ -1,8 +1,8 @@
 package com.seabreyh.mana.blocks;
 
-import com.seabreyh.mana.particle.ManaParticles;
-
 import java.util.Random;
+
+import com.seabreyh.mana.registry.ManaParticles;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;

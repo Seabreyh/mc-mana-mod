@@ -1,7 +1,7 @@
 package com.seabreyh.mana.entity;
 
-import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaEntities;
+import com.seabreyh.mana.registry.ManaParticles;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -34,9 +34,10 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
     private int life;
     private Vec3 shootDir = new Vec3(0.0D, 0.0D, 0.0D); // not null, to allow constant mob searching.
     private LivingEntity owner;
-    private Mob target;
+    private Mob target = null;
     private boolean hasDoneInitialTargetSearch = false;
     private boolean firstTargetDied = false;
+    private Double speedModifier = 3.0D;
 
     public EmeraldEnergyBall(Level world, LivingEntity player) {
         super(ManaEntities.EMERALD_ENERGY_BALL.get(), player, world);
@@ -60,35 +61,6 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
     public Packet<?> getAddEntityPacket() {
         return new ClientboundAddEntityPacket(this);
     }
-
-    // function was never implemented, assumed to see if target is in line of sight.
-
-    // // Helper function for raycasting target entities
-    // @Nullable
-    // private static EntityHitResult getEntityHitResult(Entity entity,
-    // Predicate<Entity> entityPredicate, Vec3 rayDir) {
-    // Level level = entity.level;
-    // Vec3 vecEntityPos = entity.position();
-    // Vec3 vecRayDir = vecEntityPos.add(rayDir);
-    // HitResult hitresult = level
-    // .clip(new ClipContext(vecEntityPos, vecRayDir, ClipContext.Block.COLLIDER,
-    // ClipContext.Fluid.NONE, entity));
-
-    // if (hitresult.getType() != HitResult.Type.MISS) {
-    // vecRayDir = hitresult.getLocation();
-    // }
-
-    // EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(level,
-    // entity, vecEntityPos, vecRayDir,
-    // entity.getBoundingBox().expandTowards(rayDir).inflate(1.0D),
-    // entityPredicate);
-
-    // if (entityHitResult != null) {
-    // hitresult = entityHitResult;
-    // }
-
-    // return entityHitResult;
-    // }
 
     @Override
     public void shoot(double shootX, double shootY, double shootZ, float scale, float muliplier) {
@@ -123,18 +95,21 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         double shortestDist = Double.MAX_VALUE;
 
         for (Mob mobs : candidates) {
-            // If initial search for target (shot by player), use a degree restraint on
-            // target search. Otherwise, use no degree restraint when searching for target
-            // in bullet travel AND the first found target obtained by the degree restraint has died. This allows the non discarded
-            // bullets to bounce to other targets after the previous target dies.
-
-            // As it did before, this will still target mobs undergound (not in line of
-            // sight) only if there is not target within the degree restraint of initial
-            // target search on player shoot and first target has died. To correct this, implement a raycast line of
-            // sight.
             Vec3 dirToEntity = mobs.position().subtract(this.position()).normalize();
+            // IF within 0.9 degree and this if first shoot from player, go to found
+            // target;
+
+            // IF has already been shot and the initial target has died, go to found target
+            // without degree restraint;
+
+            // IF has already been shot and the initial target has NOT died, and within 0.9
+            // degree, go to found target;
+
+            // firstTargetDied is being used here to see if the bullet has found a target
+            // yet after being shot.
             if ((dirToEntity.dot(this.shootDir) >= 0.9 && !hasDoneInitialTargetSearch)
-                    || (hasDoneInitialTargetSearch && firstTargetDied)) {
+                    || (hasDoneInitialTargetSearch && firstTargetDied)
+                    || (hasDoneInitialTargetSearch && dirToEntity.dot(this.shootDir) >= 0.9 && !firstTargetDied)) {
                 foundTarget = mobs;
                 double distTo = foundTarget.position().subtract(this.position()).length();
                 if (distTo < shortestDist) {
@@ -197,15 +172,13 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         boolean flag = this.noPhysics;
         Vec3 vec3 = this.getDeltaMovement();
 
-        // (double)3 changes the underwater speed.
-        this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.015D * (double) 3, this.getZ());
+        this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.015D * speedModifier, this.getZ());
 
         if (this.level.isClientSide) {
             this.yOld = this.getY();
         }
 
-        // (double)3 changes the underwater speed.
-        double d0 = 0.05D * (double) 3;
+        double d0 = 0.05D * speedModifier;
         this.setDeltaMovement(this.getDeltaMovement().scale(0.75D).add(vec3.normalize().scale(d0)));
 
         if (!this.level.isClientSide) {
@@ -217,28 +190,30 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
 
             Vec3 delta = this.getDeltaMovement();
             int multiplier = 1;
-
+            // ---------------------------
             // MOVEMENT LOGIC - TARGETED
+            // ---------------------------
             if (this.target != null) {
                 Vec3 dirToEntity;
                 Vec3 moveToTarget;
 
-                // if enderdragon, lower tracking to be able to hit it.
-                if (this.target instanceof EnderDragon) {
-                    dirToEntity = this.target.getPosition(1.0f).subtract(this.position()).normalize();
+                // if NOT ender dragon
+                if (!(this.target instanceof EnderDragon)) {
+                    dirToEntity = this.target.getEyePosition().subtract(this.position()).normalize();
                     delta = delta.lerp(dirToEntity, 0.15);
                     this.setDeltaMovement(delta);
-                    moveToTarget = target.getPosition(1.0f).subtract(this.position());
+                    moveToTarget = target.getEyePosition().subtract(this.position());
                     this.setPosRaw(this.getX(), this.getY() + moveToTarget.y * 0.015D * (double) multiplier,
                             this.getZ());
                     if (this.level.isClientSide) {
                         this.yOld = this.getY();
                     }
                 } else {
-                    dirToEntity = this.target.getEyePosition().subtract(this.position()).normalize();
+                    // if ender dragon
+                    dirToEntity = this.target.getPosition(1.0f).subtract(this.position()).normalize();
                     delta = delta.lerp(dirToEntity, 0.15);
                     this.setDeltaMovement(delta);
-                    moveToTarget = target.getEyePosition().subtract(this.position());
+                    moveToTarget = target.getPosition(1.0f).subtract(this.position());
                     this.setPosRaw(this.getX(), this.getY() + moveToTarget.y * 0.015D * (double) multiplier,
                             this.getZ());
                     if (this.level.isClientSide) {
@@ -259,7 +234,9 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                 ++this.life;
 
             } else {
-                // MOVEMENT LOGIC - NO TARGET.
+                // ---------------------------
+                // MOVEMENT LOGIC - NO TARGET
+                // ---------------------------
                 vec3 = this.getDeltaMovement();
                 double d5 = vec3.x;
                 double d6 = vec3.y;
@@ -295,7 +272,7 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         } else {
             // trail particles
             for (int i = 0; i < 4; ++i) {
-                this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_GREEN.get(), this.getX(),
+                this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_EMERALD.get(), this.getX(),
                         this.getY(), this.getZ(),
                         this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
                         this.random.nextGaussian() * 0.1D);
@@ -352,4 +329,5 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
             }
         }
     }
+
 }

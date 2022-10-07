@@ -3,8 +3,8 @@ package com.seabreyh.mana.entity;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.blocks.entity.StarCatcherEntityBlock;
 import com.seabreyh.mana.event.player.PlayerWishEvent;
-import com.seabreyh.mana.particle.ManaParticles;
 import com.seabreyh.mana.registry.ManaItems;
+import com.seabreyh.mana.registry.ManaParticles;
 
 import java.util.Random;
 
@@ -34,25 +34,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.NaturalSpawner.SpawnPredicate;
 import net.minecraft.world.level.block.AirBlock;
-import net.minecraft.world.level.block.BarrelBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
-import net.minecraft.world.level.block.WoolCarpetBlock;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.WaterFluid;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fluids.FluidAttributes.Water;
 
 public class Meteor extends AbstractArrow implements SpawnPredicate {
     private int age;

@@ -14,8 +14,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class AmethystEnergyBallRenderer extends EntityRenderer<AmethystEnergyBall> {
 
     private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/entity/shulker/spark.png");
-    // private static final RenderType RENDER_TYPE =
-    // RenderType.entityTranslucent(TEXTURE_LOCATION);
     private final ShulkerBulletModel<AmethystEnergyBall> model;
 
     public AmethystEnergyBallRenderer(EntityRendererProvider.Context manager) {
