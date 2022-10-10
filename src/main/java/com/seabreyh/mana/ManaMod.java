@@ -2,6 +2,7 @@ package com.seabreyh.mana;
 
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.event.ManaClientEvents;
+import com.seabreyh.mana.gui.ManaMenuTypes;
 import com.seabreyh.mana.networking.ManaMessages;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaBlocks;
@@ -9,7 +10,6 @@ import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaItems;
 import com.seabreyh.mana.registry.ManaParticles;
 import com.seabreyh.mana.registry.ManaSounds;
-import com.seabreyh.mana.screen.ManaMenuTypes;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;

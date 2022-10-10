@@ -1,8 +1,9 @@
-package com.seabreyh.mana.screen;
+package com.seabreyh.mana.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.gui.menus.StarCatcherMenu;
 
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;

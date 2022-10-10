@@ -2,6 +2,7 @@ package com.seabreyh.mana.registry;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.blocks.CelestialTorch;
+import com.seabreyh.mana.blocks.StaffTable;
 import com.seabreyh.mana.blocks.StarBottle;
 import com.seabreyh.mana.blocks.StarCatcher;
 import com.seabreyh.mana.blocks.botany.flowers.Flower;
@@ -40,6 +41,15 @@ public class ManaBlocks {
                                         .destroyTime(0.3f)
                                         .noOcclusion()
                                         .lightLevel(BlockState -> 15)),
+                        ManaCreativeTabs.MANA_TAB_BLOCKS);
+
+        public static final RegistryObject<Block> STAFF_TABLE = registerBlock("staff_table",
+                        () -> new StaffTable(BlockBehaviour.Properties
+                                        .of(Material.STONE)
+                                        .strength(0.2f)
+                                        .destroyTime(0.3f)
+                                        .noOcclusion()
+                                        .lightLevel(BlockState -> 2)),
                         ManaCreativeTabs.MANA_TAB_BLOCKS);
 
         public static final RegistryObject<Block> STAR_BOTTLE = registerBlock("star_bottle",
