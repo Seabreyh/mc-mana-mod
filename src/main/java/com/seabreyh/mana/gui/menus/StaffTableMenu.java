@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class StaffTableMenu extends AbstractContainerMenu {
     private final StaffTableEntityBlock blockEntity;
@@ -34,10 +35,12 @@ public class StaffTableMenu extends AbstractContainerMenu {
         addPlayerHotbar(inv);
 
         this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-            // this.addSlot(new SlotItemHandler(handler, 0, 34, 40));
-            // this.addSlot(new SlotItemHandler(handler, 1, 57, 18));
-            // this.addSlot(new SlotItemHandler(handler, 2, 103, 18));
-            this.addSlot(new ManaResultSlot(handler, 0, 80, 53));
+            //crafting slots
+            this.addSlot(new SlotItemHandler(handler, 0, 38, 53));
+            this.addSlot(new SlotItemHandler(handler, 1, 59, 53));
+            this.addSlot(new SlotItemHandler(handler, 2, 80, 53));
+            //result slot
+            this.addSlot(new ManaResultSlot(handler, 3, 135, 53));
         });
     }
 
@@ -62,7 +65,7 @@ public class StaffTableMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
     // THIS YOU HAVE TO DEFINE!
-    private static final int TE_INVENTORY_SLOT_COUNT = 1; // must be the number of slots you have!
+    private static final int TE_INVENTORY_SLOT_COUNT = 4; // must be the number of slots you have!
 
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {

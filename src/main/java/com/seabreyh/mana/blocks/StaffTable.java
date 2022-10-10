@@ -53,11 +53,12 @@ public class StaffTable extends BaseEntityBlock implements SimpleWaterloggedBloc
     }
 
     private static final VoxelShape SHAPE = Stream.of(
-            Block.box(0.125, 0, 0.125, 0.25, 0.3125, 0.25),
-            Block.box(0.75, 0, 0.125, 0.875, 0.3125, 0.25),
-            Block.box(0.75, 0, 0.75, 0.875, 0.3125, 0.875),
-            Block.box(0.125, 0, 0.75, 0.25, 0.3125, 0.875),
-            Block.box(0.0625, 0.3125, 0.0625, 0.9375, 0.4375, 0.9375)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+        Block.box(1, 5, 1, 15, 7, 15),
+        Block.box(2, 0, 2, 4, 5, 4),
+        Block.box(12, 0, 2, 14, 5, 4),
+        Block.box(12, 0, 12, 14, 5, 14),
+        Block.box(2, 0, 12, 4, 5, 14)
+        ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
@@ -154,8 +155,7 @@ public class StaffTable extends BaseEntityBlock implements SimpleWaterloggedBloc
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState,
-            BlockEntityType<T> pBlockEntityType) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return createTickerHelper(pBlockEntityType, ManaBlockEntities.STAFF_TABLE_ENTITY_BLOCK.get(),
                 StaffTableEntityBlock::tick);
     }
