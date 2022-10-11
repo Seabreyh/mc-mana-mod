@@ -80,7 +80,7 @@ public class StaffTableRecipies implements Recipe<SimpleContainer> {
 
             JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
             //POTENTIAL ISSUE
-            NonNullList<Ingredient> inputs = NonNullList.withSize(4, Ingredient.EMPTY);
+            NonNullList<Ingredient> inputs = NonNullList.withSize(3, Ingredient.EMPTY);
 
             for (int i = 0; i < inputs.size(); i++) {
                 inputs.set(i, Ingredient.fromJson(ingredients.get(i)));

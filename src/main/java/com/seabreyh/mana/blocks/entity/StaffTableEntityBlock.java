@@ -1,21 +1,19 @@
 package com.seabreyh.mana.blocks.entity;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.blocks.StaffTable;
 import com.seabreyh.mana.gui.menus.StaffTableMenu;
 import com.seabreyh.mana.recipies.StaffTableRecipies;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaItems;
 
-import java.util.List;
+import it.unimi.dsi.fastutil.booleans.Boolean2CharFunction;
+
 import java.util.Optional;
-import java.util.Random;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
-import com.google.common.collect.Lists;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -34,7 +32,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -45,6 +42,8 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
     private final ItemStackHandler itemHandler = new ItemStackHandler(5) { // UPDATE TO THE AMOUNT OF SLOTS YOU HAVE
         @Override
         protected void onContentsChanged(int slot) {
+            ManaMod.LOGGER.info("Contents changed - SLOT: " + slot);
+
             setChanged();
         }
     };
@@ -154,10 +153,13 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
         for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
-
+        //how does the logic understand what slots the items go in to complete the recipe.
+        //video reference.
         Optional<StaffTableRecipies> match = level.getRecipeManager()
                 .getRecipeFor(StaffTableRecipies.Type.INSTANCE, inventory, level);
-
+        //THIS IS NEVER BEING CALLED
+        //crashes when match.isPresent is removed.
+        //no match is found and that causes an error? No recipie match found? do I need to have a shaped recipe?
                 return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
                 && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem())
                  && hasManaCapsule(entity);
@@ -196,18 +198,22 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
 
 
     private static boolean hasNotReachedStackLimit(StaffTableEntityBlock entity) {
+        ManaMod.LOGGER.info("hasNotReachedStackLimit: " + String.valueOf(entity.itemHandler.getStackInSlot(4).getCount() < entity.itemHandler.getStackInSlot(4).getMaxStackSize()));
         return entity.itemHandler.getStackInSlot(4).getCount() < entity.itemHandler.getStackInSlot(4).getMaxStackSize();
     }
 
     private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack output) {
+        ManaMod.LOGGER.info("canInsertIntoOutputSlot: " + String.valueOf(inventory.getItem(4).getItem() == output.getItem() || inventory.getItem(4).isEmpty()));
         return inventory.getItem(4).getItem() == output.getItem() || inventory.getItem(4).isEmpty();
     }
 
     private static boolean hasManaCapsule(StaffTableEntityBlock entity) {
+        ManaMod.LOGGER.info("hasManaCapsule: " + String.valueOf(entity.itemHandler.getStackInSlot(0).getItem() == ManaItems.FILLED_MANA_CAPSULE.get()));
         return entity.itemHandler.getStackInSlot(0).getItem() == ManaItems.FILLED_MANA_CAPSULE.get();
     }
 
     private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
+        ManaMod.LOGGER.info("canInsertAmountIntoOutputSlot: " + String.valueOf(inventory.getItem(4).getMaxStackSize() > inventory.getItem(4).getCount()));
         return inventory.getItem(4).getMaxStackSize() > inventory.getItem(4).getCount();
     }
 }
