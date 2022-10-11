@@ -40,13 +40,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
-    public int tickCount;
-    public int catchCount;
-    private float activeRotation;
-    private float rotationSpeed = 6F;
-    private final List<BlockPos> effectBlocks = Lists.newArrayList();
-    private int itemToCraft = 0;
-
+    //POTENTIAL ISSUE 
     private final ItemStackHandler itemHandler = new ItemStackHandler(5) { // UPDATE TO THE AMOUNT OF SLOTS YOU HAVE
         @Override
         protected void onContentsChanged(int slot) {
@@ -56,8 +50,32 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
+    protected final ContainerData data;
+    private int progress = 0;
+    private int maxProgress = 72;
+
     public StaffTableEntityBlock(BlockPos pWorldPosition, BlockState pBlockState) {
         super(ManaBlockEntities.STAFF_TABLE_ENTITY_BLOCK.get(), pWorldPosition, pBlockState);
+        this.data = new ContainerData() {
+            public int get(int index) {
+                switch (index) {
+                    case 0: return StaffTableEntityBlock.this.progress;
+                    case 1: return StaffTableEntityBlock.this.maxProgress;
+                    default: return 0;
+                }
+            }
+
+            public void set(int index, int value) {
+                switch(index) {
+                    case 0: StaffTableEntityBlock.this.progress = value; break;
+                    case 1: StaffTableEntityBlock.this.maxProgress = value; break;
+                }
+            }
+
+            public int getCount() {
+                return 2;
+            }
+        };
     }
 
     @Override
@@ -65,18 +83,10 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
         return new TextComponent("Staff Table");
     }
 
-    public float getRotationSpeed() {
-        return rotationSpeed;
-    }
-
-    public static void setRotationSpeed(float speed, StaffTableEntityBlock entity) {
-        entity.rotationSpeed = speed;
-    }
-
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new StaffTableMenu(pContainerId, pInventory, this);
+        return new StaffTableMenu(pContainerId, pInventory, this, this.data);
     }
 
     @Nonnull
@@ -104,6 +114,7 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag) {
         tag.put("inventory", itemHandler.serializeNBT());
+        tag.putInt("staff_table.progress", progress);
         super.saveAdditional(tag);
     }
 
@@ -111,6 +122,7 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
     public void load(CompoundTag nbt) {
         super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
+        progress = nbt.getInt("staff_table.progress");
     }
 
     public void drops() {
@@ -122,30 +134,35 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
-        public static void tick(Level pLevel, BlockPos pPos, BlockState pState, StaffTableEntityBlock pBlockEntity) {
-
-
-            
-            if(hasRecipe(pBlockEntity) && hasNotReachedStackLimit(pBlockEntity)) {
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, StaffTableEntityBlock pBlockEntity) {
+        if(hasRecipe(pBlockEntity)) {
+            pBlockEntity.progress++;
+            setChanged(pLevel, pPos, pState);
+            if(pBlockEntity.progress > pBlockEntity.maxProgress) {
                 craftItem(pBlockEntity);
-                ManaMod.LOGGER.info("1");
-
             }
-            else if(hasRecipe(pBlockEntity)) {
-                    craftItem(pBlockEntity);
-                    ManaMod.LOGGER.info("2");
-
-            } else {
-
-                }
+        } else {
+            pBlockEntity.resetProgress();
+            setChanged(pLevel, pPos, pState);
+        }
     }
 
-    public float getActiveRotation(float p_59198_) {
-        return (this.activeRotation + p_59198_) * -0.0375F * getRotationSpeed();
+    private static boolean hasRecipe(StaffTableEntityBlock entity) {
+        Level level = entity.level;
+        SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
+        for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
+            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
+        }
+
+        Optional<StaffTableRecipies> match = level.getRecipeManager()
+                .getRecipeFor(StaffTableRecipies.Type.INSTANCE, inventory, level);
+
+                return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
+                && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem())
+                 && hasManaCapsule(entity);
     }
 
     public static void craftItem(StaffTableEntityBlock entity) {
-
         Level level = entity.level;
         SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
         for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
@@ -165,28 +182,17 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
             entity.itemHandler.setStackInSlot(4, new ItemStack(match.get().getResultItem().getItem(),
                     entity.itemHandler.getStackInSlot(4).getCount() + 1));
 
-            // entity.resetProgress();
+            entity.resetProgress();
         }else{
             ManaMod.LOGGER.info("MATCH NOT PRESENT");
         }
                 
     }
 
-    private static boolean hasRecipe(StaffTableEntityBlock entity) {
-        Level level = entity.level;
-        SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
-        for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
-            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
-        }
-
-        Optional<StaffTableRecipies> match = level.getRecipeManager()
-                .getRecipeFor(StaffTableRecipies.Type.INSTANCE, inventory, level);
-
-                return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
-                && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem())
-                 && hasManaCapsule(entity);
-       
+    private void resetProgress() {
+        this.progress = 0;
     }
+
 
     private static boolean hasNotReachedStackLimit(StaffTableEntityBlock entity) {
         return entity.itemHandler.getStackInSlot(4).getCount() < entity.itemHandler.getStackInSlot(4).getMaxStackSize();
