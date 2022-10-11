@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["#/#", "/#/", "#/#"],
+  "key": {
+    "#": {
+      "item": "mana:mana_dust"
+    },
+    "/": {
+      "item": "minecraft:sugar"
+    }
+  },
+  "result": {
+    "item": "mana:mana_treat"
+  }
+}

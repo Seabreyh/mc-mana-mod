@@ -24,7 +24,6 @@ public class StaffTableScreen extends AbstractContainerScreen<StaffTableMenu> {
 
     protected void init() {
         super.init();
-        this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
     }
 
     @Override
@@ -39,7 +38,7 @@ public class StaffTableScreen extends AbstractContainerScreen<StaffTableMenu> {
 
     @Override
     protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
-        this.font.draw(p_97808_, this.title, (float) this.titleLabelX, (float) 6,
+        this.font.draw(p_97808_, this.title, (float) 8, (float) 2,
                 4210752);
         this.font.draw(p_97808_, this.playerInventoryTitle, (float) 8, (float) this.imageHeight - 98,
                 4210752);

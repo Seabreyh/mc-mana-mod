@@ -12,8 +12,10 @@
   "item.mana.granted_wish_item": "Granted Wish",
   "item.mana.mana_crystal": "Mana Crystal",
   "item.mana.mana_shard": "Mana Shard",
-  "item.mana.mana_capsule": "Mana Capsule",
+  "item.mana.empty_mana_capsule": "Empty Mana Capsule",
+  "item.mana.filled_mana_capsule": "Filled Mana Capsule",
   "item.mana.mana_dust": "Mana Dust",
+  "item.mana.mana_treat": "Mana Treat",
 
   "gui.mana.select_wish": "Choose your wish",
 
@@ -35,5 +37,6 @@
 
   "tooltip.mana.amethyst_staff.tooltip": "§7Does not react well to fire... or does it?",
   "tooltip.mana.emerald_staff.tooltip": "§7Auto targeted magic",
-  "tooltip.mana.lshift.tooltip": "§7Hold §8[§bLSHIFT§8] §7for more info"
+  "tooltip.mana.lshift.tooltip": "§7Hold §8[§bLSHIFT§8] §7for more info",
+  "tooltip.mana.manatreat.tooltip": "§7Eat to increase your mana level"
 }
