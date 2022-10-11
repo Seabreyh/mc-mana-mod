@@ -7,10 +7,14 @@ import com.seabreyh.mana.particle.MagicPloomParticleEmerald;
 import com.seabreyh.mana.particle.MagicPloomParticleStarCatcher;
 import com.seabreyh.mana.particle.StarPowerParticle;
 import com.seabreyh.mana.particle.TwinkleParticle;
+import com.seabreyh.mana.recipies.StaffTableRecipies;
 import com.seabreyh.mana.registry.ManaParticles;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraft.core.Registry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -42,5 +46,10 @@ public class ManaEventBusEvents {
 
                 Minecraft.getInstance().particleEngine.register(ManaParticles.STAR_POWER.get(),
                                 StarPowerParticle.Provider::new);
+        }
+
+        @SubscribeEvent
+        public static void registerRecipeTypes(final RegistryEvent.Register<RecipeSerializer<?>> event) {
+                Registry.register(Registry.RECIPE_TYPE, StaffTableRecipies.Type.ID, StaffTableRecipies.Type.INSTANCE);
         }
 }

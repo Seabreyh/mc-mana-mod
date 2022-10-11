@@ -1,10 +1,15 @@
 package com.seabreyh.mana.blocks.entity;
 
+import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.blocks.StaffTable;
 import com.seabreyh.mana.gui.menus.StaffTableMenu;
+import com.seabreyh.mana.recipies.StaffTableRecipies;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaItems;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -117,10 +122,22 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, StaffTableEntityBlock entity) {
-        if (hasRecipe(entity) && hasNotReachedStackLimit(entity)) {
-            craftItem(entity);
-        }
+        public static void tick(Level pLevel, BlockPos pPos, BlockState pState, StaffTableEntityBlock pBlockEntity) {
+
+
+            
+            if(hasRecipe(pBlockEntity) && hasNotReachedStackLimit(pBlockEntity)) {
+                craftItem(pBlockEntity);
+                ManaMod.LOGGER.info("1");
+
+            }
+            else if(hasRecipe(pBlockEntity)) {
+                    craftItem(pBlockEntity);
+                    ManaMod.LOGGER.info("2");
+
+            } else {
+
+                }
     }
 
     public float getActiveRotation(float p_59198_) {
@@ -128,65 +145,62 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
     }
 
     public static void craftItem(StaffTableEntityBlock entity) {
-        entity.itemHandler.extractItem(0, 1, false);
-        entity.itemHandler.extractItem(1, 1, false);
-        entity.itemHandler.extractItem(2, 1, false);
-        entity.itemHandler.extractItem(3, 1, false);
 
-        switch (entity.itemToCraft) {
-            case 1:
-                entity.itemHandler.setStackInSlot(4, new ItemStack(ManaItems.AMETHYST_STAFF.get(),
-                        entity.itemHandler.getStackInSlot(4).getCount() + 1));
-                entity.itemToCraft = 0;
-                break;
-            case 2:
-                entity.itemHandler.setStackInSlot(4, new ItemStack(ManaItems.EMERALD_STAFF.get(),
-                        entity.itemHandler.getStackInSlot(4).getCount() + 1));
-                entity.itemToCraft = 0;
-                break;
-            default:
-                break;
-
+        Level level = entity.level;
+        SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
+        for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
+            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
+
+        Optional<StaffTableRecipies> match = level.getRecipeManager()
+                .getRecipeFor(StaffTableRecipies.Type.INSTANCE, inventory, level);
+
+        if(match.isPresent()) {
+            ManaMod.LOGGER.info("MATCH PRESENT");
+            entity.itemHandler.extractItem(0,1, false);
+            entity.itemHandler.extractItem(1,1, false);
+            entity.itemHandler.extractItem(2,1, false);
+            entity.itemHandler.extractItem(3,1, false);
+
+            entity.itemHandler.setStackInSlot(4, new ItemStack(match.get().getResultItem().getItem(),
+                    entity.itemHandler.getStackInSlot(4).getCount() + 1));
+
+            // entity.resetProgress();
+        }else{
+            ManaMod.LOGGER.info("MATCH NOT PRESENT");
+        }
+                
     }
 
     private static boolean hasRecipe(StaffTableEntityBlock entity) {
-
-        if ( // ---------------------------------------
-        entity.itemHandler.getStackInSlot(0).getItem() == ManaItems.FILLED_MANA_CAPSULE.get() &&
-                entity.itemHandler.getStackInSlot(1).getItem() == Items.AMETHYST_BLOCK &&
-                entity.itemHandler.getStackInSlot(2).getItem() == Items.COPPER_INGOT &&
-                entity.itemHandler.getStackInSlot(3).getItem() == Items.COPPER_INGOT) {
-
-            boolean hasItemInSlotOne = entity.itemHandler.getStackInSlot(0).getItem() == ManaItems.FILLED_MANA_CAPSULE
-                    .get();
-            boolean hasItemInSlotTwo = entity.itemHandler.getStackInSlot(1).getItem() == Items.AMETHYST_BLOCK;
-            boolean hasItemInSlotThree = entity.itemHandler.getStackInSlot(2).getItem() == Items.COPPER_INGOT;
-            boolean hasItemInSlotFour = entity.itemHandler.getStackInSlot(3).getItem() == Items.COPPER_INGOT;
-            entity.itemToCraft = 1;
-            return hasItemInSlotOne && hasItemInSlotTwo && hasItemInSlotThree && hasItemInSlotFour;
-        }
-        if ( // ---------------------------------------
-        entity.itemHandler.getStackInSlot(0).getItem() == ManaItems.FILLED_MANA_CAPSULE.get() &&
-                entity.itemHandler.getStackInSlot(1).getItem() == Items.EMERALD_BLOCK &&
-                entity.itemHandler.getStackInSlot(2).getItem() == Items.GOLD_INGOT &&
-                entity.itemHandler.getStackInSlot(3).getItem() == Items.GOLD_INGOT) {
-
-            boolean hasItemInSlotOne = entity.itemHandler.getStackInSlot(0).getItem() == ManaItems.FILLED_MANA_CAPSULE
-                    .get();
-            boolean hasItemInSlotTwo = entity.itemHandler.getStackInSlot(1).getItem() == Items.EMERALD_BLOCK;
-            boolean hasItemInSlotThree = entity.itemHandler.getStackInSlot(2).getItem() == Items.GOLD_INGOT;
-            boolean hasItemInSlotFour = entity.itemHandler.getStackInSlot(3).getItem() == Items.GOLD_INGOT;
-            entity.itemToCraft = 2;
-            return hasItemInSlotOne && hasItemInSlotTwo && hasItemInSlotThree && hasItemInSlotFour;
-        } else {
-            return false;
+        Level level = entity.level;
+        SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
+        for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
+            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
 
+        Optional<StaffTableRecipies> match = level.getRecipeManager()
+                .getRecipeFor(StaffTableRecipies.Type.INSTANCE, inventory, level);
+
+                return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
+                && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem())
+                 && hasManaCapsule(entity);
+       
     }
 
     private static boolean hasNotReachedStackLimit(StaffTableEntityBlock entity) {
         return entity.itemHandler.getStackInSlot(4).getCount() < entity.itemHandler.getStackInSlot(4).getMaxStackSize();
     }
 
+    private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack output) {
+        return inventory.getItem(4).getItem() == output.getItem() || inventory.getItem(4).isEmpty();
+    }
+
+    private static boolean hasManaCapsule(StaffTableEntityBlock entity) {
+        return entity.itemHandler.getStackInSlot(0).getItem() == ManaItems.FILLED_MANA_CAPSULE.get();
+    }
+
+    private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
+        return inventory.getItem(4).getMaxStackSize() > inventory.getItem(4).getCount();
+    }
 }
