@@ -28,6 +28,7 @@ public class StaffTableRecipies implements Recipe<SimpleContainer> {
     }
 
     @Override
+    //POTENTIAL ISSUE
     public boolean matches(SimpleContainer pContainer, Level pLevel) {
         return recipeItems.get(0).test(pContainer.getItem(1));
     }
@@ -78,6 +79,7 @@ public class StaffTableRecipies implements Recipe<SimpleContainer> {
             ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "output"));
 
             JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
+            //POTENTIAL ISSUE
             NonNullList<Ingredient> inputs = NonNullList.withSize(4, Ingredient.EMPTY);
 
             for (int i = 0; i < inputs.size(); i++) {
