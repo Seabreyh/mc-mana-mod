@@ -7,7 +7,7 @@ import com.seabreyh.mana.particle.MagicPloomParticleEmerald;
 import com.seabreyh.mana.particle.MagicPloomParticleStarCatcher;
 import com.seabreyh.mana.particle.StarPowerParticle;
 import com.seabreyh.mana.particle.TwinkleParticle;
-import com.seabreyh.mana.recipies.StaffTableRecipies;
+import com.seabreyh.mana.recipes.StaffTableRecipies;
 import com.seabreyh.mana.registry.ManaParticles;
 
 import net.minecraft.client.Minecraft;

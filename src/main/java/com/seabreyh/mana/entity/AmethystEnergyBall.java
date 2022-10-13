@@ -227,7 +227,7 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         Entity entity = hitEntity.getEntity();
         Entity entity1 = this.getOwner();
         LivingEntity livingentity = entity1 instanceof LivingEntity ? (LivingEntity) entity1 : null;
-        boolean flag = entity.hurt(DamageSource.indirectMobAttack(this, livingentity).setProjectile(), 2F);
+        boolean flag = entity.hurt(DamageSource.indirectMobAttack(this, livingentity).setProjectile(), 3F);
 
         if (flag && entity != entity1) {
             this.doEnchantDamageEffects(livingentity, entity);

@@ -2,7 +2,7 @@ package com.seabreyh.mana.blocks.entity;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.gui.menus.StaffTableMenu;
-import com.seabreyh.mana.recipies.StaffTableRecipies;
+import com.seabreyh.mana.recipes.StaffTableRecipies;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaItems;
 
@@ -38,12 +38,10 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
-    //POTENTIAL ISSUE 
+    // POTENTIAL ISSUE
     private final ItemStackHandler itemHandler = new ItemStackHandler(5) { // UPDATE TO THE AMOUNT OF SLOTS YOU HAVE
         @Override
         protected void onContentsChanged(int slot) {
-            ManaMod.LOGGER.info("Contents changed - SLOT: " + slot);
-
             setChanged();
         }
     };
@@ -59,16 +57,23 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
         this.data = new ContainerData() {
             public int get(int index) {
                 switch (index) {
-                    case 0: return StaffTableEntityBlock.this.progress;
-                    case 1: return StaffTableEntityBlock.this.maxProgress;
-                    default: return 0;
+                    case 0:
+                        return StaffTableEntityBlock.this.progress;
+                    case 1:
+                        return StaffTableEntityBlock.this.maxProgress;
+                    default:
+                        return 0;
                 }
             }
 
             public void set(int index, int value) {
-                switch(index) {
-                    case 0: StaffTableEntityBlock.this.progress = value; break;
-                    case 1: StaffTableEntityBlock.this.maxProgress = value; break;
+                switch (index) {
+                    case 0:
+                        StaffTableEntityBlock.this.progress = value;
+                        break;
+                    case 1:
+                        StaffTableEntityBlock.this.maxProgress = value;
+                        break;
                 }
             }
 
@@ -135,10 +140,10 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, StaffTableEntityBlock pBlockEntity) {
-        if(hasRecipe(pBlockEntity)) {
+        if (hasRecipe(pBlockEntity)) {
             pBlockEntity.progress++;
             setChanged(pLevel, pPos, pState);
-            if(pBlockEntity.progress > pBlockEntity.maxProgress) {
+            if (pBlockEntity.progress > pBlockEntity.maxProgress) {
                 craftItem(pBlockEntity);
             }
         } else {
@@ -153,16 +158,18 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
         for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
-        //how does the logic understand what slots the items go in to complete the recipe.
-        //video reference.
+        // how does the logic understand what slots the items go in to complete the
+        // recipe.
+        // video reference.
         Optional<StaffTableRecipies> match = level.getRecipeManager()
                 .getRecipeFor(StaffTableRecipies.Type.INSTANCE, inventory, level);
-        //THIS IS NEVER BEING CALLED
-        //crashes when match.isPresent is removed.
-        //no match is found and that causes an error? No recipie match found? do I need to have a shaped recipe?
-                return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
+        // THIS IS NEVER BEING CALLED
+        // crashes when match.isPresent is removed.
+        // no match is found and that causes an error? No recipie match found? do I need
+        // to have a shaped recipe?
+        return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
                 && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem())
-                 && hasManaCapsule(entity);
+                && hasManaCapsule(entity);
     }
 
     public static void craftItem(StaffTableEntityBlock entity) {
@@ -175,45 +182,37 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
         Optional<StaffTableRecipies> match = level.getRecipeManager()
                 .getRecipeFor(StaffTableRecipies.Type.INSTANCE, inventory, level);
 
-        if(match.isPresent()) {
-            ManaMod.LOGGER.info("MATCH PRESENT");
-            entity.itemHandler.extractItem(0,1, false);
-            entity.itemHandler.extractItem(1,1, false);
-            entity.itemHandler.extractItem(2,1, false);
-            entity.itemHandler.extractItem(3,1, false);
+        if (match.isPresent()) {
+            entity.itemHandler.extractItem(0, 1, false);
+            entity.itemHandler.extractItem(1, 1, false);
+            entity.itemHandler.extractItem(2, 1, false);
+            entity.itemHandler.extractItem(3, 1, false);
 
             entity.itemHandler.setStackInSlot(4, new ItemStack(match.get().getResultItem().getItem(),
                     entity.itemHandler.getStackInSlot(4).getCount() + 1));
 
             entity.resetProgress();
-        }else{
-            ManaMod.LOGGER.info("MATCH NOT PRESENT");
         }
-                
+
     }
 
     private void resetProgress() {
         this.progress = 0;
     }
 
-
     private static boolean hasNotReachedStackLimit(StaffTableEntityBlock entity) {
-        ManaMod.LOGGER.info("hasNotReachedStackLimit: " + String.valueOf(entity.itemHandler.getStackInSlot(4).getCount() < entity.itemHandler.getStackInSlot(4).getMaxStackSize()));
         return entity.itemHandler.getStackInSlot(4).getCount() < entity.itemHandler.getStackInSlot(4).getMaxStackSize();
     }
 
     private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack output) {
-        ManaMod.LOGGER.info("canInsertIntoOutputSlot: " + String.valueOf(inventory.getItem(4).getItem() == output.getItem() || inventory.getItem(4).isEmpty()));
         return inventory.getItem(4).getItem() == output.getItem() || inventory.getItem(4).isEmpty();
     }
 
     private static boolean hasManaCapsule(StaffTableEntityBlock entity) {
-        ManaMod.LOGGER.info("hasManaCapsule: " + String.valueOf(entity.itemHandler.getStackInSlot(0).getItem() == ManaItems.FILLED_MANA_CAPSULE.get()));
         return entity.itemHandler.getStackInSlot(0).getItem() == ManaItems.FILLED_MANA_CAPSULE.get();
     }
 
     private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
-        ManaMod.LOGGER.info("canInsertAmountIntoOutputSlot: " + String.valueOf(inventory.getItem(4).getMaxStackSize() > inventory.getItem(4).getCount()));
         return inventory.getItem(4).getMaxStackSize() > inventory.getItem(4).getCount();
     }
 }
