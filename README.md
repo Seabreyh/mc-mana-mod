@@ -20,6 +20,7 @@ A mod that introduces magic into Minecraft in amazing ways.
 * Mana Crystal
 * Star Dust
 * Wishes
+* Staff Tables
 
 ### Current features
 * Mana bar
