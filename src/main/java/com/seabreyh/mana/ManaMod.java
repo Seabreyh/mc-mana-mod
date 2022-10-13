@@ -9,7 +9,7 @@ import com.seabreyh.mana.registry.ManaBlocks;
 import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaItems;
 import com.seabreyh.mana.registry.ManaParticles;
-import com.seabreyh.mana.registry.ManaRecipies;
+import com.seabreyh.mana.registry.ManaRecipes;
 import com.seabreyh.mana.registry.ManaSounds;
 
 import net.minecraft.world.level.block.Block;
@@ -47,8 +47,8 @@ public class ManaMod {
         ManaBlocks.register(eventBus);
         ManaBlockEntities.register(eventBus);
         ManaMenuTypes.register(eventBus);
-        ManaRecipies.register(eventBus);
-        
+        ManaRecipes.register(eventBus);
+
         // Add listeners
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
