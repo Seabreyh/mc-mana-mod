@@ -7,7 +7,7 @@ import com.seabreyh.mana.particle.MagicPloomParticleEmerald;
 import com.seabreyh.mana.particle.MagicPloomParticleStarCatcher;
 import com.seabreyh.mana.particle.StarPowerParticle;
 import com.seabreyh.mana.particle.TwinkleParticle;
-import com.seabreyh.mana.recipies.StaffTableRecipies;
+import com.seabreyh.mana.recipes.StaffTableRecipes;
 import com.seabreyh.mana.registry.ManaParticles;
 
 import net.minecraft.client.Minecraft;
@@ -50,6 +50,6 @@ public class ManaEventBusEvents {
 
         @SubscribeEvent
         public static void registerRecipeTypes(final RegistryEvent.Register<RecipeSerializer<?>> event) {
-                Registry.register(Registry.RECIPE_TYPE, StaffTableRecipies.Type.ID, StaffTableRecipies.Type.INSTANCE);
+                Registry.register(Registry.RECIPE_TYPE, StaffTableRecipes.Type.ID, StaffTableRecipes.Type.INSTANCE);
         }
 }
