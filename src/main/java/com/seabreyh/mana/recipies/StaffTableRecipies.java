@@ -12,6 +12,8 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DoubleBlockCombiner.BlockType;
 
 import javax.annotation.Nullable;
 
@@ -28,9 +30,18 @@ public class StaffTableRecipies implements Recipe<SimpleContainer> {
     }
 
     @Override
+    //compares recipe items to what is in the block entity slots.
     //POTENTIAL ISSUE
     public boolean matches(SimpleContainer pContainer, Level pLevel) {
-        return recipeItems.get(0).test(pContainer.getItem(1));
+        if(pContainer.getItem(1) != Blocks.AIR){
+            ManaMod.LOGGER.info("recipeItem0: " + recipeItems.get(0) + " pContainer1: " + pContainer.getItem(1));
+            ManaMod.LOGGER.info("recipeItem0: " + recipeItems.get(2) + " pContainer1: " + pContainer.getItem(2));
+            ManaMod.LOGGER.info("recipeItem0: " + recipeItems.get(2) + " pContainer1: " + pContainer.getItem(3));
+        }
+        )
+        return recipeItems.get(0).test(pContainer.getItem(1)) &&
+               recipeItems.get(1).test(pContainer.getItem(2)) &&
+               recipeItems.get(2).test(pContainer.getItem(3));
     }
 
     @Override

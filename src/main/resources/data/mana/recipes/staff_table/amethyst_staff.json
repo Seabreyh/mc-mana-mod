@@ -2,9 +2,6 @@
     "type": "mana:staff_table",
     "ingredients": [
         {
-            "item": "mana:filled_mana_capsule"
-        },
-        {
             "item": "minecraft:amethyst_block"
         },
         {
