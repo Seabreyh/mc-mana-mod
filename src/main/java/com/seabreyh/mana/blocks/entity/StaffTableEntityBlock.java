@@ -2,7 +2,7 @@ package com.seabreyh.mana.blocks.entity;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.gui.menus.StaffTableMenu;
-import com.seabreyh.mana.recipes.StaffTableRecipies;
+import com.seabreyh.mana.recipes.StaffTableRecipes;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaItems;
 
@@ -161,8 +161,8 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
         // how does the logic understand what slots the items go in to complete the
         // recipe.
         // video reference.
-        Optional<StaffTableRecipies> match = level.getRecipeManager()
-                .getRecipeFor(StaffTableRecipies.Type.INSTANCE, inventory, level);
+        Optional<StaffTableRecipes> match = level.getRecipeManager()
+                .getRecipeFor(StaffTableRecipes.Type.INSTANCE, inventory, level);
         // THIS IS NEVER BEING CALLED
         // crashes when match.isPresent is removed.
         // no match is found and that causes an error? No recipie match found? do I need
@@ -179,8 +179,8 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
 
-        Optional<StaffTableRecipies> match = level.getRecipeManager()
-                .getRecipeFor(StaffTableRecipies.Type.INSTANCE, inventory, level);
+        Optional<StaffTableRecipes> match = level.getRecipeManager()
+                .getRecipeFor(StaffTableRecipes.Type.INSTANCE, inventory, level);
 
         if (match.isPresent()) {
             entity.itemHandler.extractItem(0, 1, false);
