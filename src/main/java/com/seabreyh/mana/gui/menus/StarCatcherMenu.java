@@ -1,7 +1,7 @@
 package com.seabreyh.mana.gui.menus;
 
 import com.seabreyh.mana.registry.ManaBlocks;
-import com.seabreyh.mana.blocks.entity.StarCatcherEntityBlock;
+import com.seabreyh.mana.blocks.entity.StarCatcherBlockEntity;
 import com.seabreyh.mana.gui.ManaMenuTypes;
 import com.seabreyh.mana.gui.slot.ManaResultSlot;
 
@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class StarCatcherMenu extends AbstractContainerMenu {
-    private final StarCatcherEntityBlock blockEntity;
+    private final StarCatcherBlockEntity blockEntity;
     private final Level level;
 
     public StarCatcherMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
@@ -27,7 +27,7 @@ public class StarCatcherMenu extends AbstractContainerMenu {
     public StarCatcherMenu(int pContainerId, Inventory inv, BlockEntity entity) {
         super(ManaMenuTypes.STAR_CATCHER_MENU.get(), pContainerId);
         checkContainerSize(inv, 4);
-        blockEntity = ((StarCatcherEntityBlock) entity);
+        blockEntity = ((StarCatcherBlockEntity) entity);
         this.level = inv.player.level;
 
         addPlayerInventory(inv);

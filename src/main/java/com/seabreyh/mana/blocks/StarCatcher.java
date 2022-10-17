@@ -1,6 +1,6 @@
 package com.seabreyh.mana.blocks;
 
-import com.seabreyh.mana.blocks.entity.StarCatcherEntityBlock;
+import com.seabreyh.mana.blocks.entity.StarCatcherBlockEntity;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 
 import java.util.stream.Stream;
@@ -142,8 +142,8 @@ public class StarCatcher extends BaseEntityBlock implements SimpleWaterloggedBlo
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (pState.getBlock() != pNewState.getBlock()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if (blockEntity instanceof StarCatcherEntityBlock) {
-                ((StarCatcherEntityBlock) blockEntity).drops();
+            if (blockEntity instanceof StarCatcherBlockEntity) {
+                ((StarCatcherBlockEntity) blockEntity).drops();
             }
         }
         super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
@@ -154,8 +154,8 @@ public class StarCatcher extends BaseEntityBlock implements SimpleWaterloggedBlo
             Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
-            if (entity instanceof StarCatcherEntityBlock) {
-                NetworkHooks.openGui(((ServerPlayer) pPlayer), (StarCatcherEntityBlock) entity, pPos);
+            if (entity instanceof StarCatcherBlockEntity) {
+                NetworkHooks.openGui(((ServerPlayer) pPlayer), (StarCatcherBlockEntity) entity, pPos);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }
@@ -166,7 +166,7 @@ public class StarCatcher extends BaseEntityBlock implements SimpleWaterloggedBlo
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new StarCatcherEntityBlock(pPos, pState);
+        return new StarCatcherBlockEntity(pPos, pState);
     }
 
     @Nullable
@@ -174,7 +174,7 @@ public class StarCatcher extends BaseEntityBlock implements SimpleWaterloggedBlo
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState,
             BlockEntityType<T> pBlockEntityType) {
         return createTickerHelper(pBlockEntityType, ManaBlockEntities.STAR_CATCHER_ENTITY_BLOCK.get(),
-                StarCatcherEntityBlock::tick);
+                StarCatcherBlockEntity::tick);
     }
 
 }

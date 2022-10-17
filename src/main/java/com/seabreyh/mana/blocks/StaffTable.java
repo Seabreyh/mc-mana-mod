@@ -1,6 +1,6 @@
 package com.seabreyh.mana.blocks;
 
-import com.seabreyh.mana.blocks.entity.StaffTableEntityBlock;
+import com.seabreyh.mana.blocks.entity.StaffTableBlockEntity;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 
 import java.util.stream.Stream;
@@ -126,8 +126,8 @@ public class StaffTable extends BaseEntityBlock implements SimpleWaterloggedBloc
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (pState.getBlock() != pNewState.getBlock()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if (blockEntity instanceof StaffTableEntityBlock) {
-                ((StaffTableEntityBlock) blockEntity).drops();
+            if (blockEntity instanceof StaffTableBlockEntity) {
+                ((StaffTableBlockEntity) blockEntity).drops();
             }
         }
         super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
@@ -138,8 +138,8 @@ public class StaffTable extends BaseEntityBlock implements SimpleWaterloggedBloc
             Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
-            if (entity instanceof StaffTableEntityBlock) {
-                NetworkHooks.openGui(((ServerPlayer) pPlayer), (StaffTableEntityBlock) entity, pPos);
+            if (entity instanceof StaffTableBlockEntity) {
+                NetworkHooks.openGui(((ServerPlayer) pPlayer), (StaffTableBlockEntity) entity, pPos);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }
@@ -150,14 +150,14 @@ public class StaffTable extends BaseEntityBlock implements SimpleWaterloggedBloc
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new StaffTableEntityBlock(pPos, pState);
+        return new StaffTableBlockEntity(pPos, pState);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return createTickerHelper(pBlockEntityType, ManaBlockEntities.STAFF_TABLE_ENTITY_BLOCK.get(),
-                StaffTableEntityBlock::tick);
+                StaffTableBlockEntity::tick);
     }
 
 }

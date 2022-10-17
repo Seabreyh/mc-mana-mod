@@ -1,6 +1,7 @@
 package com.seabreyh.mana.registry;
 
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.blocks.AmethystBlock;
 import com.seabreyh.mana.blocks.CelestialTorch;
 import com.seabreyh.mana.blocks.StaffTable;
 import com.seabreyh.mana.blocks.StarBottle;
@@ -49,7 +50,7 @@ public class ManaBlocks {
                                         .strength(0.2f)
                                         .destroyTime(0.3f)
                                         .noOcclusion()
-                                        .lightLevel(BlockState -> 2)),
+                                        .lightLevel(BlockState -> 5)),
                         ManaCreativeTabs.MANA_TAB_BLOCKS);
 
         public static final RegistryObject<Block> STAR_BOTTLE = registerBlock("star_bottle",
@@ -68,6 +69,11 @@ public class ManaBlocks {
                                         .lightLevel(BlockState -> 15)
                                         .sound(SoundType.WOOD)),
                         ManaCreativeTabs.MANA_TAB_BLOCKS);
+
+        public static final RegistryObject<Block> AMETHYST_BLOCK = registerBlock("amethyst_block",
+                        () -> new AmethystBlock(BlockBehaviour.Properties
+                                        .of(Material.METAL).requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.METAL)),
+                                        ManaCreativeTabs.MANA_TAB_BLOCKS);
 
         // FLOWERS - dont forget, to event register potted flowers in setup of main
         public static final RegistryObject<Block> FLOWER_BUTTERCUP = registerBlock("flower_buttercup",

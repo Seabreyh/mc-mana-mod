@@ -2,7 +2,7 @@
     "type": "mana:staff_table",
     "ingredients": [
         {
-            "item": "minecraft:amethyst_block"
+            "item": "mana:amethyst_block"
         },
         {
             "item": "minecraft:copper_ingot"

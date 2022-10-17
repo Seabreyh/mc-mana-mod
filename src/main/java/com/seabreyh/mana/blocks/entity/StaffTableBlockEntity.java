@@ -1,12 +1,9 @@
 package com.seabreyh.mana.blocks.entity;
 
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.gui.menus.StaffTableMenu;
 import com.seabreyh.mana.recipes.StaffTableRecipes;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaItems;
-
-import it.unimi.dsi.fastutil.booleans.Boolean2CharFunction;
 
 import java.util.Optional;
 
@@ -19,6 +16,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -37,8 +36,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
-    // POTENTIAL ISSUE
+public class StaffTableBlockEntity extends BlockEntity implements MenuProvider {
+    Optional<StaffTableRecipes> match;
+    private boolean isCrafting = false;
     private final ItemStackHandler itemHandler = new ItemStackHandler(5) { // UPDATE TO THE AMOUNT OF SLOTS YOU HAVE
         @Override
         protected void onContentsChanged(int slot) {
@@ -52,15 +52,15 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
     private int progress = 0;
     private int maxProgress = 72;
 
-    public StaffTableEntityBlock(BlockPos pWorldPosition, BlockState pBlockState) {
+    public StaffTableBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(ManaBlockEntities.STAFF_TABLE_ENTITY_BLOCK.get(), pWorldPosition, pBlockState);
         this.data = new ContainerData() {
             public int get(int index) {
                 switch (index) {
                     case 0:
-                        return StaffTableEntityBlock.this.progress;
+                        return StaffTableBlockEntity.this.progress;
                     case 1:
-                        return StaffTableEntityBlock.this.maxProgress;
+                        return StaffTableBlockEntity.this.maxProgress;
                     default:
                         return 0;
                 }
@@ -69,10 +69,10 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
             public void set(int index, int value) {
                 switch (index) {
                     case 0:
-                        StaffTableEntityBlock.this.progress = value;
+                        StaffTableBlockEntity.this.progress = value;
                         break;
                     case 1:
-                        StaffTableEntityBlock.this.maxProgress = value;
+                        StaffTableBlockEntity.this.maxProgress = value;
                         break;
                 }
             }
@@ -139,60 +139,77 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, StaffTableEntityBlock pBlockEntity) {
-        if (hasRecipe(pBlockEntity)) {
-            pBlockEntity.progress++;
-            setChanged(pLevel, pPos, pState);
-            if (pBlockEntity.progress > pBlockEntity.maxProgress) {
-                craftItem(pBlockEntity);
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, StaffTableBlockEntity entity) {
+        
+
+        if(entity.isCrafting){
+            entity.progress++;
+            if (entity.progress > entity.maxProgress) {
+                craftItem(entity);
+                
             }
-        } else {
-            pBlockEntity.resetProgress();
+        }else {
+            entity.resetProgress();
             setChanged(pLevel, pPos, pState);
         }
-    }
 
-    private static boolean hasRecipe(StaffTableEntityBlock entity) {
-        Level level = entity.level;
-        SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
-        for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
-            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
-        }
-        // how does the logic understand what slots the items go in to complete the
-        // recipe.
-        // video reference.
-        Optional<StaffTableRecipes> match = level.getRecipeManager()
-                .getRecipeFor(StaffTableRecipes.Type.INSTANCE, inventory, level);
-        // THIS IS NEVER BEING CALLED
-        // crashes when match.isPresent is removed.
-        // no match is found and that causes an error? No recipie match found? do I need
-        // to have a shaped recipe?
-        return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
-                && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem())
-                && hasManaCapsule(entity);
-    }
+        if (hasRecipe(entity) && !entity.isCrafting) {
 
-    public static void craftItem(StaffTableEntityBlock entity) {
-        Level level = entity.level;
-        SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
-        for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
-            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
-        }
+            
 
-        Optional<StaffTableRecipes> match = level.getRecipeManager()
+            Level level = entity.level;
+            SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
+
+            entity.match = level.getRecipeManager()
                 .getRecipeFor(StaffTableRecipes.Type.INSTANCE, inventory, level);
 
-        if (match.isPresent()) {
+            entity.isCrafting = true;
+
             entity.itemHandler.extractItem(0, 1, false);
             entity.itemHandler.extractItem(1, 1, false);
             entity.itemHandler.extractItem(2, 1, false);
             entity.itemHandler.extractItem(3, 1, false);
+            entity.itemHandler.insertItem(0, new ItemStack(ManaItems.EMPTY_MANA_CAPSULE.get()), false);
+            pLevel.playSound((Player) null, pPos.getX(), pPos.getY(), pPos.getZ(),SoundEvents.BOTTLE_EMPTY,
+                SoundSource.AMBIENT, 10.0F, 1F);
+            setChanged(pLevel, pPos, pState);
+            
+        } 
+    }
 
-            entity.itemHandler.setStackInSlot(4, new ItemStack(match.get().getResultItem().getItem(),
+    private static boolean hasRecipe(StaffTableBlockEntity entity) {
+        Level level = entity.level;
+        SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
+        for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
+            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
+        }
+
+        entity.match = level.getRecipeManager()
+                .getRecipeFor(StaffTableRecipes.Type.INSTANCE, inventory, level);
+      
+        return entity.match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
+                && canInsertItemIntoOutputSlot(inventory, entity.match.get().getResultItem())
+                && hasManaCapsule(entity);
+    }
+
+    public static void craftItem(StaffTableBlockEntity entity) {
+
+        // for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
+        //     inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
+        // }
+
+        // if (match.isPresent()) {
+            // entity.itemHandler.extractItem(0, 1, false);
+            // entity.itemHandler.extractItem(1, 1, false);
+            // entity.itemHandler.extractItem(2, 1, false);
+            // entity.itemHandler.extractItem(3, 1, false);
+
+            entity.itemHandler.setStackInSlot(4, new ItemStack(entity.match.get().getResultItem().getItem(),
                     entity.itemHandler.getStackInSlot(4).getCount() + 1));
 
             entity.resetProgress();
-        }
+            entity.isCrafting = false;
+        // }
 
     }
 
@@ -200,7 +217,7 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
         this.progress = 0;
     }
 
-    private static boolean hasNotReachedStackLimit(StaffTableEntityBlock entity) {
+    private static boolean hasNotReachedStackLimit(StaffTableBlockEntity entity) {
         return entity.itemHandler.getStackInSlot(4).getCount() < entity.itemHandler.getStackInSlot(4).getMaxStackSize();
     }
 
@@ -208,7 +225,7 @@ public class StaffTableEntityBlock extends BlockEntity implements MenuProvider {
         return inventory.getItem(4).getItem() == output.getItem() || inventory.getItem(4).isEmpty();
     }
 
-    private static boolean hasManaCapsule(StaffTableEntityBlock entity) {
+    private static boolean hasManaCapsule(StaffTableBlockEntity entity) {
         return entity.itemHandler.getStackInSlot(0).getItem() == ManaItems.FILLED_MANA_CAPSULE.get();
     }
 

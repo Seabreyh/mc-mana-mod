@@ -1,7 +1,7 @@
 package com.seabreyh.mana.gui.menus;
 
 import com.seabreyh.mana.registry.ManaBlocks;
-import com.seabreyh.mana.blocks.entity.StaffTableEntityBlock;
+import com.seabreyh.mana.blocks.entity.StaffTableBlockEntity;
 import com.seabreyh.mana.gui.ManaMenuTypes;
 import com.seabreyh.mana.gui.slot.ManaResultSlot;
 
@@ -20,7 +20,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class StaffTableMenu extends AbstractContainerMenu {
-    private final StaffTableEntityBlock blockEntity;
+    private final StaffTableBlockEntity blockEntity;
     private final Level level;
     private final ContainerData data;
 
@@ -31,7 +31,7 @@ public class StaffTableMenu extends AbstractContainerMenu {
     public StaffTableMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
         super(ManaMenuTypes.STAFF_TABLE_MENU.get(), pContainerId);
         checkContainerSize(inv, 4);
-        blockEntity = ((StaffTableEntityBlock) entity);
+        blockEntity = ((StaffTableBlockEntity) entity);
         this.level = inv.player.level;
         this.data = data;
 
@@ -70,7 +70,6 @@ public class StaffTableMenu extends AbstractContainerMenu {
     private static final int VANILLA_FIRST_SLOT_INDEX = 0;
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
-    // THIS YOU HAVE TO DEFINE!
     private static final int TE_INVENTORY_SLOT_COUNT = 5; // must be the number of slots you have!
 
     @Override
