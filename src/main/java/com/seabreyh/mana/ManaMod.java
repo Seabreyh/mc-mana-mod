@@ -70,12 +70,15 @@ public class ManaMod {
         event.enqueueWork(() -> {
             ManaMessages.register();
 
+<<<<<<< HEAD
             ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ManaBlocks.FLOWER_BUTTERCUP.getId(),
                     ManaBlocks.POTTED_FLOWER_BUTTERCUP);
 
             ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ManaBlocks.PLANT_LEMONBALM.getId(),
                     ManaBlocks.POTTED_PLANT_LEMONBALM);
             BrewingRecipeRegistry.addRecipe(new ManaPotionBrewing(Potions.THICK, ManaItems.MANA_DUST.get(), ManaPotions.STRONG_IRON_SKIN.get()));
+=======
+>>>>>>> fbabb21d1932bc9565c6e060c64b250319e29774
             BrewingRecipeRegistry.addRecipe(new ManaPotionBrewing(Potions.THICK, ManaItems.MANA_DUST.get(), ManaPotions.MANA_INSTANT.get()));
         });
         
