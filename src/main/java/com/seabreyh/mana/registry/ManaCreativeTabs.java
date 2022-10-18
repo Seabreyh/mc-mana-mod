@@ -37,20 +37,4 @@ public class ManaCreativeTabs extends CreativeModeTab {
         return null;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void fillItemList(NonNullList<ItemStack> items) {
-        super.fillItemList(items);
-        try {
-            for (Field f : ManaPotions.class.getDeclaredFields()) {
-                Object obj = f.get(null);
-                if (obj instanceof Potion) {
-                    ItemStack potionStack = ManaPotions.createPotion((Potion) obj);
-                    items.add(potionStack);
-                }
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }

@@ -14,6 +14,8 @@ import com.seabreyh.mana.items.StarDust;
 import com.seabreyh.mana.items.WishItem;
 
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -58,5 +60,8 @@ public class ManaItems {
 
         public static final RegistryObject<Item> MANA_CAPSULE = ITEMS.register("mana_capsule",
                         () -> new ManaCapsule(new Item.Properties().tab(ManaCreativeTabs.MANA_TAB_ITEMS).stacksTo(64)));
+
+        public static final RegistryObject<PotionItem> POTION = ITEMS.register("potion",
+                        () -> new PotionItem(new Item.Properties().tab(ManaCreativeTabs.MANA_TAB_ITEMS)));
 
 }

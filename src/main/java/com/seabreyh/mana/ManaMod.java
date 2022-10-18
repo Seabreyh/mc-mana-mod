@@ -13,6 +13,7 @@ import com.seabreyh.mana.registry.ManaPotions;
 import com.seabreyh.mana.registry.ManaSounds;
 import com.seabreyh.mana.screen.ManaMenuTypes;
 
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
@@ -72,6 +73,11 @@ public class ManaMod {
 
         });
 
+    }
+
+    @SubscribeEvent
+    public static void registerRecipes(RegistryEvent.Register<RecipeSerializer<?>> event) {
+        ManaPotions.registerRecipes();
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {

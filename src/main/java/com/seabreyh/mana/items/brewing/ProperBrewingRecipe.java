@@ -20,22 +20,20 @@ public class ProperBrewingRecipe extends BrewingRecipe {
 
     @Override
     public boolean isInput(@Nonnull ItemStack stack) {
-        if (stack == null) {
-            return false;
-        } else {
-            ItemStack[] matchingStacks = input.getItems();
-            if (matchingStacks.length == 0) {
-                return stack.isEmpty();
-            } else {
-                for (ItemStack itemstack : matchingStacks) {
-                    if (itemstack.sameItem(stack) && ItemStack.tagMatches(itemstack, stack)) {
-                        return true;
-                    }
-                }
 
-                return false;
+        ItemStack[] matchingStacks = input.getItems();
+        if (matchingStacks.length == 0) {
+            return stack.isEmpty();
+        } else {
+            for (ItemStack itemstack : matchingStacks) {
+                if (itemstack.sameItem(stack) && ItemStack.tagMatches(itemstack, stack)) {
+                    return true;
+                }
             }
+
+            return false;
         }
+
     }
 
 }
