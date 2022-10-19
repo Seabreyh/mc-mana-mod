@@ -8,6 +8,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.EnchantedBookItem;
 
 import java.lang.reflect.Field;
 
@@ -21,6 +24,36 @@ public class ManaCreativeTabs extends CreativeModeTab {
         @Override
         public ItemStack makeIcon() {
             return new ItemStack(ManaItems.AMETHYST_STAFF.get());
+        }
+
+        @OnlyIn(Dist.CLIENT)
+        public void fillItemList(NonNullList<ItemStack> items) {
+            super.fillItemList(items);
+            try {
+                for (Field f : ManaPotions.class.getDeclaredFields()) {
+                    Object obj = f.get(null);
+                    if (obj instanceof Potion) {
+                        ItemStack potionStack = ManaPotions.createPotion((Potion) obj);
+                        items.add(potionStack);
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                for (Field f : ManaPotions.class.getDeclaredFields()) {
+                    Object obj = f.get(null);
+                    if (obj instanceof Enchantment) {
+                        Enchantment enchant = (Enchantment) obj;
+                        if (enchant.isAllowedOnBooks()) {
+                            items.add(EnchantedBookItem
+                                    .createForEnchantment(new EnchantmentInstance(enchant, enchant.getMaxLevel())));
+                        }
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         }
     };
 

@@ -32,7 +32,9 @@
 
   "sounds.mana.star_capture": "Caught star",
 
-  "mana.potion.mana_instant": "Instant Mana Potion",
+  "mana.effect.mana_instant": "Instant Mana",
+
+  "item.minecraft.potion.effect.mana_instant": "Instant Mana Potion",
 
   "tooltip.mana.amethyst_staff.tooltip": "§7Does not react well to fire... or does it?",
   "tooltip.mana.emerald_staff.tooltip": "§7Auto targeted magic",

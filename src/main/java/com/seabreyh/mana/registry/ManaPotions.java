@@ -62,7 +62,7 @@ public class ManaPotions {
     }
 
     public static ItemStack createPotion(Potion potion) {
-        return PotionUtils.setPotion(new ItemStack(ManaItems.POTION.get()), potion);
+        return PotionUtils.setPotion(new ItemStack(Items.POTION), potion);
     }
 
     // POTION RECIPES

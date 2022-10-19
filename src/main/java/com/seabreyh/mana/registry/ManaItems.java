@@ -61,7 +61,4 @@ public class ManaItems {
         public static final RegistryObject<Item> MANA_CAPSULE = ITEMS.register("mana_capsule",
                         () -> new ManaCapsule(new Item.Properties().tab(ManaCreativeTabs.MANA_TAB_ITEMS).stacksTo(64)));
 
-        public static final RegistryObject<PotionItem> POTION = ITEMS.register("potion",
-                        () -> new PotionItem(new Item.Properties().tab(ManaCreativeTabs.MANA_TAB_ITEMS)));
-
 }

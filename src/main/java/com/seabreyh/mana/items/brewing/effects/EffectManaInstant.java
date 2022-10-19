@@ -13,10 +13,10 @@ public class EffectManaInstant extends MobEffect {
 
     public EffectManaInstant() {
         super(MobEffectCategory.BENEFICIAL, 0X865337);
-        this.setRegistryName(ManaMod.MOD_ID, "mana_instant");
-        // this.addAttributeModifier(Attributes.KNOCKBACK_RESISTANCE,
-        // "03C3C89D-7037-4B42-869F-B146BCB64D2F", 0.5D,
-        // AttributeModifier.Operation.ADDITION);
+        this.setRegistryName("mana:mana_instant");
+        this.addAttributeModifier(Attributes.KNOCKBACK_RESISTANCE,
+                "03C3C89D-7037-4B42-869F-B146BCB64D2F", 0.5D,
+                AttributeModifier.Operation.ADDITION);
     }
 
     public void applyEffectTick(LivingEntity LivingEntityIn, int amplifier) {
@@ -27,7 +27,7 @@ public class EffectManaInstant extends MobEffect {
     }
 
     public String getDescriptionId() {
-        return "mana.potion.mana_instant";
+        return "mana.effect.mana_instant";
     }
 
 }
