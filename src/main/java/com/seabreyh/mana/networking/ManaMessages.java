@@ -22,7 +22,6 @@ public class ManaMessages {
     }
 
     public static void register() {
-        ManaMod.LOGGER.debug("###REGISTER");
         SimpleChannel net = NetworkRegistry.ChannelBuilder
                 .named(new ResourceLocation(ManaMod.MOD_ID, "messages"))
                 .networkProtocolVersion(() -> "1.0")

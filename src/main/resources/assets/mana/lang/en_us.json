@@ -1,7 +1,5 @@
 {
-  "itemGroup.mana_items": "Mana Mod Items",
-  "itemGroup.mana_blocks": "Mana Mod Blocks",
-  "itemGroup.manaModTab": "Mana",
+  "itemGroup.mana": "Mana",
 
   "item.mana.amethyst_staff": "Amethyst Staff",
   "item.mana.emerald_staff": "Emerald Staff",

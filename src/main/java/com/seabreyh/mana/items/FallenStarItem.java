@@ -37,10 +37,9 @@ public class FallenStarItem extends Item {
             } else {
                 this.playSound(world, player);
                 itemstack.shrink(1);
-                ManaMod.LOGGER.debug("shrink");
                 if (itemstack.isEmpty()) {
                     player.getInventory().removeItem(itemstack);
-                    
+
                 }
                 return InteractionResultHolder.consume(itemstack);
             }
