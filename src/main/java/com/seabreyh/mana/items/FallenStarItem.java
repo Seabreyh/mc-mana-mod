@@ -1,6 +1,5 @@
 package com.seabreyh.mana.items;
 
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.event.player.PlayerManaEvent;
 
 import java.util.Random;
@@ -37,10 +36,9 @@ public class FallenStarItem extends Item {
             } else {
                 this.playSound(world, player);
                 itemstack.shrink(1);
-                ManaMod.LOGGER.debug("shrink");
                 if (itemstack.isEmpty()) {
                     player.getInventory().removeItem(itemstack);
-                    
+
                 }
                 return InteractionResultHolder.consume(itemstack);
             }

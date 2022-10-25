@@ -40,7 +40,7 @@ public class ManaBlocks {
                                         .destroyTime(0.3f)
                                         .noOcclusion()
                                         .lightLevel(BlockState -> 15)),
-                        ManaCreativeTabs.MANA_TAB_BLOCKS);
+                        ManaMod.TAB);
 
         public static final RegistryObject<Block> STAR_BOTTLE = registerBlock("star_bottle",
                         () -> new StarBottle(BlockBehaviour.Properties
@@ -50,20 +50,20 @@ public class ManaBlocks {
                                         .destroyTime(0.3f)
                                         .noOcclusion()
                                         .lightLevel(BlockState -> 15)),
-                        ManaCreativeTabs.MANA_TAB_BLOCKS);
+                        ManaMod.TAB);
 
         public static final RegistryObject<Block> CELESTIAL_TORCH = registerBlock("celestial_torch",
                         () -> new CelestialTorch(BlockBehaviour.Properties
                                         .of(Material.DECORATION).noCollission().instabreak()
                                         .lightLevel(BlockState -> 15)
                                         .sound(SoundType.WOOD)),
-                        ManaCreativeTabs.MANA_TAB_BLOCKS);
+                        ManaMod.TAB);
 
         // FLOWERS - dont forget, to event register potted flowers in setup of main
         public static final RegistryObject<Block> FLOWER_BUTTERCUP = registerBlock("flower_buttercup",
                         () -> new Flower(BlockBehaviour.Properties.of(Material.PLANT).noCollission().instabreak()
                                         .sound(SoundType.GRASS)),
-                        ManaCreativeTabs.MANA_TAB_BLOCKS);
+                        ManaMod.TAB);
 
         public static final RegistryObject<Block> POTTED_FLOWER_BUTTERCUP = registerBlockWithoutBlockItem(
                         "potted_flower_buttercup",
@@ -73,7 +73,7 @@ public class ManaBlocks {
         public static final RegistryObject<Block> PLANT_LEMONBALM = registerBlock("plant_lemonbalm",
                         () -> new Flower(BlockBehaviour.Properties.of(Material.PLANT).noCollission().instabreak()
                                         .sound(SoundType.GRASS)),
-                        ManaCreativeTabs.MANA_TAB_BLOCKS);
+                        ManaMod.TAB);
 
         public static final RegistryObject<Block> POTTED_PLANT_LEMONBALM = registerBlockWithoutBlockItem(
                         "potted_plant_lemonbalm",

@@ -47,14 +47,12 @@ public class PlayerWishEvent {
 
     public static void makeWishFromIndx(int i) {
         WishType wishType = fromIndex(i);
-        ManaMod.LOGGER.debug("Make wish indx " + i);
         makeWish(wishType);
 
         ManaMessages.sendToServer(new ChoseWishC2SPacket(wishType));
     }
 
     public static void makeWish(WishType wishType) {
-        ManaMod.LOGGER.debug("Make wish " + wishType);
     }
 
     public static void serverHandlePlayerWish(ServerPlayer player, Level level, WishType recvWishType) {
