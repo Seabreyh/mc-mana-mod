@@ -65,9 +65,9 @@ public class ManaEvents {
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.side == LogicalSide.SERVER) {
 
-            // Constantly regenerates mana for each player at a slow, random rate
+            // Constantly regenerates mana for each player at a slow rate
             event.player.getCapability(PlayerManaStatProvider.PLAYER_MANA_STAT).ifPresent(mana_stat -> {
-                if (event.player.getRandom().nextFloat() < 0.005f) {
+                if (event.player.tickCount % 110 == 0) {
                     PlayerManaEvent.regenMana(event.player, 1);
                 }
             });

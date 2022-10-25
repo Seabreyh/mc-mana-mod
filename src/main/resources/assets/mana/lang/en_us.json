@@ -31,8 +31,10 @@
   "sounds.mana.star_capture": "Caught star",
 
   "mana.effect.mana_instant": "Instant Mana",
+  "mana.effect.mana_regen": "Mana Regeneration",
 
   "item.minecraft.potion.effect.mana_instant": "Instant Mana Potion",
+  "item.minecraft.potion.effect.mana_regen": "Potion of Mana Regeneration",
 
   "tooltip.mana.amethyst_staff.tooltip": "§7Does not react well to fire... or does it?",
   "tooltip.mana.emerald_staff.tooltip": "§7Auto targeted magic",

@@ -1,6 +1,5 @@
 package com.seabreyh.mana.items;
 
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.event.player.PlayerManaEvent;
 
 import java.util.Random;

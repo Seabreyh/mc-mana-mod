@@ -22,7 +22,8 @@ public class ManaCreativeTab extends CreativeModeTab {
 
     @Override
     public ItemStack makeIcon() {
-        return new ItemStack(ManaItems.TAB_ICON.get());
+        // return new ItemStack(ManaItems.TAB_ICON.get());
+        return new ItemStack(ManaItems.AMETHYST_STAFF.get());
     }
 
     @OnlyIn(Dist.CLIENT)

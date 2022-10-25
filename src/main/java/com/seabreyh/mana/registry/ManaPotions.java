@@ -6,31 +6,30 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
-
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 import java.lang.reflect.Field;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.items.brewing.ProperBrewingRecipe;
 import com.seabreyh.mana.items.brewing.effects.EffectManaInstant;
+import com.seabreyh.mana.items.brewing.effects.EffectManaRegen;
 
 @Mod.EventBusSubscriber(modid = ManaMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ManaPotions {
 
     // MOB EFFECTS
     public static final MobEffect MANA_INSTANT = new EffectManaInstant();
+    public static final MobEffect MANA_REGEN = new EffectManaRegen();
 
     // POTIONS
-    public static final Potion MANA_INSTANT_POTION = new Potion(new MobEffectInstance(MANA_INSTANT, 3600))
+    public static final Potion MANA_INSTANT_POTION = new Potion(new MobEffectInstance(MANA_INSTANT))
             .setRegistryName("mana:mana_instant");
+    public static final Potion MANA_REGEN_POTION = new Potion(new MobEffectInstance(MANA_REGEN, 500))
+            .setRegistryName("mana:mana_regen");
 
     // REGISTER
     @SubscribeEvent
@@ -67,7 +66,10 @@ public class ManaPotions {
 
     // POTION RECIPES
     public static void registerRecipes() {
-        BrewingRecipeRegistry.addRecipe(Ingredient.of(createPotion(Potions.THICK)),
-                Ingredient.of(ManaItems.MANA_DUST.get()), createPotion(MANA_INSTANT_POTION));
+        BrewingRecipeRegistry.addRecipe(new ProperBrewingRecipe(Potions.THICK,
+                ManaItems.STAR_DUST.get(), ManaPotions.MANA_INSTANT_POTION));
+
+        BrewingRecipeRegistry.addRecipe(new ProperBrewingRecipe(Potions.THICK,
+                ManaItems.MANA_DUST.get(), ManaPotions.MANA_REGEN_POTION));
     }
 }
