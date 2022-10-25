@@ -1,5 +1,6 @@
 package com.seabreyh.mana.blocks.entity;
 
+import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.gui.menus.StaffTableMenu;
 import com.seabreyh.mana.recipes.StaffTableRecipes;
 import com.seabreyh.mana.registry.ManaBlockEntities;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -140,53 +142,81 @@ public class StaffTableBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, StaffTableBlockEntity entity) {
-        
 
-        if(entity.isCrafting){
-            entity.progress++;
-            if (entity.progress > entity.maxProgress) {
-                craftItem(entity);
-                
+        if (!pLevel.isClientSide) {
+            if (entity.isCrafting) {
+                entity.progress++;
+                if (entity.progress > entity.maxProgress) {
+                    // craftItem(entity);
+
+                }
+            } else {
+                entity.resetProgress();
+                setChanged(pLevel, pPos, pState);
             }
-        }else {
-            entity.resetProgress();
-            setChanged(pLevel, pPos, pState);
+
+            if (hasRecipe(entity) && !entity.isCrafting) {
+
+                Level level = entity.level;
+                SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
+
+                entity.match = level.getRecipeManager()
+                        .getRecipeFor(StaffTableRecipes.Type.INSTANCE, inventory, level);
+
+                entity.isCrafting = true;
+
+                // entity.itemHandler.extractItem(0, 1, false);
+                // entity.itemHandler.extractItem(1, 1, false);
+                // entity.itemHandler.extractItem(2, 1, false);
+                // entity.itemHandler.extractItem(3, 1, false);
+                entity.itemHandler.insertItem(0, new ItemStack(ManaItems.EMPTY_MANA_CAPSULE.get()), false);
+                pLevel.playSound((Player) null, pPos.getX(), pPos.getY(), pPos.getZ(), SoundEvents.BOTTLE_EMPTY,
+                        SoundSource.AMBIENT, 10.0F, 1F);
+                setChanged(pLevel, pPos, pState);
+
+            }
+
+            if (hasRecipe(entity) && entity.itemHandler.getStackInSlot(4) == ItemStack.EMPTY) {
+                craftItem(entity);
+            } else if (hasRecipe(entity) && entity.itemHandler.getStackInSlot(4) != ItemStack.EMPTY) {
+                entity.itemHandler.setStackInSlot(4, new ItemStack(Items.AIR, 1));
+                entity.itemHandler.
+            }
         }
-
-        if (hasRecipe(entity) && !entity.isCrafting) {
-
-            
-
-            Level level = entity.level;
-            SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
-
-            entity.match = level.getRecipeManager()
-                .getRecipeFor(StaffTableRecipes.Type.INSTANCE, inventory, level);
-
-            entity.isCrafting = true;
-
-            entity.itemHandler.extractItem(0, 1, false);
-            entity.itemHandler.extractItem(1, 1, false);
-            entity.itemHandler.extractItem(2, 1, false);
-            entity.itemHandler.extractItem(3, 1, false);
-            entity.itemHandler.insertItem(0, new ItemStack(ManaItems.EMPTY_MANA_CAPSULE.get()), false);
-            pLevel.playSound((Player) null, pPos.getX(), pPos.getY(), pPos.getZ(),SoundEvents.BOTTLE_EMPTY,
-                SoundSource.AMBIENT, 10.0F, 1F);
-            setChanged(pLevel, pPos, pState);
-            
-        } 
     }
 
     private static boolean hasRecipe(StaffTableBlockEntity entity) {
-        Level level = entity.level;
+        // Level level = entity.level;
         SimpleContainer inventory = new SimpleContainer(entity.itemHandler.getSlots());
         for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
 
-        entity.match = level.getRecipeManager()
-                .getRecipeFor(StaffTableRecipes.Type.INSTANCE, inventory, level);
-      
+        entity.match = entity.level.getRecipeManager()
+                .getRecipeFor(StaffTableRecipes.Type.INSTANCE, inventory, entity.level);
+
+        // ManaMod.LOGGER.info("------------------");
+        // ManaMod.LOGGER.info("Match is present: " +
+        // Boolean.toString(entity.match.isPresent()));
+        // ManaMod.LOGGER.info(
+        // "Can insert AMOUNT into output slot: " +
+        // Boolean.toString(canInsertAmountIntoOutputSlot(inventory)));
+        // ManaMod.LOGGER.info("Can insert ITEM into output slot: "
+        // + Boolean.toString(canInsertItemIntoOutputSlot(inventory,
+        // entity.match.get().getResultItem())));
+        // ManaMod.LOGGER.info("Mana Capsule: " +
+        // Boolean.toString(hasManaCapsule(entity)));
+
+        if (canInsertAmountIntoOutputSlot(inventory)) {
+            return entity.match.isPresent()
+                    && canInsertItemIntoOutputSlot(inventory, entity.match.get().getResultItem())
+                    && hasManaCapsule(entity);
+        } else if (!canInsertAmountIntoOutputSlot(inventory)
+                && entity.itemHandler.getStackInSlot(4) == entity.match.get().getResultItem()) {
+            return entity.match.isPresent()
+                    && canInsertItemIntoOutputSlot(inventory, entity.match.get().getResultItem())
+                    && hasManaCapsule(entity);
+        }
         return entity.match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
                 && canInsertItemIntoOutputSlot(inventory, entity.match.get().getResultItem())
                 && hasManaCapsule(entity);
@@ -195,20 +225,23 @@ public class StaffTableBlockEntity extends BlockEntity implements MenuProvider {
     public static void craftItem(StaffTableBlockEntity entity) {
 
         // for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
-        //     inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
+        // inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         // }
 
         // if (match.isPresent()) {
-            // entity.itemHandler.extractItem(0, 1, false);
-            // entity.itemHandler.extractItem(1, 1, false);
-            // entity.itemHandler.extractItem(2, 1, false);
-            // entity.itemHandler.extractItem(3, 1, false);
+        // entity.itemHandler.extractItem(0, 1, false);
+        // entity.itemHandler.extractItem(1, 1, false);
+        // entity.itemHandler.extractItem(2, 1, false);
+        // entity.itemHandler.extractItem(3, 1, false);
 
-            entity.itemHandler.setStackInSlot(4, new ItemStack(entity.match.get().getResultItem().getItem(),
-                    entity.itemHandler.getStackInSlot(4).getCount() + 1));
+        // entity.itemHandler.setStackInSlot(4, new
+        // ItemStack(entity.match.get().getResultItem().getItem(),
+        // entity.itemHandler.getStackInSlot(4).getCount() + 1));
+        entity.itemHandler.setStackInSlot(4, new ItemStack(entity.match.get().getResultItem().getItem(),
+                entity.itemHandler.getStackInSlot(4).getCount() + 1));
 
-            entity.resetProgress();
-            entity.isCrafting = false;
+        entity.resetProgress();
+        entity.isCrafting = false;
         // }
 
     }
