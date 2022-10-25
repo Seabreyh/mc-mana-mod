@@ -62,18 +62,13 @@ public class ManaItems {
                         () -> new ManaShard(new Item.Properties().tab(ManaMod.TAB).stacksTo(64)));
 
         public static final RegistryObject<Item> EMPTY_MANA_CAPSULE = ITEMS.register("empty_mana_capsule",
-                        () -> new EmptyManaCapsule(new Item.Properties()
-                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
-                                        .stacksTo(1)));
+                        () -> new EmptyManaCapsule(new Item.Properties().tab(ManaMod.TAB).stacksTo(1)));
 
         public static final RegistryObject<Item> FILLED_MANA_CAPSULE = ITEMS.register("filled_mana_capsule",
-                        () -> new FilledManaCapsule(new Item.Properties()
-                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
-                                        .stacksTo(1)));
+                        () -> new FilledManaCapsule(new Item.Properties().tab(ManaMod.TAB).stacksTo(1)));
 
         public static final RegistryObject<Item> MANA_TREAT = ITEMS.register("mana_treat",
-                        () -> new ManaTreat(new Item.Properties()
-                                        .tab(ManaCreativeTabs.MANA_TAB_ITEMS)
-                                        .stacksTo(64).food(ManaTreat.MANA_TREAT)));
+                        () -> new ManaTreat(new Item.Properties().tab(ManaMod.TAB).stacksTo(64)
+                                        .food(ManaTreat.MANA_TREAT)));
 
 }

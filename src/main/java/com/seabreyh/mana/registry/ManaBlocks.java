@@ -51,7 +51,7 @@ public class ManaBlocks {
                                         .destroyTime(0.3f)
                                         .noOcclusion()
                                         .lightLevel(BlockState -> 5)),
-                        ManaCreativeTabs.MANA_TAB_BLOCKS);
+                        ManaMod.TAB);
 
         public static final RegistryObject<Block> STAR_BOTTLE = registerBlock("star_bottle",
                         () -> new StarBottle(BlockBehaviour.Properties
@@ -72,8 +72,9 @@ public class ManaBlocks {
 
         public static final RegistryObject<Block> AMETHYST_BLOCK = registerBlock("amethyst_block",
                         () -> new AmethystBlock(BlockBehaviour.Properties
-                                        .of(Material.METAL).requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.METAL)),
-                                        ManaCreativeTabs.MANA_TAB_BLOCKS);
+                                        .of(Material.METAL).requiresCorrectToolForDrops().strength(5.0F, 6.0F)
+                                        .sound(SoundType.METAL)),
+                        ManaMod.TAB);
 
         // FLOWERS - dont forget, to event register potted flowers in setup of main
         public static final RegistryObject<Block> FLOWER_BUTTERCUP = registerBlock("flower_buttercup",
