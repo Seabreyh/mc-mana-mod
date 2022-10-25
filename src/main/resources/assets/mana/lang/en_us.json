@@ -36,6 +36,15 @@
   "item.minecraft.potion.effect.mana_instant": "Instant Mana Potion",
   "item.minecraft.potion.effect.mana_regen": "Potion of Mana Regeneration",
 
+  "item.minecraft.splash_potion.effect.mana_instant": "Splash Potion of Instant Mana",
+  "item.minecraft.splash_potion.effect.mana_regen": "Splash Potion of Mana Regeneration",
+
+  "item.minecraft.tipped_arrow.effect.mana_instant": "Arrow of Instant Mana",
+  "item.minecraft.tipped_arrow.effect.mana_regen": "Arrow of Mana Regeneration",
+
+  "item.minecraft.lingering_potion.effect.mana_instant": "Lingering Potion of Instant Mana",
+  "item.minecraft.lingering_potion.effect.mana_regen": "Lingering Potion of Mana Regeneration",
+
   "tooltip.mana.amethyst_staff.tooltip": "§7Does not react well to fire... or does it?",
   "tooltip.mana.emerald_staff.tooltip": "§7Auto targeted magic",
   "tooltip.mana.lshift.tooltip": "§7Hold §8[§bLSHIFT§8] §7for more info"
