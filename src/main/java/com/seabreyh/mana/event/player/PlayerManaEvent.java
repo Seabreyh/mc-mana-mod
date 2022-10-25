@@ -62,8 +62,6 @@ public class PlayerManaEvent {
 
             mana_stat.addManaCapacity(mana_increase);
 
-            ManaMod.LOGGER.debug("###SERVER_INCREASE_MANA_CAP " + mana_increase);
-
             // Send packet with new player mana data to all the clients
             ManaMessages.sendToPlayer(new ManaStatSyncS2CPacket(mana_stat.getManaValue(), mana_stat.getManaCapacity()),
                     ((ServerPlayer) player));

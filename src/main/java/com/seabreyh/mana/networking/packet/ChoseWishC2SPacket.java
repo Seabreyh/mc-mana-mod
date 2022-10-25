@@ -35,7 +35,6 @@ public class ChoseWishC2SPacket {
         final var success = new AtomicBoolean(false);
         context.enqueueWork(() -> {
             WishType recvWishType = this.wishType;
-            ManaMod.LOGGER.debug("SERVER got sealed wish packet: " + recvWishType);
             ServerPlayer player = context.getSender();
             ServerLevel level = player.getLevel();
             PlayerWishEvent.serverHandlePlayerWish(player, level, recvWishType);

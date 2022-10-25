@@ -162,10 +162,6 @@ public class Meteor extends AbstractArrow implements SpawnPredicate {
                 this.playSound(SoundEvents.EVOKER_CAST_SPELL, 2.0F, 1.0F);
             }
 
-            if (pBlockEntity == null) {
-                ManaMod.LOGGER.debug("pBlockEntity is null");
-            }
-
             // If within 0.7 blocks of catcher, catch.
             if (Math.abs(vec3.x) < 0.7 && Math.abs(vec3.y) < 0.7 && Math.abs(vec3.z) < 0.7) {
                 this.playSound(SoundEvents.BOTTLE_FILL_DRAGONBREATH, 2.0F, 1.0F);
@@ -200,7 +196,6 @@ public class Meteor extends AbstractArrow implements SpawnPredicate {
             double playerSeesStar = dirPlayerToStar.dot(dirPlayerLooking);
 
             if (playerSeesStar > 0.98 && playerRotX <= -15F) {
-                ManaMod.LOGGER.debug("PLAYER SPOTS STAR THROUGH SPYGLASS");
                 PlayerWishEvent.starGrantPlayerWish(this.ownPlayer, level);
                 playerWishedOn = true;
             }

@@ -168,10 +168,6 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                 this.playSound(SoundEvents.EVOKER_CAST_SPELL, 2.0F, 1.0F);
             }
 
-            if (pBlockEntity == null) {
-                ManaMod.LOGGER.debug("pBlockEntity is null");
-            }
-
             // If within 0.7 blocks of catcher, catch.
             if (Math.abs(vec3.x) < 0.7 && Math.abs(vec3.y) < 0.7 && Math.abs(vec3.z) < 0.7) {
                 this.playSound(SoundEvents.BOTTLE_FILL_DRAGONBREATH, 2.0F, 1.0F);

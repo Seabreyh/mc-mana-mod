@@ -46,12 +46,9 @@ public class GrantedWishItem extends SealedWishItem {
                 case WEATHER_CLEAR:
                     // world.setThunderLevel(0f);
                     ((ServerLevel) world).setWeatherParameters(0, 0, false, false);
-                    ManaMod.LOGGER.debug("WISH MAKE CLEAR SKIES");
                     break;
                 case WEATHER_STORM:
                     ((ServerLevel) world).setWeatherParameters(0, 0, true, true);
-
-                    ManaMod.LOGGER.debug("WISH MAKE RAIN");
 
                     // world.setThunderLevel(1f);
                     break;

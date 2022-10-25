@@ -2,16 +2,21 @@ package com.seabreyh.mana;
 
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.event.ManaClientEvents;
+
 import com.seabreyh.mana.gui.ManaMenuTypes;
 import com.seabreyh.mana.networking.ManaMessages;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaBlocks;
+import com.seabreyh.mana.registry.ManaCreativeTab;
 import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaItems;
 import com.seabreyh.mana.registry.ManaParticles;
+import com.seabreyh.mana.registry.ManaPotions;
 import com.seabreyh.mana.registry.ManaRecipes;
 import com.seabreyh.mana.registry.ManaSounds;
 
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
@@ -19,6 +24,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -27,11 +33,11 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod("mana")
+@Mod(ManaMod.MOD_ID)
 public class ManaMod {
     public static final String MOD_ID = "mana";
-
-    // Directly reference a slf4j logger
+    public static CreativeModeTab TAB = new ManaCreativeTab();
+    public static CommonProxy PROXY = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public ManaMod() {
@@ -39,10 +45,10 @@ public class ManaMod {
         // Register items
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        ManaItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ManaEntities.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ManaParticles.PARTICLE_TYPES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ManaSounds.SOUND_EVENTS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ManaItems.ITEMS.register(eventBus);
+        ManaEntities.ENTITIES.register(eventBus);
+        ManaParticles.PARTICLE_TYPES.register(eventBus);
+        ManaSounds.SOUND_EVENTS.register(eventBus);
 
         ManaBlocks.register(eventBus);
         ManaBlockEntities.register(eventBus);
@@ -55,6 +61,8 @@ public class ManaMod {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        PROXY.init();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -67,7 +75,16 @@ public class ManaMod {
 
             ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ManaBlocks.PLANT_LEMONBALM.getId(),
                     ManaBlocks.POTTED_PLANT_LEMONBALM);
+
+            ManaPotions.registerRecipes();
+
         });
+
+    }
+
+    @SubscribeEvent
+    public static void registerRecipes(RegistryEvent.Register<RecipeSerializer<?>> event) {
+        ManaPotions.registerRecipes();
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
@@ -75,12 +92,9 @@ public class ManaMod {
         ManaClientEvents.registerBlockRenderers(event);
         ManaClientEvents.registerBlockEntityRenderers(event);
         ManaClientEvents.registerOverlays(event);
-
         ManaClientEvents.registerMenuScreens(/* no event pls */);
 
-        // ClientSetup.registerMenuScreens(event);
-        // MenuScreens.register(ManaMenuTypes.STAR_CATCHER_MENU.get(),
-        // StarCatcherScreen::new);
+        PROXY.clientInit();
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
@@ -99,4 +113,7 @@ public class ManaMod {
         }
     }
 
+    public Object getISTERProperties() {
+        return null;
+    }
 }
