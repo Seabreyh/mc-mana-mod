@@ -21,6 +21,8 @@ A mod that introduces magic into Minecraft in amazing ways.
 * Star Dust
 * Wishes
 * Staff Tables
+* Instant Mana Potion & other potion type variants
+* Mana Regen Potion & other potion type variants
 
 ### Current features
 * Mana bar
