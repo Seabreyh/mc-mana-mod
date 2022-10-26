@@ -24,6 +24,7 @@ A mod that introduces magic into Minecraft in amazing ways.
 ### Current features
 * Mana bar
 * Grow Budding Amethyst Blocks with Amethyst Block and Star Dust
+* Use stars as fuel source in furnace.
 
 ### Current events
 * Falling Stars
