@@ -27,5 +27,8 @@ A mod that introduces magic into Minecraft in amazing ways.
 * Use stars as fuel source in furnace.
 * Amethyst Magic in fire creates wild magic
 
+### Vanilla Integrations
+* Buttercup flower in flower pot
+
 ### Current events
 * Falling Stars
