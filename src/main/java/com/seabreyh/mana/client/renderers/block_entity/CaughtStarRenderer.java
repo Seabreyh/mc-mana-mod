@@ -2,8 +2,7 @@ package com.seabreyh.mana.client.renderers.block_entity;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.blocks.entity.StarCatcherBlockEntity;
-import com.seabreyh.mana.entity.FallenStar;
-
+import com.seabreyh.mana.entity.environment.FallenStar;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;
@@ -26,7 +25,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class CaughtStarRenderer implements BlockEntityRenderer<StarCatcherBlockEntity>{
+public class CaughtStarRenderer implements BlockEntityRenderer<StarCatcherBlockEntity> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(ManaMod.MOD_ID,
             "textures/entity/fallen_star/fallen_star.png");
@@ -50,39 +49,40 @@ public class CaughtStarRenderer implements BlockEntityRenderer<StarCatcherBlockE
         partdefinition.addOrReplaceChild("cube",
                 CubeListBuilder.create().texOffs(32, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
         return LayerDefinition.create(meshdefinition, 64, 32);
-    }    
+    }
+
     @Override
     public void render(StarCatcherBlockEntity entityBlock, float partialTicks, PoseStack stack,
             MultiBufferSource buffer, int combinedOverlay, int packedLight) {
 
-                stack.pushPose();
-                float f1 = entityBlock.getActiveRotation(partialTicks) * (180F / (float)Math.PI);
-                
-                VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entityTranslucent(TEXTURE, true));
-                stack.pushPose();
-                stack.scale(0.5F, 0.5F, 0.5F);
-                stack.translate(1D, 0D, 1D);
+        stack.pushPose();
+        float f1 = entityBlock.getActiveRotation(partialTicks) * (180F / (float) Math.PI);
 
-                int i = OverlayTexture.NO_OVERLAY;
-                
-                stack.mulPose(Vector3f.YP.rotationDegrees(f1));
+        VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entityTranslucent(TEXTURE, true));
+        stack.pushPose();
+        stack.scale(0.5F, 0.5F, 0.5F);
+        stack.translate(1D, 0D, 1D);
 
-                stack.translate(0D, 0.93D, 0D);
+        int i = OverlayTexture.NO_OVERLAY;
 
-                stack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 55.0F, true));
-                this.glass.render(stack, vertexconsumer, 6029544, i);
-                
-                stack.scale(0.875F, 0.875F, 0.875F);
-                stack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F, true));
-                stack.mulPose(Vector3f.YP.rotationDegrees(f1));
-                stack.scale(0.6F, 0.6F, 0.6F);
+        stack.mulPose(Vector3f.YP.rotationDegrees(f1));
 
-                this.cube.render(stack, vertexconsumer, 6029544, i);
+        stack.translate(0D, 0.93D, 0D);
 
-                stack.popPose();
-                stack.popPose();
+        stack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 55.0F, true));
+        this.glass.render(stack, vertexconsumer, 6029544, i);
+
+        stack.scale(0.875F, 0.875F, 0.875F);
+        stack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F, true));
+        stack.mulPose(Vector3f.YP.rotationDegrees(f1));
+        stack.scale(0.6F, 0.6F, 0.6F);
+
+        this.cube.render(stack, vertexconsumer, 6029544, i);
+
+        stack.popPose();
+        stack.popPose();
     }
-    
+
     public ResourceLocation getTextureLocation(FallenStar p_114157_) {
         return TEXTURE;
     }

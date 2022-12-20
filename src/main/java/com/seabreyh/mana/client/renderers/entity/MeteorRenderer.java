@@ -1,9 +1,8 @@
 package com.seabreyh.mana.client.renderers.entity;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.entity.FallenStar;
-import com.seabreyh.mana.entity.Meteor;
-
+import com.seabreyh.mana.entity.environment.FallenStar;
+import com.seabreyh.mana.entity.environment.Meteor;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Quaternion;

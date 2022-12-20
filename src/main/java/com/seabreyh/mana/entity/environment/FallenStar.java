@@ -1,4 +1,4 @@
-package com.seabreyh.mana.entity;
+package com.seabreyh.mana.entity.environment;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.blocks.entity.StarCatcherBlockEntity;

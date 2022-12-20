@@ -1,6 +1,6 @@
 package com.seabreyh.mana.event.world;
 
-import com.seabreyh.mana.entity.FallenStar;
+import com.seabreyh.mana.entity.environment.FallenStar;
 import com.seabreyh.mana.registry.ManaEntities;
 
 import java.util.Random;

@@ -1,11 +1,10 @@
 package com.seabreyh.mana.registry;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.items.AmethystStaff;
-import com.seabreyh.mana.items.EmeraldStaff;
 import com.seabreyh.mana.items.FallenStarItem;
 import com.seabreyh.mana.items.FilledManaCapsule;
 import com.seabreyh.mana.items.GrantedWishItem;
+import com.seabreyh.mana.items.CelestialBoomerang;
 import com.seabreyh.mana.items.EmptyManaCapsule;
 import com.seabreyh.mana.items.ManaCrystal;
 import com.seabreyh.mana.items.ManaDust;
@@ -14,6 +13,8 @@ import com.seabreyh.mana.items.ManaTreat;
 import com.seabreyh.mana.items.SealedWishItem;
 import com.seabreyh.mana.items.StarDust;
 import com.seabreyh.mana.items.WishItem;
+import com.seabreyh.mana.items.staffs.AmethystStaff;
+import com.seabreyh.mana.items.staffs.EmeraldStaff;
 
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
@@ -30,6 +31,10 @@ public class ManaItems {
 
         public static final RegistryObject<Item> AMETHYST_STAFF = ITEMS.register("amethyst_staff",
                         () -> new AmethystStaff(
+                                        new Item.Properties().durability(500).tab(ManaMod.TAB)));
+
+        public static final RegistryObject<Item> CELESTIAL_BOOMERANG = ITEMS.register("celestial_boomerang",
+                        () -> new CelestialBoomerang(
                                         new Item.Properties().durability(500).tab(ManaMod.TAB)));
 
         public static final RegistryObject<Item> EMERALD_STAFF = ITEMS.register("emerald_staff",

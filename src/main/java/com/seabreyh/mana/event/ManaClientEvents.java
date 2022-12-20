@@ -5,9 +5,11 @@ import com.seabreyh.mana.client.gui.ManaHudOverlay;
 import com.seabreyh.mana.client.gui.WishViewScreen;
 import com.seabreyh.mana.client.renderers.block_entity.CaughtStarRenderer;
 import com.seabreyh.mana.client.renderers.entity.AmethystEnergyBallRenderer;
+import com.seabreyh.mana.client.renderers.entity.CelestialBoomerangEntityRenderer;
 import com.seabreyh.mana.client.renderers.entity.EmeraldEnergyBallRenderer;
 import com.seabreyh.mana.client.renderers.entity.FallenStarRenderer;
 import com.seabreyh.mana.client.renderers.entity.MeteorRenderer;
+import com.seabreyh.mana.entity.throwable.CelestialBoomerangEntity;
 import com.seabreyh.mana.gui.ManaMenuTypes;
 import com.seabreyh.mana.gui.screens.StaffTableScreen;
 import com.seabreyh.mana.gui.screens.StarCatcherScreen;
@@ -39,6 +41,7 @@ public class ManaClientEvents {
     public static void registerEntityRenderers(FMLClientSetupEvent event) {
         EntityRenderers.register(ManaEntities.AMETHYST_ENERGY_BALL.get(), AmethystEnergyBallRenderer::new);
         EntityRenderers.register(ManaEntities.EMERALD_ENERGY_BALL.get(), EmeraldEnergyBallRenderer::new);
+        EntityRenderers.register(ManaEntities.CELESTIAL_BOOMERANG_ENTITY.get(), CelestialBoomerangEntityRenderer::new);
         EntityRenderers.register(ManaEntities.FALLEN_STAR.get(), FallenStarRenderer::new);
         EntityRenderers.register(ManaEntities.METEOR.get(), MeteorRenderer::new);
     }

@@ -1,4 +1,4 @@
-package com.seabreyh.mana.entity;
+package com.seabreyh.mana.entity.staff;
 
 import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaParticles;

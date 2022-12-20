@@ -1,6 +1,6 @@
 package com.seabreyh.mana.blocks.entity;
 
-import com.seabreyh.mana.entity.FallenStar;
+import com.seabreyh.mana.entity.environment.FallenStar;
 import com.seabreyh.mana.gui.menus.StarCatcherMenu;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaItems;

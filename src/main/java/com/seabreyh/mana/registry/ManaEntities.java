@@ -1,10 +1,11 @@
 package com.seabreyh.mana.registry;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.entity.AmethystEnergyBall;
-import com.seabreyh.mana.entity.EmeraldEnergyBall;
-import com.seabreyh.mana.entity.FallenStar;
-import com.seabreyh.mana.entity.Meteor;
+import com.seabreyh.mana.entity.environment.FallenStar;
+import com.seabreyh.mana.entity.environment.Meteor;
+import com.seabreyh.mana.entity.staff.AmethystEnergyBall;
+import com.seabreyh.mana.entity.staff.EmeraldEnergyBall;
+import com.seabreyh.mana.entity.throwable.CelestialBoomerangEntity;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -26,6 +27,14 @@ public class ManaEntities {
                         "emerald_energy_ball",
                         () -> EntityType.Builder.<EmeraldEnergyBall>of(EmeraldEnergyBall::new, MobCategory.MISC)
                                         .sized(0.3f, 0.3f).build("emerald_energy_ball"));
+
+        public static final RegistryObject<EntityType<CelestialBoomerangEntity>> CELESTIAL_BOOMERANG_ENTITY = ENTITIES
+                        .register(
+                                        "celestial_boomerang_entity",
+                                        () -> EntityType.Builder
+                                                        .<CelestialBoomerangEntity>of(CelestialBoomerangEntity::new,
+                                                                        MobCategory.MISC)
+                                                        .sized(0.3f, 0.3f).build("celestial_boomerang_entity"));
 
         public static final RegistryObject<EntityType<FallenStar>> FALLEN_STAR = ENTITIES.register(
                         "fallen_star",

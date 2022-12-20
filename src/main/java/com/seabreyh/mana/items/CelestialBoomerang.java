@@ -1,8 +1,10 @@
 package com.seabreyh.mana.items;
 
-import com.seabreyh.mana.entity.AmethystEnergyBall;
+import com.seabreyh.mana.entity.staff.EmeraldEnergyBall;
+import com.seabreyh.mana.entity.throwable.CelestialBoomerangEntity;
 import com.seabreyh.mana.event.player.PlayerManaEvent;
 
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.client.gui.screens.Screen;
@@ -21,11 +23,9 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+public class CelestialBoomerang extends Item {
 
-public class AmethystStaff extends Item {
-
-    public AmethystStaff(Properties properties) {
+    public CelestialBoomerang(Properties properties) {
         super(properties);
     }
 
@@ -36,26 +36,24 @@ public class AmethystStaff extends Item {
     @Override
     // Called when player right clicks staff
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-
         ItemStack itemstack = player.getItemInHand(hand);
         boolean hasMana = false;
         if (!world.isClientSide) {
 
             if (this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
                 // Handle depletion of player mana from use
-                hasMana = PlayerManaEvent.consumeMana(player, 1);
+                hasMana = PlayerManaEvent.consumeMana(player, 3);
                 hasMana |= player.isCreative();
             }
 
             if (hasMana && this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
-                AmethystEnergyBall energyBall = new AmethystEnergyBall(world, player);
+                CelestialBoomerangEntity energyBall = new CelestialBoomerangEntity(world, player);
                 energyBall.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
                 energyBall.setNoGravity(true);
                 world.addFreshEntity(energyBall);
             }
         }
         if (hasMana && this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
-
             this.playSound(world, player);
             this.setDamage(itemstack, this.getDamage(itemstack) + 2);
             return InteractionResultHolder.success(itemstack);
@@ -75,9 +73,10 @@ public class AmethystStaff extends Item {
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents,
             TooltipFlag pIsAdvanced) {
         if (Screen.hasShiftDown()) {
-            pTooltipComponents.add(new TranslatableComponent("tooltip.mana.amethyst_staff.tooltip"));
+            pTooltipComponents.add(new TranslatableComponent("tooltip.mana.emerald_staff.tooltip"));
         } else {
             pTooltipComponents.add(new TranslatableComponent("tooltip.mana.lshift.tooltip"));
         }
     }
+
 }

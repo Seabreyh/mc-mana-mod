@@ -26,7 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.Util;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import com.seabreyh.mana.entity.FallenStar;
+import com.seabreyh.mana.entity.environment.FallenStar;
 import com.seabreyh.mana.registry.ItemTabIcon;
 import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaItems;
