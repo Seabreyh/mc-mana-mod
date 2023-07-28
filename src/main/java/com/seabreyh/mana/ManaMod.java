@@ -21,7 +21,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
+//import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -83,7 +84,8 @@ public class ManaMod {
     }
 
     @SubscribeEvent
-    public static void registerRecipes(RegistryEvent.Register<RecipeSerializer<?>> event) {
+    // UPDATED
+    public static void registerRecipes(RegisterEvent.RegisterHelper<RecipeSerializer<?>> event) {
         ManaPotions.registerRecipes();
     }
 
@@ -107,7 +109,8 @@ public class ManaMod {
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
         @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
+        // UPDATED
+        public static void onBlocksRegistry(final RegisterEvent.RegisterHelper<Block> blockRegistryEvent) {
             // Register a new block here
             // LOGGER.info("HELLO from Register Block");
         }

@@ -15,7 +15,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+// import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -31,8 +31,9 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
+//import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class StarCatcherBlockEntity extends BlockEntity implements MenuProvider {
@@ -57,7 +58,7 @@ public class StarCatcherBlockEntity extends BlockEntity implements MenuProvider 
 
     @Override
     public Component getDisplayName() {
-        return new TextComponent("Star Catcher");
+        return Component.literal("Star Catcher");
     }
 
     public float getRotationSpeed() {
@@ -77,7 +78,7 @@ public class StarCatcherBlockEntity extends BlockEntity implements MenuProvider 
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER) {
             return lazyItemHandler.cast();
         }
 

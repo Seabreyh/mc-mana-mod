@@ -16,7 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+//import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
@@ -34,8 +35,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
+//import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class StaffTableBlockEntity extends BlockEntity implements MenuProvider {
@@ -92,7 +94,8 @@ public class StaffTableBlockEntity extends BlockEntity implements MenuProvider {
 
     @Override
     public Component getDisplayName() {
-        return new TextComponent("Staff Table");
+        // UPDATED
+        return Component.literal("Staff Table");
     }
 
     @Nullable
@@ -104,7 +107,8 @@ public class StaffTableBlockEntity extends BlockEntity implements MenuProvider {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        // UPDATED
+        if (cap == ForgeCapabilities.ITEM_HANDLER) {
             return lazyItemHandler.cast();
         }
 
