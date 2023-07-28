@@ -8,11 +8,12 @@ import com.seabreyh.mana.client.renderers.entity.AmethystEnergyBallRenderer;
 import com.seabreyh.mana.client.renderers.entity.EmeraldEnergyBallRenderer;
 import com.seabreyh.mana.client.renderers.entity.FallenStarRenderer;
 import com.seabreyh.mana.client.renderers.entity.MeteorRenderer;
+import com.seabreyh.mana.gui.ManaMenuTypes;
+import com.seabreyh.mana.gui.screens.StaffTableScreen;
+import com.seabreyh.mana.gui.screens.StarCatcherScreen;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaBlocks;
 import com.seabreyh.mana.registry.ManaEntities;
-import com.seabreyh.mana.screen.ManaMenuTypes;
-import com.seabreyh.mana.screen.StarCatcherScreen;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -63,6 +64,7 @@ public class ManaClientEvents {
     // No @SubscribeEvent
     public static void registerMenuScreens() {
         MenuScreens.register(ManaMenuTypes.STAR_CATCHER_MENU.get(), StarCatcherScreen::new);
+        MenuScreens.register(ManaMenuTypes.STAFF_TABLE_MENU.get(), StaffTableScreen::new);
     }
 
     @SubscribeEvent

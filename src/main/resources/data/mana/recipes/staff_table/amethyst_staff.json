@@ -1,0 +1,17 @@
+{
+    "type": "mana:staff_table",
+    "ingredients": [
+        {
+            "item": "mana:amethyst_block"
+        },
+        {
+            "item": "minecraft:copper_ingot"
+        },
+        {
+            "item": "minecraft:copper_ingot"
+        }
+    ],
+    "output": {
+      "item": "mana:amethyst_staff"
+    }
+  }

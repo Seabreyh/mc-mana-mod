@@ -3,6 +3,7 @@ package com.seabreyh.mana;
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.event.ManaClientEvents;
 
+import com.seabreyh.mana.gui.ManaMenuTypes;
 import com.seabreyh.mana.networking.ManaMessages;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaBlocks;
@@ -11,8 +12,8 @@ import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaItems;
 import com.seabreyh.mana.registry.ManaParticles;
 import com.seabreyh.mana.registry.ManaPotions;
+import com.seabreyh.mana.registry.ManaRecipes;
 import com.seabreyh.mana.registry.ManaSounds;
-import com.seabreyh.mana.screen.ManaMenuTypes;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -20,7 +21,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
+//import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -52,6 +54,7 @@ public class ManaMod {
         ManaBlocks.register(eventBus);
         ManaBlockEntities.register(eventBus);
         ManaMenuTypes.register(eventBus);
+        ManaRecipes.register(eventBus);
 
         // Add listeners
         eventBus.addListener(this::setup);
@@ -81,7 +84,8 @@ public class ManaMod {
     }
 
     @SubscribeEvent
-    public static void registerRecipes(RegistryEvent.Register<RecipeSerializer<?>> event) {
+    // UPDATED
+    public static void registerRecipes(RegisterEvent.RegisterHelper<RecipeSerializer<?>> event) {
         ManaPotions.registerRecipes();
     }
 
@@ -105,7 +109,8 @@ public class ManaMod {
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
         @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
+        // UPDATED
+        public static void onBlocksRegistry(final RegisterEvent.RegisterHelper<Block> blockRegistryEvent) {
             // Register a new block here
             // LOGGER.info("HELLO from Register Block");
         }

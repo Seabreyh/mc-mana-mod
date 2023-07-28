@@ -3,7 +3,7 @@ loaderVersion="[40,)" #mandatory This is typically bumped every Minecraft versio
 license="All rights reserved"
 [[mods]] #mandatory
 modId="mana" #mandatory
-version="0.0.5" #mandatory
+version="0.0.6" #mandatory
 displayName="Mana" #mandatory
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
@@ -31,6 +31,6 @@ A mod that introduces magic into Minecraft in amazing ways.
     modId="minecraft"
     mandatory=true
 # This version range declares a minimum of the current minecraft version up to but not including the next major version
-    versionRange="[1.18.2,1.19)"
+    versionRange="[1.20.1,)"
     ordering="NONE"
     side="BOTH"

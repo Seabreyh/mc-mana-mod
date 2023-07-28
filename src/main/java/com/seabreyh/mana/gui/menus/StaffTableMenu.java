@@ -1,42 +1,53 @@
-package com.seabreyh.mana.screen;
+package com.seabreyh.mana.gui.menus;
 
 import com.seabreyh.mana.registry.ManaBlocks;
-import com.seabreyh.mana.blocks.entity.StarCatcherEntityBlock;
-import com.seabreyh.mana.screen.slot.ManaResultSlot;
+import com.seabreyh.mana.blocks.entity.StaffTableBlockEntity;
+import com.seabreyh.mana.gui.ManaMenuTypes;
+import com.seabreyh.mana.gui.slot.ManaResultSlot;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
-public class StarCatcherMenu extends AbstractContainerMenu {
-    private final StarCatcherEntityBlock blockEntity;
+public class StaffTableMenu extends AbstractContainerMenu {
+    private final StaffTableBlockEntity blockEntity;
     private final Level level;
+    private final ContainerData data;
 
-    public StarCatcherMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()));
+    public StaffTableMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
+        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2));
     }
 
-    public StarCatcherMenu(int pContainerId, Inventory inv, BlockEntity entity) {
-        super(ManaMenuTypes.STAR_CATCHER_MENU.get(), pContainerId);
+    public StaffTableMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
+        super(ManaMenuTypes.STAFF_TABLE_MENU.get(), pContainerId);
         checkContainerSize(inv, 4);
-        blockEntity = ((StarCatcherEntityBlock) entity);
+        blockEntity = ((StaffTableBlockEntity) entity);
         this.level = inv.player.level;
+        this.data = data;
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
         this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-            // this.addSlot(new SlotItemHandler(handler, 0, 34, 40));
-            // this.addSlot(new SlotItemHandler(handler, 1, 57, 18));
-            // this.addSlot(new SlotItemHandler(handler, 2, 103, 18));
-            this.addSlot(new ManaResultSlot(handler, 0, 80, 53));
+            // crafting slots
+            this.addSlot(new SlotItemHandler(handler, 0, 26, 35));
+            this.addSlot(new SlotItemHandler(handler, 1, 62, 17));
+            this.addSlot(new SlotItemHandler(handler, 2, 62, 35));
+            this.addSlot(new SlotItemHandler(handler, 3, 62, 53));
+            // result slot
+            this.addSlot(new ManaResultSlot(handler, 4, 116, 35));
         });
+        addDataSlots(data);
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
@@ -59,8 +70,7 @@ public class StarCatcherMenu extends AbstractContainerMenu {
     private static final int VANILLA_FIRST_SLOT_INDEX = 0;
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
-    // THIS YOU HAVE TO DEFINE!
-    private static final int TE_INVENTORY_SLOT_COUNT = 1; // must be the number of slots you have!
+    private static final int TE_INVENTORY_SLOT_COUNT = 5; // must be the number of slots you have!
 
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
@@ -100,7 +110,7 @@ public class StarCatcherMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
-                pPlayer, ManaBlocks.STAR_CATCHER.get());
+                pPlayer, ManaBlocks.STAFF_TABLE.get());
     }
 
     private void addPlayerInventory(Inventory playerInventory) {

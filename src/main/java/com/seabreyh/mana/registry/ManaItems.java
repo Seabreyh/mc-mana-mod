@@ -4,11 +4,13 @@ import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.items.AmethystStaff;
 import com.seabreyh.mana.items.EmeraldStaff;
 import com.seabreyh.mana.items.FallenStarItem;
+import com.seabreyh.mana.items.FilledManaCapsule;
 import com.seabreyh.mana.items.GrantedWishItem;
-import com.seabreyh.mana.items.ManaCapsule;
+import com.seabreyh.mana.items.EmptyManaCapsule;
 import com.seabreyh.mana.items.ManaCrystal;
 import com.seabreyh.mana.items.ManaDust;
 import com.seabreyh.mana.items.ManaShard;
+import com.seabreyh.mana.items.ManaTreat;
 import com.seabreyh.mana.items.SealedWishItem;
 import com.seabreyh.mana.items.StarDust;
 import com.seabreyh.mana.items.WishItem;
@@ -59,7 +61,14 @@ public class ManaItems {
         public static final RegistryObject<Item> MANA_SHARD = ITEMS.register("mana_shard",
                         () -> new ManaShard(new Item.Properties().tab(ManaMod.TAB).stacksTo(64)));
 
-        public static final RegistryObject<Item> MANA_CAPSULE = ITEMS.register("mana_capsule",
-                        () -> new ManaCapsule(new Item.Properties().tab(ManaMod.TAB).stacksTo(64)));
+        public static final RegistryObject<Item> EMPTY_MANA_CAPSULE = ITEMS.register("empty_mana_capsule",
+                        () -> new EmptyManaCapsule(new Item.Properties().tab(ManaMod.TAB).stacksTo(1)));
+
+        public static final RegistryObject<Item> FILLED_MANA_CAPSULE = ITEMS.register("filled_mana_capsule",
+                        () -> new FilledManaCapsule(new Item.Properties().tab(ManaMod.TAB).stacksTo(1)));
+
+        public static final RegistryObject<Item> MANA_TREAT = ITEMS.register("mana_treat",
+                        () -> new ManaTreat(new Item.Properties().tab(ManaMod.TAB).stacksTo(64)
+                                        .food(ManaTreat.MANA_TREAT)));
 
 }

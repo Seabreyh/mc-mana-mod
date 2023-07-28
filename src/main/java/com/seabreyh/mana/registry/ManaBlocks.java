@@ -1,7 +1,9 @@
 package com.seabreyh.mana.registry;
 
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.blocks.AmethystBlock;
 import com.seabreyh.mana.blocks.CelestialTorch;
+import com.seabreyh.mana.blocks.StaffTable;
 import com.seabreyh.mana.blocks.StarBottle;
 import com.seabreyh.mana.blocks.StarCatcher;
 import com.seabreyh.mana.blocks.botany.flowers.Flower;
@@ -42,6 +44,15 @@ public class ManaBlocks {
                                         .lightLevel(BlockState -> 15)),
                         ManaMod.TAB);
 
+        public static final RegistryObject<Block> STAFF_TABLE = registerBlock("staff_table",
+                        () -> new StaffTable(BlockBehaviour.Properties
+                                        .of(Material.STONE)
+                                        .strength(0.2f)
+                                        .destroyTime(0.3f)
+                                        .noOcclusion()
+                                        .lightLevel(BlockState -> 5)),
+                        ManaMod.TAB);
+
         public static final RegistryObject<Block> STAR_BOTTLE = registerBlock("star_bottle",
                         () -> new StarBottle(BlockBehaviour.Properties
                                         .of(Material.GLASS)
@@ -57,6 +68,12 @@ public class ManaBlocks {
                                         .of(Material.DECORATION).noCollission().instabreak()
                                         .lightLevel(BlockState -> 15)
                                         .sound(SoundType.WOOD)),
+                        ManaMod.TAB);
+
+        public static final RegistryObject<Block> AMETHYST_BLOCK = registerBlock("amethyst_block",
+                        () -> new AmethystBlock(BlockBehaviour.Properties
+                                        .of(Material.METAL).requiresCorrectToolForDrops().strength(5.0F, 6.0F)
+                                        .sound(SoundType.METAL)),
                         ManaMod.TAB);
 
         // FLOWERS - dont forget, to event register potted flowers in setup of main

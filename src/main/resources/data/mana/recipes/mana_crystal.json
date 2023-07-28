@@ -1,19 +1,15 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "pattern": [
-        "#/#",
-        "/#/",
-        "#/#"
-    ],
-    "key": {
-        "#": {
-            "item": "mana:star_dust"
-        },
-        "/": {
-            "item": "minecraft:amethyst_shard"
-        }
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["###", "#/#", "###"],
+  "key": {
+    "#": {
+      "item": "mana:star_dust"
     },
-    "result": {
-        "item": "mana:mana_crystal"
+    "/": {
+      "item": "minecraft:amethyst_shard"
     }
+  },
+  "result": {
+    "item": "mana:mana_crystal"
+  }
 }

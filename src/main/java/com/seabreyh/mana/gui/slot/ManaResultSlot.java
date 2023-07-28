@@ -1,4 +1,4 @@
-package com.seabreyh.mana.screen.slot;
+package com.seabreyh.mana.gui.slot;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;

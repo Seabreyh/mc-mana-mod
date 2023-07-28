@@ -1,6 +1,8 @@
-package com.seabreyh.mana.screen;
+package com.seabreyh.mana.gui;
 
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.gui.menus.StaffTableMenu;
+import com.seabreyh.mana.gui.menus.StarCatcherMenu;
 
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -17,6 +19,9 @@ public class ManaMenuTypes {
 
     public static final RegistryObject<MenuType<StarCatcherMenu>> STAR_CATCHER_MENU =
             registerMenuType(StarCatcherMenu::new, "star_catcher_menu");
+
+    public static final RegistryObject<MenuType<StaffTableMenu>> STAFF_TABLE_MENU =
+            registerMenuType(StaffTableMenu::new, "staff_table_menu");
 
     private static <T extends AbstractContainerMenu>RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory,
                                                                                                  String name) {
