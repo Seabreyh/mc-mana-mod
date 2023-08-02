@@ -2,9 +2,10 @@
   "credit": "Made with Blockbench",
   "texture_size": [32, 48],
   "textures": {
-    "5": "mana:blocks/star_catcher",
+    "5": "mana:block/star_catcher",
     "particle": "block/anvil"
   },
+  "render_type": "cutout",
   "elements": [
     {
       "from": [2, 1, 2],

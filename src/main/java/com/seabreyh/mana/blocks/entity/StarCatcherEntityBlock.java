@@ -1,9 +1,9 @@
 package com.seabreyh.mana.blocks.entity;
 
 import com.seabreyh.mana.entity.FallenStar;
-import com.seabreyh.mana.gui.menus.StarCatcherMenu;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaItems;
+import com.seabreyh.mana.screen.StarCatcherMenu;
 
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -15,7 +15,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-// import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -31,12 +31,11 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-//import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class StarCatcherBlockEntity extends BlockEntity implements MenuProvider {
+public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider {
     public int tickCount;
     public int catchCount;
     private float activeRotation;
@@ -52,20 +51,20 @@ public class StarCatcherBlockEntity extends BlockEntity implements MenuProvider 
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
-    public StarCatcherBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
+    public StarCatcherEntityBlock(BlockPos pWorldPosition, BlockState pBlockState) {
         super(ManaBlockEntities.STAR_CATCHER_ENTITY_BLOCK.get(), pWorldPosition, pBlockState);
     }
 
     @Override
     public Component getDisplayName() {
-        return Component.literal("Star Catcher");
+        return new TextComponent("Star Catcher");
     }
 
     public float getRotationSpeed() {
         return rotationSpeed;
     }
 
-    public static void setRotationSpeed(float speed, StarCatcherBlockEntity entity) {
+    public static void setRotationSpeed(float speed, StarCatcherEntityBlock entity) {
         entity.rotationSpeed = speed;
     }
 
@@ -78,7 +77,7 @@ public class StarCatcherBlockEntity extends BlockEntity implements MenuProvider 
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return lazyItemHandler.cast();
         }
 
@@ -118,13 +117,13 @@ public class StarCatcherBlockEntity extends BlockEntity implements MenuProvider 
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, StarCatcherBlockEntity pBlockEntity) {
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, StarCatcherEntityBlock pBlockEntity) {
         if (pLevel.isClientSide()) {
             if (pBlockEntity.catchCount > 0) {
                 float modifier = Math.min((float) pBlockEntity.catchCount * 10.0f, 20.0f);
-                StarCatcherBlockEntity.setRotationSpeed(6.0f + modifier, pBlockEntity);
+                StarCatcherEntityBlock.setRotationSpeed(6.0f + modifier, pBlockEntity);
             } else {
-                StarCatcherBlockEntity.setRotationSpeed(3.0F, pBlockEntity);
+                StarCatcherEntityBlock.setRotationSpeed(3.0F, pBlockEntity);
             }
         }
 
@@ -144,7 +143,7 @@ public class StarCatcherBlockEntity extends BlockEntity implements MenuProvider 
         return (this.activeRotation + p_59198_) * -0.0375F * getRotationSpeed();
     }
 
-    private static void locateStars(Level plevel, StarCatcherBlockEntity pBlockEntity, BlockPos pPos,
+    private static void locateStars(Level plevel, StarCatcherEntityBlock pBlockEntity, BlockPos pPos,
             BlockState pState) {
 
         if (!plevel.isClientSide()) {
@@ -196,14 +195,14 @@ public class StarCatcherBlockEntity extends BlockEntity implements MenuProvider 
         }
     }
 
-    public static void craftItem(StarCatcherBlockEntity entity) {
+    public static void craftItem(StarCatcherEntityBlock entity) {
         if (hasNotReachedStackLimit(entity)) {
             entity.itemHandler.setStackInSlot(0, new ItemStack(ManaItems.FALLEN_STAR_ITEM.get(),
                     entity.itemHandler.getStackInSlot(0).getCount() + 1));
         }
     }
 
-    private static boolean hasNotReachedStackLimit(StarCatcherBlockEntity entity) {
+    private static boolean hasNotReachedStackLimit(StarCatcherEntityBlock entity) {
         return entity.itemHandler.getStackInSlot(0).getCount() < entity.itemHandler.getStackInSlot(0).getMaxStackSize();
     }
 

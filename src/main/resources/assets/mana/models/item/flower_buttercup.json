@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "mana:blocks/flower_buttercup"
-    }
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mana:block/flower_buttercup"
+  }
 }

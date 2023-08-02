@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "mana:items/fallen_star_item"
-    }
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mana:item/fallen_star_item"
+  }
 }

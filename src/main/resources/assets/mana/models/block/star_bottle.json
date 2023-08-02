@@ -1,69 +1,70 @@
 {
-	"credit": "Made with Blockbench",
-	"textures": {
-		"1": "mana:blocks/star_bottle",
-		"2": "mana:blocks/star_bit",
-		"particle": "minecraft:block/glass"
-	},
-	"elements": [
-		{
-			"from": [5, 0, 5],
-			"to": [11, 7, 11],
-			"faces": {
-				"north": {"uv": [0, 0, 6, 7], "texture": "#1"},
-				"east": {"uv": [6, 0, 12, 7], "texture": "#1"},
-				"south": {"uv": [0, 0, 6, 7], "texture": "#1"},
-				"west": {"uv": [6, 0, 12, 7], "texture": "#1"},
-				"up": {"uv": [8, 8, 14, 14], "texture": "#1"},
-				"down": {"uv": [8, 8, 14, 14], "texture": "#1"}
-			}
-		},
-		{
-			"from": [6, 7, 6],
-			"to": [10, 8, 10],
-			"faces": {
-				"north": {"uv": [0, 7, 4, 8], "texture": "#1"},
-				"east": {"uv": [0, 7, 4, 8], "texture": "#1"},
-				"south": {"uv": [0, 7, 4, 8], "texture": "#1"},
-				"west": {"uv": [0, 7, 4, 8], "texture": "#1"}
-			}
-		},
-		{
-			"from": [5.5, 8, 5.5],
-			"to": [10.5, 9, 10.5],
-			"faces": {
-				"north": {"uv": [6, 15, 11, 16], "texture": "#1"},
-				"east": {"uv": [6, 15, 11, 16], "texture": "#1"},
-				"south": {"uv": [6, 15, 11, 16], "texture": "#1"},
-				"west": {"uv": [6, 15, 11, 16], "texture": "#1"},
-				"up": {"uv": [0, 11, 5, 16], "texture": "#1"},
-				"down": {"uv": [0, 11, 5, 16], "texture": "#1"}
-			}
-		},
-		{
-			"from": [6.5, 7, 6.5],
-			"to": [9.5, 8, 9.5],
-			"faces": {
-				"north": {"uv": [1, 12, 4, 13], "texture": "#1"},
-				"east": {"uv": [1, 12, 4, 13], "texture": "#1"},
-				"south": {"uv": [1, 14, 4, 15], "texture": "#1"},
-				"west": {"uv": [1, 14, 4, 15], "texture": "#1"},
-				"up": {"uv": [1, 12, 4, 15], "texture": "#1"},
-				"down": {"uv": [1, 12, 4, 15], "texture": "#1"}
-			}
-		},
-		{
-			"from": [-1.5, 1.8, 9.85],
-			"to": [1.25, 4.55, 12.6],
-			"rotation": {"angle": 45, "axis": "y", "origin": [0, 0, 0]},
-			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#2"},
-				"east": {"uv": [0, 0, 16, 16], "texture": "#2"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#2"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#2"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#2"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#2"}
-			}
-		}
-	]
+  "credit": "Made with Blockbench",
+  "textures": {
+    "1": "mana:block/star_bottle",
+    "2": "mana:block/star_bit",
+    "particle": "minecraft:block/glass"
+  },
+  "render_type": "cutout",
+  "elements": [
+    {
+      "from": [5, 0, 5],
+      "to": [11, 7, 11],
+      "faces": {
+        "north": { "uv": [0, 0, 6, 7], "texture": "#1" },
+        "east": { "uv": [6, 0, 12, 7], "texture": "#1" },
+        "south": { "uv": [0, 0, 6, 7], "texture": "#1" },
+        "west": { "uv": [6, 0, 12, 7], "texture": "#1" },
+        "up": { "uv": [8, 8, 14, 14], "texture": "#1" },
+        "down": { "uv": [8, 8, 14, 14], "texture": "#1" }
+      }
+    },
+    {
+      "from": [6, 7, 6],
+      "to": [10, 8, 10],
+      "faces": {
+        "north": { "uv": [0, 7, 4, 8], "texture": "#1" },
+        "east": { "uv": [0, 7, 4, 8], "texture": "#1" },
+        "south": { "uv": [0, 7, 4, 8], "texture": "#1" },
+        "west": { "uv": [0, 7, 4, 8], "texture": "#1" }
+      }
+    },
+    {
+      "from": [5.5, 8, 5.5],
+      "to": [10.5, 9, 10.5],
+      "faces": {
+        "north": { "uv": [6, 15, 11, 16], "texture": "#1" },
+        "east": { "uv": [6, 15, 11, 16], "texture": "#1" },
+        "south": { "uv": [6, 15, 11, 16], "texture": "#1" },
+        "west": { "uv": [6, 15, 11, 16], "texture": "#1" },
+        "up": { "uv": [0, 11, 5, 16], "texture": "#1" },
+        "down": { "uv": [0, 11, 5, 16], "texture": "#1" }
+      }
+    },
+    {
+      "from": [6.5, 7, 6.5],
+      "to": [9.5, 8, 9.5],
+      "faces": {
+        "north": { "uv": [1, 12, 4, 13], "texture": "#1" },
+        "east": { "uv": [1, 12, 4, 13], "texture": "#1" },
+        "south": { "uv": [1, 14, 4, 15], "texture": "#1" },
+        "west": { "uv": [1, 14, 4, 15], "texture": "#1" },
+        "up": { "uv": [1, 12, 4, 15], "texture": "#1" },
+        "down": { "uv": [1, 12, 4, 15], "texture": "#1" }
+      }
+    },
+    {
+      "from": [-1.5, 1.8, 9.85],
+      "to": [1.25, 4.55, 12.6],
+      "rotation": { "angle": 45, "axis": "y", "origin": [0, 0, 0] },
+      "faces": {
+        "north": { "uv": [0, 0, 16, 16], "texture": "#2" },
+        "east": { "uv": [0, 0, 16, 16], "texture": "#2" },
+        "south": { "uv": [0, 0, 16, 16], "texture": "#2" },
+        "west": { "uv": [0, 0, 16, 16], "texture": "#2" },
+        "up": { "uv": [0, 0, 16, 16], "texture": "#2" },
+        "down": { "uv": [0, 0, 16, 16], "texture": "#2" }
+      }
+    }
+  ]
 }

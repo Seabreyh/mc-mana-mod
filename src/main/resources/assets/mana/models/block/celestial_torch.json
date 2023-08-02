@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/template_torch",
-    "textures": {
-      "torch": "mana:blocks/celestial_torch"
-  }
+  "textures": {
+    "torch": "mana:block/celestial_torch"
+  },
+  "render_type": "cutout"
 }

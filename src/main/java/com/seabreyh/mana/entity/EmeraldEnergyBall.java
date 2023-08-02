@@ -1,11 +1,16 @@
 package com.seabreyh.mana.entity;
 
+import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaParticles;
 
 import javax.annotation.Nonnull;
+
+import org.apache.commons.compress.compressors.lz77support.LZ77Compressor.Block.BlockType;
+
 import java.util.List;
 
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.util.Mth;
@@ -18,13 +23,15 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -58,12 +65,15 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
 
     @Nonnull
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return new ClientboundAddEntityPacket(this);
     }
 
     @Override
     public void shoot(double shootX, double shootY, double shootZ, float scale, float muliplier) {
+
+        ManaMod.LOGGER.info("EmeraldEnergyBall.shoot() called ----------------");
+
         Vec3 vec3 = (new Vec3(shootX, shootY, shootZ)).normalize()
                 .add(this.random.nextGaussian() * (double) 0.0075F * (double) muliplier,
                         this.random.nextGaussian() * (double) 0.0075F * (double) muliplier,
@@ -89,7 +99,7 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         // get boudning box of the emerald ball entity, rather than players, this allows
         // ball to target after shooting.
         AABB aabb = this.getBoundingBox().inflate(64.0D, 24.0D, 64.0D);
-        List<? extends Mob> candidates = this.level.getNearbyEntities(Mob.class,
+        List<? extends Mob> candidates = this.level().getNearbyEntities(Mob.class,
                 TargetingConditions.forCombat().range(64.0D), this.owner, aabb);
         Mob foundTarget = null;
         double shortestDist = Double.MAX_VALUE;
@@ -174,17 +184,17 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
 
         this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.015D * speedModifier, this.getZ());
 
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             this.yOld = this.getY();
         }
 
         double d0 = 0.05D * speedModifier;
         this.setDeltaMovement(this.getDeltaMovement().scale(0.75D).add(vec3.normalize().scale(d0)));
 
-        if (!this.level.isClientSide) {
+        if (!this.level().isClientSide) {
             // Despawn after 10 seconds
             if (this.life > 20 * 10) {
-                this.level.broadcastEntityEvent(this, (byte) 3);
+                this.level().broadcastEntityEvent(this, (byte) 3);
                 this.discard();
             }
 
@@ -205,7 +215,7 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                     moveToTarget = target.getEyePosition().subtract(this.position());
                     this.setPosRaw(this.getX(), this.getY() + moveToTarget.y * 0.015D * (double) multiplier,
                             this.getZ());
-                    if (this.level.isClientSide) {
+                    if (this.level().isClientSide) {
                         this.yOld = this.getY();
                     }
                 } else {
@@ -216,7 +226,7 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                     moveToTarget = target.getPosition(1.0f).subtract(this.position());
                     this.setPosRaw(this.getX(), this.getY() + moveToTarget.y * 0.015D * (double) multiplier,
                             this.getZ());
-                    if (this.level.isClientSide) {
+                    if (this.level().isClientSide) {
                         this.yOld = this.getY();
                     }
                 }
@@ -272,7 +282,7 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         } else {
             // trail particles
             for (int i = 0; i < 4; ++i) {
-                this.level.addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_EMERALD.get(), this.getX(),
+                this.level().addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_EMERALD.get(), this.getX(),
                         this.getY(), this.getZ(),
                         this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
                         this.random.nextGaussian() * 0.1D);
@@ -283,23 +293,30 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
 
     protected void onHitBlock(BlockHitResult hitBlock) {
         // discard entity on hitblock unless LEAVES, GLASS, or ICE
-        BlockState blockState = this.level.getBlockState(hitBlock.getBlockPos());
-        if (blockState.getMaterial() != Material.LEAVES && blockState.getMaterial() != Material.GLASS
-                && blockState.getMaterial() != Material.ICE) {
-            this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
+        BlockState blockState = this.level().getBlockState(hitBlock.getBlockPos());
+        ManaMod.LOGGER.debug("BS " + blockState);
+        ManaMod.LOGGER.debug("BS String " + blockState.toString());
 
-            if (!this.level.isClientSide) { // qty spread velocity
-                ((ServerLevel) this.level).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1,
-                        0D,
-                        0D, 0D, 0D);
-                ((ServerLevel) this.level).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(),
-                        20,
-                        1D, 1D, 1D, 0.3D);
+        // if (blockState.isAir() !blockState.is(instanceof Block.LeavesBlock &&
+        // blockState.] != Material.GLASS
+        // && blockState.getMaterial() != Material.ICE) {
+        this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
 
-                this.discard(); // discard needs to be server-side
-            }
-            super.onHitBlock(hitBlock);
+        if (!this.level().isClientSide) { // qty spread velocity
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.FLASH, this.getX(),
+                    this.getY(), this.getZ(),
+                    1,
+                    0D,
+                    0D, 0D, 0D);
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.END_ROD,
+                    this.getX(), this.getY(), this.getZ(),
+                    20,
+                    1D, 1D, 1D, 0.3D);
+
+            this.discard(); // discard needs to be server-side
         }
+        super.onHitBlock(hitBlock);
+        // }
     }
 
     protected void onHit(HitResult hitResult) {
@@ -311,23 +328,26 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         Entity entity = hitEntity.getEntity();
         Entity owner = this.getOwner();
         LivingEntity livingentity = owner instanceof LivingEntity ? (LivingEntity) owner : null;
-        boolean flag = entity.hurt(DamageSource.indirectMobAttack(this, livingentity).setProjectile(), 2F);
+        // boolean flag = entity.hurt(DamageSource.indirectMobAttack(this,
+        // livingentity).setProjectile(), 2F);
 
-        if (flag && entity != owner) {
-            this.doEnchantDamageEffects(livingentity, entity);
-            if (this.target != null) {
-                this.playSound(this.getHitSound(), 3F, 2F);
-            } else {
-                this.playSound(this.getHitSound(), 1.2F, 1.5F);
-            }
+        // if (flag && entity != owner) {
+        // this.doEnchantDamageEffects(livingentity, entity);
+        // if (this.target != null) {
+        // this.playSound(this.getHitSound(), 3F, 2F);
+        // } else {
+        // this.playSound(this.getHitSound(), 1.2F, 1.5F);
+        // }
 
-            if (!this.level.isClientSide) {
-                ((ServerLevel) this.level).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 20,
-                        0.15D, 0.15D, 0.15D, 0.2D);
+        // if (!this.level().isClientSide) {
+        // ((ServerLevel) this.level()).sendParticles(ParticleTypes.CRIT, this.getX(),
+        // this.getY(), this.getZ(),
+        // 20,
+        // 0.15D, 0.15D, 0.15D, 0.2D);
 
-                this.discard(); // discard needs to be server-side
-            }
-        }
+        // this.discard(); // discard needs to be server-side
+        // }
+        // }
     }
 
 }

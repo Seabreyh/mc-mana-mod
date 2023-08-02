@@ -2,20 +2,26 @@ package com.seabreyh.mana;
 
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.event.ManaClientEvents;
-
-import com.seabreyh.mana.gui.ManaMenuTypes;
 import com.seabreyh.mana.networking.ManaMessages;
-import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaBlocks;
+// import com.seabreyh.mana.event.ManaClientEvents;
 import com.seabreyh.mana.registry.ManaCreativeTab;
 import com.seabreyh.mana.registry.ManaEntities;
+// import com.seabreyh.mana.gui.ManaMenuTypes;
+// import com.seabreyh.mana.networking.ManaMessages;
+// import com.seabreyh.mana.registry.ManaBlockEntities;
+// import com.seabreyh.mana.registry.ManaBlocks;
+// import com.seabreyh.mana.registry.ManaCreativeTab;
+// import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaItems;
+// import com.seabreyh.mana.registry.ManaParticles;
+// import com.seabreyh.mana.registry.ManaPotions;
+// import com.seabreyh.mana.registry.ManaRecipes;
+// import com.seabreyh.mana.registry.ManaSounds;
 import com.seabreyh.mana.registry.ManaParticles;
-import com.seabreyh.mana.registry.ManaPotions;
-import com.seabreyh.mana.registry.ManaRecipes;
-import com.seabreyh.mana.registry.ManaSounds;
 
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -29,6 +35,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
@@ -37,8 +44,8 @@ import org.slf4j.Logger;
 @Mod(ManaMod.MOD_ID)
 public class ManaMod {
     public static final String MOD_ID = "mana";
-    public static CreativeModeTab TAB = new ManaCreativeTab();
-    public static CommonProxy PROXY = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+    // public static CommonProxy PROXY = DistExecutor.runForDist(() ->
+    // ClientProxy::new, () -> CommonProxy::new);
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public ManaMod() {
@@ -46,15 +53,16 @@ public class ManaMod {
         // Register items
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        ManaItems.ITEMS.register(eventBus);
+        ManaItems.register(eventBus);
+        ManaCreativeTab.register(eventBus);
         ManaEntities.ENTITIES.register(eventBus);
         ManaParticles.PARTICLE_TYPES.register(eventBus);
-        ManaSounds.SOUND_EVENTS.register(eventBus);
+        // ManaSounds.SOUND_EVENTS.register(eventBus);
 
         ManaBlocks.register(eventBus);
-        ManaBlockEntities.register(eventBus);
-        ManaMenuTypes.register(eventBus);
-        ManaRecipes.register(eventBus);
+        // ManaBlockEntities.register(eventBus);
+        // ManaMenuTypes.register(eventBus);
+        // ManaRecipes.register(eventBus);
 
         // Add listeners
         eventBus.addListener(this::setup);
@@ -63,7 +71,8 @@ public class ManaMod {
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
-        PROXY.init();
+        // eventBus.addListener(this::addCreative);
+        // PROXY.init();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -77,16 +86,16 @@ public class ManaMod {
             ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ManaBlocks.PLANT_LEMONBALM.getId(),
                     ManaBlocks.POTTED_PLANT_LEMONBALM);
 
-            ManaPotions.registerRecipes();
+            // ManaPotions.registerRecipes();
 
         });
 
     }
 
-    @SubscribeEvent
+    // @SubscribeEvent
     // UPDATED
     public static void registerRecipes(RegisterEvent.RegisterHelper<RecipeSerializer<?>> event) {
-        ManaPotions.registerRecipes();
+        // ManaPotions.registerRecipes();
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
@@ -96,11 +105,11 @@ public class ManaMod {
         ManaClientEvents.registerOverlays(event);
         ManaClientEvents.registerMenuScreens(/* no event pls */);
 
-        PROXY.clientInit();
+        // PROXY.clientInit();
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
+    // @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
         // LOGGER.info("HELLO from server starting");
@@ -108,7 +117,7 @@ public class ManaMod {
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
-        @SubscribeEvent
+        // @SubscribeEvent
         // UPDATED
         public static void onBlocksRegistry(final RegisterEvent.RegisterHelper<Block> blockRegistryEvent) {
             // Register a new block here

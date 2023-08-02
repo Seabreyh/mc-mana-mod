@@ -27,12 +27,6 @@ A mod that introduces magic into Minecraft in amazing ways.
 ### Current features
 * Mana bar
 * Grow Budding Amethyst Blocks with Amethyst Block and Star Dust
-* Use stars as fuel source in furnace.
-* Amethyst Magic in fire creates wild magic
-
-### Vanilla Integrations
-* Buttercup flower in flower pot
-* Lemonbalm plant in flower pot
 
 ### Current events
 * Falling Stars

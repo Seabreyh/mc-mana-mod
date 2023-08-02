@@ -1,6 +1,6 @@
 {
-    "parent": "minecraft:item/generated",
-    "textures": {
-        "layer0": "mana:items/mana_shard"
-    }
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mana:item/mana_shard"
+  }
 }

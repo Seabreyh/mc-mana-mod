@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/flower_pot_cross",
   "textures": {
-    "plant": "mana:blocks/potted_plant_lemonbalm"
-  }
+    "plant": "mana:block/potted_plant_lemonbalm"
+  },
+  "render_type": "cutout"
 }

@@ -34,19 +34,19 @@ public class ManaMessages {
         net.messageBuilder(ChoseWishC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(ChoseWishC2SPacket::new)
                 .encoder(ChoseWishC2SPacket::toBytes)
-                .consumer(ChoseWishC2SPacket::handle)
+                .consumerNetworkThread(ChoseWishC2SPacket::handle)
                 .add();
 
         net.messageBuilder(ManaStatSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(ManaStatSyncS2CPacket::new)
                 .encoder(ManaStatSyncS2CPacket::toBytes)
-                .consumer(ManaStatSyncS2CPacket::handle)
+                .consumerNetworkThread(ManaStatSyncS2CPacket::handle)
                 .add();
 
         net.messageBuilder(OpenWishS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(OpenWishS2CPacket::new)
                 .encoder(OpenWishS2CPacket::toBytes)
-                .consumer(OpenWishS2CPacket::handle)
+                .consumerNetworkThread(OpenWishS2CPacket::handle)
                 .add();
     }
 

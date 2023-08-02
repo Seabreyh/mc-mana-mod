@@ -1,6 +1,6 @@
 {
-    "parent": "minecraft:item/generated",
-    "textures": {
-        "layer0": "mana:items/sealed_wish_item"
-    }
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mana:item/sealed_wish_item"
+  }
 }

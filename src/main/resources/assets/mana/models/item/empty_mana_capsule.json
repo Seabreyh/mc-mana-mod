@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "mana:items/empty_mana_capsule"
+    "layer0": "mana:item/empty_mana_capsule"
   }
 }

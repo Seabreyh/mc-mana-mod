@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/cross",
   "textures": {
-    "cross": "mana:blocks/plant_lemonbalm"
-  }
+    "cross": "mana:block/plant_lemonbalm"
+  },
+  "render_type": "cutout"
 }

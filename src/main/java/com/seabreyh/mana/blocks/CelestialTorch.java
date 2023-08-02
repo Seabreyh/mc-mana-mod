@@ -7,8 +7,10 @@ import com.seabreyh.mana.registry.ManaParticles;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -23,6 +25,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -38,8 +41,17 @@ public class CelestialTorch extends Block implements SimpleWaterloggedBlock {
     private static final VoxelShape TORCH_SOUTH = Block.box(5.5D, 3.0D, 0.0D, 10.5D, 13.0D, 5.0D);
     private static final VoxelShape TORCH_WEST = Block.box(11.0D, 3.0D, 5.5D, 16.0D, 13.0D, 10.5D);
 
-    public CelestialTorch(BlockBehaviour.Properties p_57491_) {
-        super(p_57491_);
+    public CelestialTorch() {
+        this(Properties.of()
+                .pushReaction(PushReaction.DESTROY)
+                .noCollission()
+                .sound(SoundType.WOOD)
+                .lightLevel(state -> 15)
+                .instabreak());
+    }
+
+    public CelestialTorch(BlockBehaviour.Properties properties) {
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(WATERLOGGED, false));
     }
 

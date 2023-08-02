@@ -46,11 +46,15 @@ public class StarDust extends Item {
                                 SoundSource.AMBIENT, 20.0F, 1.2F / 0.2F + 0.9F);
                     }
 
+                    world.playSound((Player) null, blockpos.getX(), blockpos.getY(), blockpos.getZ(),
+                            SoundEvents.AXE_SCRAPE,
+                            SoundSource.AMBIENT, 3.0F, -6.0F / 0.2F + 0.9F);
+
                     ((ServerLevel) world).sendParticles(ParticleTypes.FLASH, blockpos.getX(), blockpos.getY(),
                             blockpos.getZ(),
                             1,
                             0D,
-                            0D, 0D, 0D);
+                            1D, 1D, 1D);
                     ((ServerLevel) world).sendParticles(ParticleTypes.END_ROD, blockpos.getX(), blockpos.getY(),
                             blockpos.getZ(),
                             20,

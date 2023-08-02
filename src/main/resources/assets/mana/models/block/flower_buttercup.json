@@ -1,6 +1,7 @@
 {
-    "parent": "minecraft:block/crop",
-    "textures": {
-      "crop": "mana:blocks/flower_buttercup"
-    }
-  }
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "mana:block/flower_buttercup"
+  },
+  "render_type": "cutout"
+}

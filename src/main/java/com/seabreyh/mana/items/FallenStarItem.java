@@ -1,12 +1,13 @@
 package com.seabreyh.mana.items;
 
-import com.seabreyh.mana.event.player.PlayerManaEvent;
+// import com.seabreyh.mana.event.player.PlayerManaEvent;
 
 import java.util.Random;
 import javax.annotation.Nullable;
 
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -23,12 +24,13 @@ public class FallenStarItem extends Item {
 
     @Override
     // Called when player right clicks star
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player player,
+            InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         boolean fullMana = false;
         if (!world.isClientSide) {
             // Handle regeneration of player mana from using star
-            fullMana = PlayerManaEvent.regenMana(player, 1);
+            // fullMana = PlayerManaEvent.regenMana(player, 1);
 
             if (fullMana) {
                 return InteractionResultHolder.pass(itemstack);
@@ -47,8 +49,9 @@ public class FallenStarItem extends Item {
     }
 
     private void playSound(Level level, Player player) {
-        Random random = level.getRandom();
-        level.playSound((Player) null, player.getX(), player.getY(), player.getZ(), SoundEvents.EXPERIENCE_ORB_PICKUP,
+        RandomSource random = level.getRandom();
+        level.playSound((Player) null, player.getX(), player.getY(), player.getZ(),
+                SoundEvents.EXPERIENCE_ORB_PICKUP,
                 SoundSource.BLOCKS, 0.25F,
                 (random.nextFloat() - random.nextFloat()) * 0.2F + 1.5F);
     }
