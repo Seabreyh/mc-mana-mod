@@ -68,6 +68,7 @@ import com.seabreyh.mana.registry.ManaParticles;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -167,18 +168,19 @@ public class StarBottle extends Block implements SimpleWaterloggedBlock {
         return false;
     }
 
-    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, Random random) {
+    @Override
+    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource random) {
         double x = (double) blockPos.getX() + 0.25;
         double y = (double) blockPos.getY();
         double z = (double) blockPos.getZ() + 0.25;
 
         for (int i = 0; i < 2; i++) {
             level.addParticle(ManaParticles.STAR_POWER.get(),
-                    x + 0.5 * random.nextDouble(0.2, 0.8),
-                    y + 0.3 * random.nextDouble(0.2, 0.8),
-                    z + 0.5 * random.nextDouble(0.2, 0.8),
-                    Math.sin(i * random.nextDouble(10)) * 0.01d, Math.cos(i * random.nextDouble(10)) * 0.01d,
-                    Math.sin(i * random.nextDouble(10)) * 0.01d);
+                    x + 0.5 * (((random.nextInt(2, 8)) * 0.1)),
+                    y + 0.3 * ((random.nextInt(2, 8)) * 0.1),
+                    z + 0.5 * ((random.nextInt(2, 8)) * 0.1),
+                    Math.sin(i * random.nextInt(10)) * 0.01d, Math.cos(i * random.nextInt(10)) * 0.01d,
+                    Math.sin(i * random.nextInt(10)) * 0.01d);
         }
     }
 }

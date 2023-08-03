@@ -2,15 +2,20 @@ package com.seabreyh.mana.blocks;
 
 import java.util.Random;
 
+import com.ibm.icu.text.MessagePattern.Part;
+import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.registry.ManaParticles;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.TorchBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -29,7 +34,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CelestialTorch extends Block implements SimpleWaterloggedBlock {
+public class CelestialTorch extends TorchBlock implements SimpleWaterloggedBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -47,11 +52,12 @@ public class CelestialTorch extends Block implements SimpleWaterloggedBlock {
                 .noCollission()
                 .sound(SoundType.WOOD)
                 .lightLevel(state -> 15)
-                .instabreak());
+                .instabreak(),
+                ParticleTypes.FLAME);
     }
 
-    public CelestialTorch(BlockBehaviour.Properties properties) {
-        super(properties);
+    public CelestialTorch(Properties properties, ParticleOptions particle) {
+        super(properties, particle);
         this.registerDefaultState(this.getStateDefinition().any().setValue(WATERLOGGED, false));
     }
 
@@ -80,7 +86,7 @@ public class CelestialTorch extends Block implements SimpleWaterloggedBlock {
         if (stateIn.getValue(WATERLOGGED)) {
             level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-
+        ManaMod.LOGGER.info("animateTick");
         // standing torch
         if (stateIn.getValue(FACING) == Direction.UP) {
             return facing == Direction.DOWN && !this.canSurvive(stateIn, level, currentPos)
@@ -108,20 +114,24 @@ public class CelestialTorch extends Block implements SimpleWaterloggedBlock {
         }
     }
 
-    public void animateTick(BlockState state, Level level, BlockPos pos, Random rand) {
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rand) {
         Direction facing = state.getValue(FACING);
         double x = (double) pos.getX() + 0.5D;
         double y = (double) pos.getY() + 0.6D;
         double z = (double) pos.getZ() + 0.5D;
-
         for (int i = 0; i < 20; i++) {
             if (rand.nextInt(10) == 0) {
+                double d0 = (double) pos.getX() + 0.5D;
+                double d1 = (double) pos.getY() + 0.7D;
+                double d2 = (double) pos.getZ() + 0.5D;
+
                 level.addParticle(ManaParticles.STAR_POWER.get(),
                         x + 0.3D * (double) facing.getOpposite().getStepX(),
                         y + 0.09D * (double) facing.getOpposite().getStepY(),
                         z + 0.3D * (double) facing.getOpposite().getStepZ(),
-                        Math.sin(i * rand.nextDouble(10)) * 0.07d, Math.cos(i * rand.nextDouble(10)) * 0.07d,
-                        Math.sin(i * rand.nextDouble(10)) * 0.07d);
+                        Math.sin(i * rand.nextInt(10)) * 0.07d, Math.cos(i * rand.nextInt(10)) * 0.07d,
+                        Math.sin(i * rand.nextInt(10)) * 0.07d);
             }
         }
     }
