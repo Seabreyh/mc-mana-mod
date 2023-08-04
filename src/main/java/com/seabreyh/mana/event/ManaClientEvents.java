@@ -36,9 +36,9 @@ public class ManaClientEvents {
 
     @SubscribeEvent
     public static void registerEntityRenderers(FMLClientSetupEvent event) {
-        // EntityRenderers.register(ManaEntities.AMETHYST_ENERGY_BALL.get(),
-        // AmethystEnergyBallRenderer::new);
+        EntityRenderers.register(ManaEntities.AMETHYST_ENERGY_BALL.get(), AmethystEnergyBallRenderer::new);
         EntityRenderers.register(ManaEntities.EMERALD_ENERGY_BALL.get(), EmeraldEnergyBallRenderer::new);
+
         // EntityRenderers.register(ManaEntities.FALLEN_STAR.get(),
         // FallenStarRenderer::new);
         // EntityRenderers.register(ManaEntities.METEOR.get(), MeteorRenderer::new);

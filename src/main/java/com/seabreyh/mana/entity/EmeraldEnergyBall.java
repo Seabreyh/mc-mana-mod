@@ -7,10 +7,12 @@ import com.seabreyh.mana.registry.ManaParticles;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.compress.compressors.lz77support.LZ77Compressor.Block.BlockType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.util.Mth;
@@ -36,6 +38,7 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
 
 public class EmeraldEnergyBall extends ThrowableProjectile {
     private int life;
@@ -71,9 +74,6 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
 
     @Override
     public void shoot(double shootX, double shootY, double shootZ, float scale, float muliplier) {
-
-        ManaMod.LOGGER.info("EmeraldEnergyBall.shoot() called ----------------");
-
         Vec3 vec3 = (new Vec3(shootX, shootY, shootZ)).normalize()
                 .add(this.random.nextGaussian() * (double) 0.0075F * (double) muliplier,
                         this.random.nextGaussian() * (double) 0.0075F * (double) muliplier,
@@ -241,8 +241,6 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                     firstTargetDied = true;
                 }
 
-                ++this.life;
-
             } else {
                 // ---------------------------
                 // MOVEMENT LOGIC - NO TARGET
@@ -286,37 +284,57 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
                         this.getY(), this.getZ(),
                         this.random.nextGaussian() * 0.1D, this.random.nextGaussian() * 0.1D,
                         this.random.nextGaussian() * 0.1D);
-
             }
         }
     }
 
+    // private void pop(Vec3 hit) {
+    // if (!stack.isEmpty()) {
+    // for (int i = 0; i < 7; i++) {
+    // Vec3 m = VecHelper.offsetRandomly(Vec3.ZERO, this.random, .25f);
+    // level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), hit.x,
+    // hit.y, hit.z, m.x, m.y,
+    // m.z);
+    // }
+    // }
+    // if (!level().isClientSide)
+    // playHitSound(level(), position());
+    // }
+
+    // @Override
+    // public boolean hurt(@NotNull DamageSource source, float amt) {
+    // if (source.is(DamageTypeTags.IS_FIRE))
+    // return false;
+    // if (this.isInvulnerableTo(source))
+    // return false;
+    // pop(position());
+    // kill();
+    // return true;
+    // }
+
+    // private DamageSource causePotatoDamage() {
+    // return AllDamageTypes.POTATO_CANNON.source(level(), getOwner(), this);
+    // }
+
     protected void onHitBlock(BlockHitResult hitBlock) {
         // discard entity on hitblock unless LEAVES, GLASS, or ICE
         BlockState blockState = this.level().getBlockState(hitBlock.getBlockPos());
-        ManaMod.LOGGER.debug("BS " + blockState);
-        ManaMod.LOGGER.debug("BS String " + blockState.toString());
-
-        // if (blockState.isAir() !blockState.is(instanceof Block.LeavesBlock &&
-        // blockState.] != Material.GLASS
+        // if (blockState.getMaterial() != Material.LEAVES && blockState.getMaterial()
+        // != Material.GLASS
         // && blockState.getMaterial() != Material.ICE) {
-        this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
+        // this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
 
         if (!this.level().isClientSide) { // qty spread velocity
-            ((ServerLevel) this.level()).sendParticles(ParticleTypes.FLASH, this.getX(),
-                    this.getY(), this.getZ(),
-                    1,
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.FLASH, this.getX(), this.getY(), this.getZ(), 1,
                     0D,
                     0D, 0D, 0D);
-            ((ServerLevel) this.level()).sendParticles(ParticleTypes.END_ROD,
-                    this.getX(), this.getY(), this.getZ(),
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(),
                     20,
                     1D, 1D, 1D, 0.3D);
 
             this.discard(); // discard needs to be server-side
         }
         super.onHitBlock(hitBlock);
-        // }
     }
 
     protected void onHit(HitResult hitResult) {
@@ -331,23 +349,29 @@ public class EmeraldEnergyBall extends ThrowableProjectile {
         // boolean flag = entity.hurt(DamageSource.indirectMobAttack(this,
         // livingentity).setProjectile(), 2F);
 
+        // boolean onServer = !level().isClientSide;
+        // if (onServer && !target.hurt(causePotatoDamage(), 2F)) {
+        // // target.setRemainingFireTicks(k);
+        // kill();
+        // return;
+        // }
         // if (flag && entity != owner) {
-        // this.doEnchantDamageEffects(livingentity, entity);
-        // if (this.target != null) {
-        // this.playSound(this.getHitSound(), 3F, 2F);
-        // } else {
-        // this.playSound(this.getHitSound(), 1.2F, 1.5F);
-        // }
+        if (entity != owner) {
+            this.doEnchantDamageEffects(livingentity, entity);
+            if (this.target != null) {
+                this.playSound(this.getHitSound(), 3F, 2F);
+            } else {
+                this.playSound(this.getHitSound(), 1.2F, 1.5F);
+            }
 
-        // if (!this.level().isClientSide) {
-        // ((ServerLevel) this.level()).sendParticles(ParticleTypes.CRIT, this.getX(),
-        // this.getY(), this.getZ(),
-        // 20,
-        // 0.15D, 0.15D, 0.15D, 0.2D);
+            if (!this.level().isClientSide) {
+                ((ServerLevel) this.level()).sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(),
+                        20,
+                        0.15D, 0.15D, 0.15D, 0.2D);
 
-        // this.discard(); // discard needs to be server-side
-        // }
-        // }
+                this.discard(); // discard needs to be server-side
+            }
+        }
     }
 
 }

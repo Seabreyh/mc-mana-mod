@@ -41,7 +41,7 @@ public class EmeraldStaff extends Item {
         ManaMod.LOGGER.info("EmeraldStaff.use() called");
 
         ItemStack itemstack = player.getItemInHand(hand);
-        boolean hasMana = false;
+        boolean hasMana = true;
 
         if (!world.isClientSide) {
             ManaMod.LOGGER.info("EmeraldStaff.use() called, not client side");
@@ -52,8 +52,8 @@ public class EmeraldStaff extends Item {
 
                 ManaMod.LOGGER.info("EmeraldStaff.use() called, hasMana = " + hasMana);
             }
-
-            if (hasMana && this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
+            // if (hasMana && this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
+            if (hasMana) {
                 EmeraldEnergyBall energyBall = new EmeraldEnergyBall(world, player);
                 energyBall.shootFromRotation(player, player.getXRot(), player.getYRot(),
                         0.0F, 1.5F, 1.0F);
@@ -90,9 +90,9 @@ public class EmeraldStaff extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel,
-            List<Component> pTooltipComponents,
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents,
             TooltipFlag pIsAdvanced) {
+
         if (Screen.hasShiftDown()) {
             pTooltipComponents.add(Component.translatable("tooltip.mana.emerald_staff.tooltip"));
         } else {

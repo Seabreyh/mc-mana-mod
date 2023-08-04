@@ -34,6 +34,10 @@ public class ManaEventBusEvents {
                 Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_FIRE.get(),
                                 MagicPloomParticleFire.Provider::new);
 
+                Minecraft.getInstance().particleEngine.register(
+                                ManaParticles.MAGIC_PLOOM_PARTICLE_EMERALD_TARGETING.get(),
+                                MagicPloomParticleFire.Provider::new);
+
                 Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_STAR_CATCHER.get(),
                                 MagicPloomParticleStarCatcher.Provider::new);
 

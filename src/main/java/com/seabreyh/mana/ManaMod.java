@@ -71,7 +71,6 @@ public class ManaMod {
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
-        // eventBus.addListener(this::addCreative);
         // PROXY.init();
     }
 

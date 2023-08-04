@@ -86,7 +86,6 @@ public class CelestialTorch extends TorchBlock implements SimpleWaterloggedBlock
         if (stateIn.getValue(WATERLOGGED)) {
             level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        ManaMod.LOGGER.info("animateTick");
         // standing torch
         if (stateIn.getValue(FACING) == Direction.UP) {
             return facing == Direction.DOWN && !this.canSurvive(stateIn, level, currentPos)
