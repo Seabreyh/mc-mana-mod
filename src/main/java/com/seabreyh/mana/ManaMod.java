@@ -14,7 +14,6 @@ import com.seabreyh.mana.registry.ManaEntities;
 // import com.seabreyh.mana.registry.ManaCreativeTab;
 // import com.seabreyh.mana.registry.ManaEntities;
 import com.seabreyh.mana.registry.ManaItems;
-// import com.seabreyh.mana.registry.ManaParticles;
 // import com.seabreyh.mana.registry.ManaPotions;
 // import com.seabreyh.mana.registry.ManaRecipes;
 // import com.seabreyh.mana.registry.ManaSounds;
@@ -26,6 +25,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
 //import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.RegisterEvent;
@@ -44,8 +44,9 @@ import org.slf4j.Logger;
 @Mod(ManaMod.MOD_ID)
 public class ManaMod {
     public static final String MOD_ID = "mana";
-    // public static CommonProxy PROXY = DistExecutor.runForDist(() ->
-    // ClientProxy::new, () -> CommonProxy::new);
+
+    public static CommonProxy PROXY = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
+
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public ManaMod() {
@@ -71,7 +72,7 @@ public class ManaMod {
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
-        // PROXY.init();
+        PROXY.init();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -102,9 +103,10 @@ public class ManaMod {
         ManaClientEvents.registerBlockRenderers(event);
         ManaClientEvents.registerBlockEntityRenderers(event);
         ManaClientEvents.registerOverlays(event);
-        ManaClientEvents.registerMenuScreens(/* no event pls */);
+        ManaClientEvents.registerMenuScreens();
+        ManaClientEvents.registerParticleFactories(null);
 
-        // PROXY.clientInit();
+        PROXY.clientInit();
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

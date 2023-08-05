@@ -25,8 +25,9 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+// import net.minecraft.network.chat.TextComponent;
+// import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -51,13 +52,15 @@ public class WishViewScreen extends Screen {
     private int currentPage;
     private List<FormattedCharSequence> cachedPageComponents = Collections.emptyList();
     private int cachedPage = -1;
-    private Component pageMsg = TextComponent.EMPTY;
+    private Component pageMsg = Component.empty();
     private PageButton forwardButton;
     private PageButton backButton;
     private final boolean playTurnSound;
 
     public WishViewScreen() {
-        super(NarratorChatListener.NO_TITLE);
+        super(Component.empty());
+        // super(NarratorChatListener.NO_TITLE);
+
         this.playTurnSound = true;
     }
 
@@ -85,7 +88,7 @@ public class WishViewScreen extends Screen {
     protected void createMenuControls() {
         this.addRenderableWidget(
                 new Button(this.width / 2 - 100, 196, 200, 20,
-                        new TranslatableComponent("gui.mana.select_wish"),
+                Component.translatable(("gui.mana.select_wish"),
                         (p_98299_) -> {
                             this.minecraft.setScreen((Screen) null);
                             PlayerWishEvent.makeWishFromIndx(this.currentPage);
@@ -157,7 +160,7 @@ public class WishViewScreen extends Screen {
         if (this.cachedPage != this.currentPage) {
             FormattedText formattedtext = this.getPageRaw(this.currentPage);
             this.cachedPageComponents = this.font.split(formattedtext, 114);
-            this.pageMsg = new TranslatableComponent("book.pageIndicator", this.currentPage + 1,
+            this.pageMsg = Component.translatable("book.pageIndicator", this.currentPage + 1,
                     Math.max(this.getNumPages(), 1));
         }
 

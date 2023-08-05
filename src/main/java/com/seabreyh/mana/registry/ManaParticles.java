@@ -17,7 +17,7 @@ public class ManaParticles {
                         .create(ForgeRegistries.PARTICLE_TYPES, ManaMod.MOD_ID);
 
         // ------------------------------------------------------------
-        // DONT FORGET TO REGISTER PARTICLE IN ManaEventBusEvents.java
+        // DONT FORGET TO REGISTER PARTICLE IN ManaClientEvents.java
         // ------------------------------------------------------------
 
         public static final RegistryObject<SimpleParticleType> MAGIC_PLOOM_PARTICLE_AMETHYST = PARTICLE_TYPES

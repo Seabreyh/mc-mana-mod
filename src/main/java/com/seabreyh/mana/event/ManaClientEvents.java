@@ -8,13 +8,22 @@ import com.seabreyh.mana.client.renderers.entity.AmethystEnergyBallRenderer;
 import com.seabreyh.mana.client.renderers.entity.EmeraldEnergyBallRenderer;
 import com.seabreyh.mana.client.renderers.entity.FallenStarRenderer;
 import com.seabreyh.mana.client.renderers.entity.MeteorRenderer;
+import com.seabreyh.mana.particle.MagicPloomParticleAmethyst;
+import com.seabreyh.mana.particle.MagicPloomParticleEmerald;
+import com.seabreyh.mana.particle.MagicPloomParticleFallingStar;
+import com.seabreyh.mana.particle.MagicPloomParticleFire;
+import com.seabreyh.mana.particle.MagicPloomParticleStarCatcher;
+import com.seabreyh.mana.particle.StarPowerParticle;
+import com.seabreyh.mana.particle.TwinkleParticle;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaBlocks;
 import com.seabreyh.mana.registry.ManaEntities;
 // import com.seabreyh.mana.screen.ManaMenuTypes;
 // import com.seabreyh.mana.screen.StarCatcherScreen;
+import com.seabreyh.mana.registry.ManaParticles;
 
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -75,5 +84,34 @@ public class ManaClientEvents {
         // OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Mana
         // Level",
         // ManaHudOverlay.MANA_STAT_HUD);
+    }
+
+    @SubscribeEvent
+    public static void registerParticleFactories(final RegisterParticleProvidersEvent event) {
+
+        Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_AMETHYST.get(),
+                MagicPloomParticleAmethyst.Provider::new);
+
+        Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_EMERALD.get(),
+                MagicPloomParticleEmerald.Provider::new);
+
+        Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_FALLING_STAR.get(),
+                MagicPloomParticleFallingStar.Provider::new);
+
+        Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_FIRE.get(),
+                MagicPloomParticleFire.Provider::new);
+
+        Minecraft.getInstance().particleEngine.register(
+                ManaParticles.MAGIC_PLOOM_PARTICLE_EMERALD_TARGETING.get(),
+                MagicPloomParticleFire.Provider::new);
+
+        Minecraft.getInstance().particleEngine.register(ManaParticles.MAGIC_PLOOM_PARTICLE_STAR_CATCHER.get(),
+                MagicPloomParticleStarCatcher.Provider::new);
+
+        Minecraft.getInstance().particleEngine.register(ManaParticles.TWINKLE_PARTICLE.get(),
+                TwinkleParticle.Provider::new);
+
+        Minecraft.getInstance().particleEngine.register(ManaParticles.STAR_POWER.get(),
+                StarPowerParticle.Provider::new);
     }
 }

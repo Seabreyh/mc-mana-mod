@@ -68,6 +68,7 @@ import com.seabreyh.mana.registry.ManaParticles;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -77,6 +78,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -84,6 +86,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -106,6 +109,14 @@ public class StarBottle extends Block implements SimpleWaterloggedBlock {
             Block.box(6, 8, 6, 10, 9, 10),
             Block.box(5.5, 9, 5.5, 10.5, 10, 10.5),
             Block.box(6.5, 8, 6.5, 9.5, 9, 9.5)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+
+    public StarBottle() {
+        this(Properties.of()
+                .sound(SoundType.GLASS)
+                .strength(0.2f)
+                .destroyTime(0.3f)
+                .lightLevel(BlockState -> 15));
+    }
 
     public StarBottle(BlockBehaviour.Properties p_153465_) {
         super(p_153465_);

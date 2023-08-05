@@ -43,6 +43,7 @@ public class ManaCreativeTab {
                         pOutPut.accept(ManaItems.MANA_DUST.get());
                         pOutPut.accept(ManaItems.MANA_SHARD.get());
                         pOutPut.accept(ManaItems.MANA_TREAT.get());
+                        pOutPut.accept(ManaItems.SEALED_WISH_ITEM.get());
 
                         // -----------------------
                         // REGISTER TAB BLOCKS

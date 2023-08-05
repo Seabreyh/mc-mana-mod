@@ -4,6 +4,7 @@ import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.blocks.AmethystBlock;
 import com.seabreyh.mana.blocks.CelestialTorch;
 import com.seabreyh.mana.blocks.StarBottle;
+import com.seabreyh.mana.blocks.StarCatcher;
 import com.seabreyh.mana.blocks.botany.flowers.Flower;
 import com.google.common.base.Supplier;
 
@@ -35,19 +36,16 @@ public class ManaBlocks {
         // that block, just replace new StarCatcher with Block
 
         public static final RegistryObject<Block> STAR_BOTTLE = registerBlock("star_bottle",
-                        () -> new StarBottle(BlockBehaviour.Properties
-                                        .copy(Blocks.GLASS)
-                                        .noOcclusion()
-                                        .sound(SoundType.GLASS)
-                                        .strength(0.2f)
-                                        .destroyTime(0.3f)
-                                        .lightLevel(BlockState -> 15)));
+                        () -> new StarBottle());
 
         public static final RegistryObject<Block> CELESTIAL_TORCH = registerBlock("celestial_torch",
                         () -> new CelestialTorch());
 
         public static final RegistryObject<Block> AMETHYST_BLOCK = registerBlock("amethyst_block",
                         () -> new AmethystBlock());
+
+        public static final RegistryObject<Block> STAR_CATCHER = registerBlock("star_catcher",
+                        () -> new StarCatcher());
 
         // -----------------------
         // REGISTER FLOWERS

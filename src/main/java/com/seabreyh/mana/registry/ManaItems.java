@@ -6,10 +6,12 @@ import com.seabreyh.mana.items.EmeraldStaff;
 import com.seabreyh.mana.items.EmptyManaCapsule;
 import com.seabreyh.mana.items.FallenStarItem;
 import com.seabreyh.mana.items.FilledManaCapsule;
+import com.seabreyh.mana.items.GrantedWishItem;
 import com.seabreyh.mana.items.ManaCrystal;
 import com.seabreyh.mana.items.ManaDust;
 import com.seabreyh.mana.items.ManaShard;
 import com.seabreyh.mana.items.ManaTreat;
+import com.seabreyh.mana.items.SealedWishItem;
 import com.seabreyh.mana.items.StarDust;
 
 import net.minecraft.world.food.FoodProperties;
@@ -58,7 +60,12 @@ public class ManaItems {
         public static final RegistryObject<Item> MANA_TREAT = ITEMS.register("mana_treat",
                         () -> new ManaTreat(new Item.Properties().food(ManaTreat.FOOD_PROPERTIES)));
 
-        // -----------------------
+        public static final RegistryObject<Item> SEALED_WISH_ITEM = ITEMS.register("sealed_wish_item",
+                        () -> new SealedWishItem(SealedWishItem.PROPERTIES));
+
+        public static final RegistryObject<Item> GRANTED_WISH_ITEM = ITEMS.register("granted_wish_item",
+                        () -> new GrantedWishItem(GrantedWishItem.PROPERTIES));
+        // -----------------------z
         // END REGISTER ITEMS
         // -----------------------
 

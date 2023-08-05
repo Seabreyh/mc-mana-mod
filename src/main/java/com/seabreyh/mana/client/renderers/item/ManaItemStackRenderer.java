@@ -23,6 +23,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.Util;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
@@ -34,6 +35,8 @@ import com.seabreyh.mana.registry.ManaItems;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.joml.Quaternionf;
 
 public class ManaItemStackRenderer extends BlockEntityWithoutLevelRenderer {
 
@@ -64,8 +67,8 @@ public class ManaItemStackRenderer extends BlockEntityWithoutLevelRenderer {
         matrixstack.scale(scale, scale, scale);
         entity.setOnGround(false);
         float partialTicks = Minecraft.getInstance().getFrameTime();
-        Quaternion quaternion = Vector3f.ZP.rotationDegrees(180.0F);
-        Quaternion quaternion1 = Vector3f.XP.rotationDegrees(20.0F);
+        Quaternionf quaternion = com.mojang.math.Axis.XP.rotationDegrees(180.0F);
+        Quaternionf quaternion1 = com.mojang.math.Axis.ZP.rotationDegrees(20.0F);
         float partialTicksForRender = partialTicks;
         int tick;
         if (Minecraft.getInstance().player == null || Minecraft.getInstance().isPaused()) {
@@ -84,16 +87,16 @@ public class ManaItemStackRenderer extends BlockEntityWithoutLevelRenderer {
                 ((LivingEntity) entity).yHeadRotO = yaw;
             }
 
-            quaternion1 = Vector3f.XP.rotationDegrees(f1 * 20.0F);
+            quaternion1 = com.mojang.math.Axis.XP.rotationDegrees(f1 * 20.0F);
             quaternion.mul(quaternion1);
         }
 
         matrixstack.mulPose(quaternion);
-        matrixstack.mulPose(Vector3f.XP.rotationDegrees((float) (-xRot)));
-        matrixstack.mulPose(Vector3f.YP.rotationDegrees((float) yRot));
-        matrixstack.mulPose(Vector3f.ZP.rotationDegrees((float) zRot));
+        matrixstack.mulPose(com.mojang.math.Axis.XP.rotationDegrees((float) (-xRot)));
+        matrixstack.mulPose(com.mojang.math.Axis.YP.rotationDegrees((float) yRot));
+        matrixstack.mulPose(com.mojang.math.Axis.ZP.rotationDegrees((float) zRot));
         EntityRenderDispatcher entityrenderdispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-        quaternion1.conj();
+        quaternion1.conjugate();
         entityrenderdispatcher.overrideCameraOrientation(quaternion1);
         entityrenderdispatcher.setRenderShadow(false);
         MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers()

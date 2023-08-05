@@ -1,5 +1,6 @@
 package com.seabreyh.mana.items;
 
+import com.seabreyh.mana.event.player.PlayerManaEvent;
 // import com.seabreyh.mana.event.player.PlayerManaEvent;
 import com.seabreyh.mana.mana_stat.PlayerManaStatProvider;
 
@@ -40,17 +41,13 @@ public class ManaTreat extends Item {
             if (!world.isClientSide) {
                 this.playSound(world, ((Player) livingEntity));
 
-                // ((Player)
-                // livingEntity).getCapability(PlayerManaStatProvider.PLAYER_MANA_STAT).ifPresent(mana_stat
-                // -> {
-                // PlayerManaEvent.increaseManaCapacity(((Player) livingEntity), 1);
-                // });
-                itemStack.shrink(1);
+                ((Player) livingEntity).getCapability(PlayerManaStatProvider.PLAYER_MANA_STAT).ifPresent(mana_stat -> {
+                    PlayerManaEvent.increaseManaCapacity(((Player) livingEntity), 1);
+                });
+
+                return this.isEdible() ? livingEntity.eat(world, itemStack) : itemStack;
             }
         }
-        // return livingEntity instanceof Player && ((Player)
-        // livingEntity).getAbilities().instabuild ? itemStack
-        // : itemStack;
 
         return this.isEdible() ? livingEntity.eat(world, itemStack) : itemStack;
     }

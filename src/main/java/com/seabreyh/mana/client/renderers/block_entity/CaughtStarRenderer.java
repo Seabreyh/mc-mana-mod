@@ -4,10 +4,10 @@ import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.blocks.entity.StarCatcherEntityBlock;
 import com.seabreyh.mana.entity.FallenStar;
 
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
@@ -26,7 +26,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class CaughtStarRenderer implements BlockEntityRenderer<StarCatcherEntityBlock>{
+public class CaughtStarRenderer implements BlockEntityRenderer<StarCatcherEntityBlock> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(ManaMod.MOD_ID,
             "textures/entity/fallen_star/fallen_star.png");
@@ -50,39 +50,47 @@ public class CaughtStarRenderer implements BlockEntityRenderer<StarCatcherEntity
         partdefinition.addOrReplaceChild("cube",
                 CubeListBuilder.create().texOffs(32, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
         return LayerDefinition.create(meshdefinition, 64, 32);
-    }    
+    }
+
     @Override
     public void render(StarCatcherEntityBlock entityBlock, float partialTicks, PoseStack stack,
             MultiBufferSource buffer, int combinedOverlay, int packedLight) {
 
-                stack.pushPose();
-                float f1 = entityBlock.getActiveRotation(partialTicks) * (180F / (float)Math.PI);
-                
-                VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entityTranslucent(TEXTURE, true));
-                stack.pushPose();
-                stack.scale(0.5F, 0.5F, 0.5F);
-                stack.translate(1D, 0D, 1D);
+        stack.pushPose();
+        float f1 = entityBlock.getActiveRotation(partialTicks) * (180F / (float) Math.PI);
 
-                int i = OverlayTexture.NO_OVERLAY;
-                
-                stack.mulPose(Vector3f.YP.rotationDegrees(f1));
+        VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entityTranslucent(TEXTURE, true));
+        stack.pushPose();
+        stack.scale(0.5F, 0.5F, 0.5F);
+        stack.translate(1D, 0D, 1D);
 
-                stack.translate(0D, 0.93D, 0D);
+        int i = OverlayTexture.NO_OVERLAY;
 
-                stack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 55.0F, true));
-                this.glass.render(stack, vertexconsumer, 6029544, i);
-                
-                stack.scale(0.875F, 0.875F, 0.875F);
-                stack.mulPose(new Quaternion(new Vector3f(SIN_45, 0.0F, SIN_45), 60.0F, true));
-                stack.mulPose(Vector3f.YP.rotationDegrees(f1));
-                stack.scale(0.6F, 0.6F, 0.6F);
+        stack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(f1));
 
-                this.cube.render(stack, vertexconsumer, 6029544, i);
+        stack.translate(0D, 0.93D, 0D);
+        Vector3f vec31f1 = new Vector3f(SIN_45, 0.0F, SIN_45);
+        Float vec31f1a = vec31f1.x();
+        Float vec31f1b = vec31f1.y();
+        Float vec31f1c = vec31f1.z();
+        stack.mulPose(new Quaternionf(vec31f1a, vec31f1b, vec31f1c, 55.0F));
+        this.glass.render(stack, vertexconsumer, 6029544, i);
 
-                stack.popPose();
-                stack.popPose();
+        stack.scale(0.875F, 0.875F, 0.875F);
+        Vector3f vec32f1 = new Vector3f(SIN_45, 0.0F, SIN_45);
+        Float vec32f1a = vec32f1.x();
+        Float vec32f1b = vec32f1.y();
+        Float vec32f1c = vec32f1.z();
+        stack.mulPose(new Quaternionf(vec32f1a, vec32f1b, vec32f1c, 60.0F));
+        stack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(f1));
+        stack.scale(0.6F, 0.6F, 0.6F);
+
+        this.cube.render(stack, vertexconsumer, 6029544, i);
+
+        stack.popPose();
+        stack.popPose();
     }
-    
+
     public ResourceLocation getTextureLocation(FallenStar p_114157_) {
         return TEXTURE;
     }
