@@ -7,6 +7,8 @@ import org.joml.Quaternionf;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+
 import org.joml.Vector3f;
 
 import net.minecraft.client.model.geom.ModelLayers;
@@ -61,25 +63,17 @@ public class FallenStarRenderer extends EntityRenderer<FallenStar> {
         float f1 = ((float) fallenStar.getAge() * animSpeed + floatTwo) * 3.0F;
         VertexConsumer vertexconsumer = multBuff.getBuffer(RenderType.entityTranslucent(TEXTURE, true));
         poseStack.pushPose();
-        poseStack.scale(0.7F, 0.7F, 0.7F);
+        poseStack.scale(0.45F, 0.45F, 0.45F);
         poseStack.translate(0.0D, -0.25D, 0.0D);
         int i = OverlayTexture.NO_OVERLAY;
 
-        poseStack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(f1));
+        poseStack.mulPose(Axis.YP.rotationDegrees(f1));
         poseStack.translate(0.0D, (double) (1.5F + f / 2.0F), 0.0D);
-        Vector3f vec31f1 = new Vector3f(SIN_45, 0.0F, SIN_45);
-        Float vec31f1a = vec31f1.x();
-        Float vec31f1b = vec31f1.y();
-        Float vec31f1c = vec31f1.z();
-        poseStack.mulPose(new Quaternionf(vec31f1a, vec31f1b, vec31f1c, 60.0F));
+        poseStack.mulPose(new Quaternionf(((float) Math.PI / 3F), SIN_45, 0.0F, SIN_45));
         this.glass.render(poseStack, vertexconsumer, 6029544, i);
 
-        poseStack.scale(0.875F, 0.875F, 0.875F);
-        Vector3f vec32f1 = new Vector3f(SIN_45, 0.0F, SIN_45);
-        Float vec32f1a = vec32f1.x();
-        Float vec32f1b = vec32f1.y();
-        Float vec32f1c = vec32f1.z();
-        poseStack.mulPose(new Quaternionf(vec32f1a, vec32f1b, vec32f1c, 60.0F));
+        poseStack.scale(0.375F, 0.375F, 0.375F);
+        poseStack.mulPose(new Quaternionf(((float) Math.PI / 3F), SIN_45, 0.0F, SIN_45));
         poseStack.mulPose(com.mojang.math.Axis.XP.rotationDegrees(f1));
         poseStack.scale(0.65F, 0.65F, 0.65F);
         this.cube.render(poseStack, vertexconsumer, 6029544, i);

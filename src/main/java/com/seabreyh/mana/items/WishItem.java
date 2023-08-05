@@ -13,6 +13,8 @@ import net.minecraft.world.level.Level;
 
 public class WishItem extends Item {
 
+    public static final Properties PROPERTIES = new Item.Properties().stacksTo(1);
+
     public WishItem(Properties p_41383_) {
         super(p_41383_);
     }

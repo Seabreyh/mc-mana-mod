@@ -13,6 +13,7 @@ import com.seabreyh.mana.items.ManaShard;
 import com.seabreyh.mana.items.ManaTreat;
 import com.seabreyh.mana.items.SealedWishItem;
 import com.seabreyh.mana.items.StarDust;
+import com.seabreyh.mana.items.WishItem;
 
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -59,6 +60,9 @@ public class ManaItems {
 
         public static final RegistryObject<Item> MANA_TREAT = ITEMS.register("mana_treat",
                         () -> new ManaTreat(new Item.Properties().food(ManaTreat.FOOD_PROPERTIES)));
+
+        public static final RegistryObject<Item> WISH_ITEM = ITEMS.register("wish_item",
+                        () -> new WishItem(WishItem.PROPERTIES));
 
         public static final RegistryObject<Item> SEALED_WISH_ITEM = ITEMS.register("sealed_wish_item",
                         () -> new SealedWishItem(SealedWishItem.PROPERTIES));

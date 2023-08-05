@@ -3,6 +3,8 @@ package com.seabreyh.mana;
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.event.ManaClientEvents;
 import com.seabreyh.mana.networking.ManaMessages;
+import com.seabreyh.mana.recipes.StaffTableRecipes;
+import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaBlocks;
 // import com.seabreyh.mana.event.ManaClientEvents;
 import com.seabreyh.mana.registry.ManaCreativeTab;
@@ -18,6 +20,7 @@ import com.seabreyh.mana.registry.ManaItems;
 // import com.seabreyh.mana.registry.ManaRecipes;
 // import com.seabreyh.mana.registry.ManaSounds;
 import com.seabreyh.mana.registry.ManaParticles;
+import com.seabreyh.mana.screen.ManaMenuTypes;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -61,8 +64,8 @@ public class ManaMod {
         // ManaSounds.SOUND_EVENTS.register(eventBus);
 
         ManaBlocks.register(eventBus);
-        // ManaBlockEntities.register(eventBus);
-        // ManaMenuTypes.register(eventBus);
+        ManaBlockEntities.register(eventBus);
+        ManaMenuTypes.register(eventBus);
         // ManaRecipes.register(eventBus);
 
         // Add listeners
@@ -124,6 +127,13 @@ public class ManaMod {
             // Register a new block here
             // LOGGER.info("HELLO from Register Block");
         }
+
+        // @SubscribeEvent
+        // public static void registerRecipeTypes(final
+        // RegisterEvent.RegisterHelper<RecipeSerializer<?>> event) {
+        // RegisterEvent.register(Registry.RECIPE_TYPE, StaffTableRecipes.Type.ID,
+        // StaffTableRecipes.Type.INSTANCE);
+        // }
     }
 
     public Object getISTERProperties() {

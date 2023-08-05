@@ -47,6 +47,15 @@ public class ManaBlocks {
         public static final RegistryObject<Block> STAR_CATCHER = registerBlock("star_catcher",
                         () -> new StarCatcher());
 
+        // public static final RegistryObject<Block> STAFF_TABLE =
+        // registerBlock("staff_table",
+        // () -> new StaffTable(BlockBehaviour.Properties
+        // .of(Material.STONE)
+        // .strength(0.2f)
+        // .destroyTime(0.3f)
+        // .noOcclusion()
+        // .lightLevel(BlockState -> 5)));
+
         // -----------------------
         // REGISTER FLOWERS
         // Note: Dont forget to register in setup of ManaMod.java
