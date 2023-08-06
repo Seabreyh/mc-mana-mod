@@ -25,6 +25,8 @@ import java.util.List;
 
 public class AmethystStaff extends Item {
 
+    public static final Properties PROPERTIES = new Item.Properties().stacksTo(1);
+
     public AmethystStaff(Properties properties) {
         super(properties);
     }

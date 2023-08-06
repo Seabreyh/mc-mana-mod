@@ -3,6 +3,7 @@ package com.seabreyh.mana.client.renderers.entity;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.entity.FallenStar;
 
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -11,6 +12,8 @@ import com.mojang.math.Axis;
 
 import org.joml.Vector3f;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -24,13 +27,14 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class FallenStarRenderer extends EntityRenderer<FallenStar> {
+public class FallenStarRenderer<T extends FallenStar> extends EntityRenderer<T> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(ManaMod.MOD_ID,
             "textures/entity/fallen_star/fallen_star.png");
     private static final float SIN_45 = (float) Math.sin((Math.PI / 4D));
@@ -55,7 +59,7 @@ public class FallenStarRenderer extends EntityRenderer<FallenStar> {
         return LayerDefinition.create(meshdefinition, 64, 32);
     }
 
-    public void render(FallenStar fallenStar, float floatOne, float floatTwo, PoseStack poseStack,
+    public void render(T fallenStar, float floatOne, float floatTwo, PoseStack poseStack,
             MultiBufferSource multBuff, int intOne) {
         float animSpeed = 3.0F;
         poseStack.pushPose();
@@ -82,6 +86,53 @@ public class FallenStarRenderer extends EntityRenderer<FallenStar> {
         poseStack.popPose();
 
         super.render(fallenStar, floatOne, floatTwo, poseStack, multBuff, intOne);
+
+        var renderNameTagEvent = new net.minecraftforge.client.event.RenderNameTagEvent(fallenStar,
+                fallenStar.getDisplayName(), this, poseStack, multBuff, intOne, floatTwo);
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(renderNameTagEvent);
+
+        this.renderNameTag(fallenStar, Component.literal(
+                "ID:" + fallenStar.getId() +
+                        " Age:" + fallenStar.getAge() + "/" + fallenStar.getMaxAge() +
+                        // " PickUp:" + fallenStar.pickup +
+                        // " Targeted:" + fallenStar.getIsTargeted() +
+                        // " MoveToCatcher: " + fallenStar.getMoveToCatcher() +
+                        " isFalling: " + fallenStar.isFalling
+        // + "This is clientThread data, needs to be server. Need Entity packet sync"
+
+        ), poseStack, multBuff, intOne);
+
+    }
+
+    // -----------------
+    // DEV STAR DATA
+    // -----------------
+
+    protected void renderNameTag(T fallenStar, Component text, PoseStack pose, MultiBufferSource multBuff,
+            int p_114502_) {
+        double d0 = this.entityRenderDispatcher.distanceToSqr(fallenStar);
+        if (net.minecraftforge.client.ForgeHooksClient.isNameplateInRenderDistance(fallenStar, d0)) {
+            boolean flag = !fallenStar.isDiscrete();
+            float f = fallenStar.getNameTagOffsetY();
+            int i = "deadmau5".equals(text.getString()) ? -10 : 0;
+            pose.pushPose();
+            pose.translate(0.0F, f, 0.0F);
+            pose.mulPose(this.entityRenderDispatcher.cameraOrientation());
+            pose.scale(-0.025F, -0.025F, 0.025F);
+            Matrix4f matrix4f = pose.last().pose();
+            float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0.95F);
+            int j = (int) (f1 * 255.0F) << 24;
+            Font font = this.getFont();
+            float f2 = (float) (-font.width(text) / 2);
+            font.drawInBatch(text, f2, (float) i, 553648127, false, matrix4f, multBuff,
+                    flag ? Font.DisplayMode.NORMAL : Font.DisplayMode.SEE_THROUGH, j, p_114502_);
+            if (flag) {
+                font.drawInBatch(text, f2, (float) i, -1, false, matrix4f, multBuff, Font.DisplayMode.SEE_THROUGH, 0,
+                        p_114502_);
+            }
+
+            pose.popPose();
+        }
     }
 
     public static float getY(FallenStar fallenStar, float floatTwo) {
@@ -95,7 +146,7 @@ public class FallenStarRenderer extends EntityRenderer<FallenStar> {
         return TEXTURE;
     }
 
-    public boolean shouldRender(FallenStar fallenStar, Frustum frustum, double doubleOne, double doubleTwo,
+    public boolean shouldRender(T fallenStar, Frustum frustum, double doubleOne, double doubleTwo,
             double doubleThree) {
         return super.shouldRender(fallenStar, frustum, doubleOne, doubleTwo, doubleThree);
     }

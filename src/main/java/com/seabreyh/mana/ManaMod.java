@@ -61,6 +61,7 @@ public class ManaMod {
         ManaCreativeTab.register(eventBus);
         ManaEntities.ENTITIES.register(eventBus);
         ManaParticles.PARTICLE_TYPES.register(eventBus);
+        ManaEntityDataSerializers.register(eventBus);
         // ManaSounds.SOUND_EVENTS.register(eventBus);
 
         ManaBlocks.register(eventBus);

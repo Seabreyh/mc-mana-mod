@@ -31,14 +31,14 @@ public class ManaItems {
         // REGISTER ITEMS
         // -----------------------
 
-        public static final RegistryObject<Item> STAR_DUST = ITEMS.register("star_dust",
-                        () -> new StarDust(new Item.Properties()));
-
         public static final RegistryObject<Item> AMETHYST_STAFF = ITEMS.register("amethyst_staff",
-                        () -> new AmethystStaff(new Item.Properties()));
+                        () -> new AmethystStaff(AmethystStaff.PROPERTIES));
 
         public static final RegistryObject<Item> EMERALD_STAFF = ITEMS.register("emerald_staff",
-                        () -> new EmeraldStaff(new Item.Properties()));
+                        () -> new EmeraldStaff(EmeraldStaff.PROPERTIES));
+
+        public static final RegistryObject<Item> STAR_DUST = ITEMS.register("star_dust",
+                        () -> new StarDust(new Item.Properties()));
 
         public static final RegistryObject<Item> EMPTY_MANA_CAPSULE = ITEMS.register("empty_mana_capsule",
                         () -> new EmptyManaCapsule(new Item.Properties()));

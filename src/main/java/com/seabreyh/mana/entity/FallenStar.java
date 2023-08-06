@@ -1,6 +1,9 @@
 package com.seabreyh.mana.entity;
 
+import com.seabreyh.mana.ManaEntityDataSerializers;
+import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.blocks.entity.StarCatcherEntityBlock;
+import com.seabreyh.mana.client.renderers.entity.FallenStarSyncData;
 import com.seabreyh.mana.event.player.PlayerWishEvent;
 import com.seabreyh.mana.registry.ManaItems;
 import com.seabreyh.mana.registry.ManaParticles;
@@ -10,6 +13,9 @@ import java.util.Random;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -42,18 +48,31 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class FallenStar extends AbstractArrow implements SpawnPredicate {
+
+    // Define Data Sync
+    private static final EntityDataAccessor<FallenStarSyncData> FALLEN_STAR_DATA = SynchedEntityData.defineId(
+            FallenStar.class, ManaEntityDataSerializers.FALLEN_STAR_DATA);
+
+    // private static final EntityDataAccessor<Boolean> IS_FALLING =
+    // SynchedEntityData.defineId(
+    // FallenStar.class, EntityDataSerializers.BOOLEAN);
+    public Boolean isFalling;
+
     private int age;
+    private int maxAge = 23000;
+
     public float bobOffs;
     private BlockState lastState;
     private double baseDamage = 10.0D;
     private EntityDimensions dimensions;
     float currentTime;
-    private boolean isFalling = true;
+    // private boolean isFalling = true;
     private boolean playerWishedOn = false;
     private Player ownPlayer;
     private boolean isTargeted = false;
     int failedProbability = random.nextInt(10);
     private boolean isFailedLandingStar = false;
+    private boolean madeFirstFall = false;
     public AbstractArrow.Pickup pickup = AbstractArrow.Pickup.ALLOWED;
 
     private boolean moveToCatcher = false;
@@ -69,13 +88,15 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     public FallenStar(EntityType<? extends FallenStar> getEntity, Level world) {
         super(getEntity, world);
 
-        this.isFalling = true;
+        setIsFalling(true);
+        // this.isFalling = true;
         this.dimensions = getEntity.getDimensions();
 
         // determine stars probabiliy to land successfuly on the server side only.
         if (!this.level().isClientSide) {
-            if (this.failedProbability < 3 && !isFailedLandingStar) {
+            if (this.failedProbability < 3 && !isFailedLandingStar && !madeFirstFall) {
                 isFailedLandingStar = true;
+                madeFirstFall = true;
             }
         }
 
@@ -86,6 +107,63 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         this.ownPlayer = ownPlayer;
 
     }
+    // -------------------------------------------
+    // DATA SYNCING
+    // -------------------------------------------
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(FALLEN_STAR_DATA, new FallenStarSyncData());
+    }
+
+    public FallenStarSyncData getFallenStarData() {
+        return entityData.get(FALLEN_STAR_DATA);
+    }
+
+    public void syncFallenStarData() {
+        FallenStarSyncData fallenStarData = getFallenStarData();
+        if (fallenStarData == null)
+            return;
+
+        fallenStarData.update(this);
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+
+        if (!level().isClientSide)
+            return;
+
+        if (FALLEN_STAR_DATA.equals(key)) {
+            FallenStarSyncData fallenStarData = getFallenStarData();
+            if (fallenStarData == null)
+                return;
+            fallenStarData.apply(this);
+        }
+    }
+
+    public void getIsFalling() {
+        FallenStarSyncData data = getFallenStarData();
+
+        ManaMod.LOGGER.info("GetIsFalling: " + data);
+
+        this.isFalling = data.isFalling;
+
+    }
+
+    public void setIsFalling(Boolean bool) {
+        FallenStarSyncData data = getFallenStarData();
+        data.isFalling = bool;
+
+        ManaMod.LOGGER.info("Set: " + data);
+        data = getFallenStarData();
+        ManaMod.LOGGER.info("BOOOL: " + data.isFalling + "id: " + this.getId());
+        this.entityData.set(FALLEN_STAR_DATA, data);
+        getIsFalling();
+    }
+    // END ---------------------------------------
 
     public static boolean canSpawn(EntityType<? extends AbstractArrow> p_27578_, LevelAccessor p_27579_,
             MobSpawnType p_27580_, BlockPos p_27581_, Random p_27582_) {
@@ -113,12 +191,16 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         this.shoot((double) f, (double) f1, (double) f2, p_37256_, p_37257_);
     }
 
-    public boolean getIsFalling() {
-        return this.isFalling;
+    public StarCatcherEntityBlock getStarCatcherEntityBlock() {
+        return this.pBlockEntity;
     }
 
     public boolean getIsTargeted() {
         return this.isTargeted;
+    }
+
+    public boolean getMoveToCatcher() {
+        return this.moveToCatcher;
     }
 
     public void setIsTargeted(boolean isTargeted) {
@@ -129,7 +211,8 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         this.catcherPos = catcherPos;
         this.pBlockEntity = pBlockEntity;
         this.moveToCatcher = true;
-        this.isFalling = false;
+        // this.isFalling = false;
+        setIsFalling(false);
     }
 
     public void stopStarCatch() {
@@ -140,10 +223,16 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     }
 
     public void tick() {
-
+        // ManaMod.LOGGER.info("ID:" + this.getId() +
+        // " Age:" + this.getAge() +
+        // // " PickUp:" + this.pickup +
+        // // " Targeted:" + this.getIsTargeted() +
+        // // " MoveToCatcher: " + this.getMoveToCatcher() +
+        // " isFalling: " + this.getIsFalling());
         // Star Catcher -------------------------------------
         // SPEED TO MOVE STAR
-        double catchSpeed = 0.8D;
+        // double catchSpeed = 0.8D;
+        double catchSpeed = 0.001D;
         int timeTillStartCatch = 130;
         if (moveToCatcher && pBlockEntity.isRemoved()) {
             stopStarCatch();
@@ -185,10 +274,13 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         if (currentTime > 0.75) {
             discardStar();
         }
+
         if (this.age != -32768) {
             ++this.age;
         }
 
+        // if (this.isFalling && this.ownPlayer != null &&
+        // this.ownPlayer.getUseItem().is(Items.SPYGLASS) && !this.playerWishedOn) {
         if (this.isFalling && this.ownPlayer != null && this.ownPlayer.getUseItem().is(Items.SPYGLASS)
                 && !this.playerWishedOn) {
             Vec3 dirPlayerToStar = this.position().subtract(this.ownPlayer.position());
@@ -299,6 +391,8 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             double deltaZ = vec3.z;
 
             if (!this.onGround() && !moveToCatcher) {
+
+                setIsFalling(true);
                 // play normal falling particles
                 for (int i = 0; i < 8; ++i) {
                     this.level().addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_FALLING_STAR.get(),
@@ -418,7 +512,8 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult) {
-        this.isFalling = false;
+        setIsFalling(false);
+        // this.isFalling = false;
         Entity entity = entityHitResult.getEntity();
         float f = (float) this.getDeltaMovement().length();
         int i = Mth.ceil(Mth.clamp((double) f * this.baseDamage, 0.0D, 2.147483647E9D));
@@ -470,7 +565,8 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
     @Override
     protected void onHitBlock(BlockHitResult p_36755_) {
-        this.isFalling = false;
+        // this.isFalling = false;
+        setIsFalling(false);
         this.lastState = this.level().getBlockState(p_36755_.getBlockPos());
         Vec3 vec3 = p_36755_.getLocation().subtract(this.getX(), this.getY(), this.getZ());
         this.setDeltaMovement(vec3);
@@ -536,6 +632,10 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         return this.age;
     }
 
+    public int getMaxAge() {
+        return this.maxAge;
+    }
+
     public float getSpin(float p_32009_) {
         return ((float) this.getAge() + p_32009_) / 20.0F + this.bobOffs;
     }
@@ -559,7 +659,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     protected void tickDespawn() {
         ++this.age;
         // After 23000 ticks, roughly a full day cycle, the star will be removed.
-        if (this.age >= 23000) {
+        if (this.age >= this.maxAge) {
             discardStar();
         }
     }

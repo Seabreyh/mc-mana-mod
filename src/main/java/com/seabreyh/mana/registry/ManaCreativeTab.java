@@ -33,9 +33,9 @@ public class ManaCreativeTab {
                         // REGISTER TAB ITEMS
                         // -----------------------
 
-                        pOutPut.accept(ManaItems.STAR_DUST.get());
                         pOutPut.accept(ManaItems.AMETHYST_STAFF.get());
                         pOutPut.accept(ManaItems.EMERALD_STAFF.get());
+                        pOutPut.accept(ManaItems.STAR_DUST.get());
                         pOutPut.accept(ManaItems.EMPTY_MANA_CAPSULE.get());
                         pOutPut.accept(ManaItems.FALLEN_STAR_ITEM.get());
                         pOutPut.accept(ManaItems.FILLED_MANA_CAPSULE.get());
