@@ -32,6 +32,8 @@
   "entity.mana.amethyst_energy_ball": "Amethyst Magic",
   "entity.mana.emerald_energy_ball": "Emerald Magic",
 
+  "death.attack.mana.fallen_star": "%1$s was struck by a Fallen Star",
+
   "sounds.mana.star_capture": "Caught star",
 
   "mana.effect.mana_instant": "Instant Mana",

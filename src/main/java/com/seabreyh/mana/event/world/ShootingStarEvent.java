@@ -1,6 +1,7 @@
 package com.seabreyh.mana.event.world;
 
-import com.seabreyh.mana.entity.FallenStar;
+import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.entity.FallenStarEntity;
 import com.seabreyh.mana.registry.ManaEntities;
 
 import java.util.Random;
@@ -24,21 +25,31 @@ public class ShootingStarEvent {
             int timer = (int) (random.nextFloat() * 20.0F * SECONDS_BETWEEN_EVENT);
             timer = timer > 0 ? timer : 1;
             float currentTime = world.getTimeOfDay(1.0F);
-            if (worldTime % timer == 0 && currentTime > 0.3 && currentTime < 0.7 && !world.isRaining()
+            if (worldTime % timer == 0 && currentTime > 0.3 && currentTime < 0.7 &&
+                    !world.isRaining()
                     && world.dimension() == Level.OVERWORLD) {
                 if (!world.isClientSide) {
-                    FallenStar shootingStar = new FallenStar(ManaEntities.FALLEN_STAR.get(), world, thisPlayer);
+                    FallenStarEntity shootingStar = new FallenStarEntity(ManaEntities.FALLEN_STAR.get(),
+                            world, thisPlayer);
 
-                    double shootXOffset = 60D * random.nextDouble() - 30D;
-                    double shootYOffset = 75D;
-                    double shootZOffset = 60D * random.nextDouble() - 30D;
+                    double shootXOffset = (60D * random.nextDouble() - 30D) * random.nextDouble();
+                    double shootYOffset = 330D; // world height and then some
+                    double shootZOffset = (60D * random.nextDouble() - 30D) * random.nextDouble();
 
-                    Vec3 shootPos = thisPlayer.position().add(new Vec3(shootXOffset, shootYOffset, shootZOffset));
+                    Vec3 playerPos = thisPlayer.position().add(new Vec3(shootXOffset,
+                            0, shootZOffset));
+                    Vec3 shootPos = new Vec3(playerPos.x, shootYOffset, playerPos.z);
                     shootingStar.setPos(shootPos);
 
                     float randShootDirAngle = random.nextFloat() * 360.0F;
-                    float randShootSteepAngle = random.nextFloat() * -45.0F;
-                    shootingStar.shootFromRotation(randShootSteepAngle, randShootDirAngle, 1F, 1.5F, 1F);
+                    // float randShootSteepAngle = random.nextFloat() * -45.0F;
+                    float randShootSteepAngle = random.nextFloat() * -75.0F;
+
+                    float rangeXZ = 0.5F + random.nextFloat() * (1.3F - 0.5F);
+                    float rangeY = 1.0F + random.nextFloat() * (2F - 1.0F);
+
+                    shootingStar.shootFromRotation(randShootSteepAngle, randShootDirAngle, rangeXZ,
+                            rangeY, rangeXZ);
 
                     world.addFreshEntity(shootingStar);
                 }

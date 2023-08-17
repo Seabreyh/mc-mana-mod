@@ -8,10 +8,14 @@ import java.util.Vector;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
-import com.seabreyh.mana.entity.FallenStar;
+import com.seabreyh.mana.blocks.entity.StarCatcherEntityBlock;
+import com.seabreyh.mana.entity.AbstractStarEntity;
+import com.seabreyh.mana.entity.FallenStarEntity;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,32 +35,33 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 public class FallenStarSyncData {
-
-    public boolean isFalling;
-    public int age;
+    public boolean noPhysics;
+    public boolean inGround;
+    public AbstractArrow.Pickup pickup;
+    public boolean isTargeted;
+    public StarCatcherEntityBlock catcher;
+    public boolean moveToCatcher;
 
     public FallenStarSyncData() {
-        isFalling = true;
+        noPhysics = false;
     }
 
-    public FallenStarSyncData copy() {
-        return null;
+    // public void setNoPhysics(boolean bool) {
+    // this.noPhysics = bool;
+    // }
 
+    public FallenStarSyncData copy() {
+        FallenStarSyncData data = new FallenStarSyncData();
+        data.noPhysics = noPhysics;
+        return data;
     }
 
     public void write(FriendlyByteBuf buffer) {
-
+        buffer.writeBoolean(noPhysics);
     }
 
     public void read(FriendlyByteBuf buffer) {
-
-    }
-
-    public void update(FallenStar entity) {
-
-    }
-
-    public void apply(FallenStar fallenStar) {
+        noPhysics = buffer.readBoolean();
     }
 
 }

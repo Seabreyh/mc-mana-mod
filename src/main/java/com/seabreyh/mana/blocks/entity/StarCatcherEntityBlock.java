@@ -1,6 +1,7 @@
 package com.seabreyh.mana.blocks.entity;
 
-import com.seabreyh.mana.entity.FallenStar;
+import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.entity.FallenStarEntity;
 import com.seabreyh.mana.registry.ManaBlockEntities;
 import com.seabreyh.mana.registry.ManaItems;
 import com.seabreyh.mana.screen.StarCatcherMenu;
@@ -54,6 +55,7 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
 
     public StarCatcherEntityBlock(BlockPos pWorldPosition, BlockState pBlockState) {
         super(ManaBlockEntities.STAR_CATCHER_ENTITY_BLOCK.get(), pWorldPosition, pBlockState);
+        ManaMod.LOGGER.info("StarCatcher init");
     }
 
     @Override
@@ -152,14 +154,15 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
             if (hasNotReachedStackLimit(pBlockEntity)) {
 
                 AABB area = pBlockEntity.getRenderBoundingBox().inflate(80.0D, 80.0D, 80.0D);
-                List<FallenStar> fallenStars = plevel.getEntitiesOfClass(FallenStar.class, area);
+                List<FallenStarEntity> fallenStars = plevel.getEntitiesOfClass(FallenStarEntity.class, area);
 
-                for (FallenStar foundStar : fallenStars) {
+                for (FallenStarEntity foundStar : fallenStars) {
                     // make sure star can only be targeted by one star catcher
-                    if (foundStar.getIsFalling() == false
+                    if (foundStar.isFalling == false
                             && foundStar.getIsTargeted() == false) {
-                        if (foundStar instanceof FallenStar) {
+                        if (foundStar instanceof FallenStarEntity) {
                             if (foundStar.getIsTargeted() == false) {
+                                ManaMod.LOGGER.info("FOUDN STAR: " + foundStar);
                                 foundStar.setIsTargeted(true);
                                 foundStar.toStarCatcher(pBlockEntity.getBlockPos(), pBlockEntity);
                                 pBlockEntity.catchCount++;
@@ -171,9 +174,9 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
 
             } else {
                 AABB area = pBlockEntity.getRenderBoundingBox().inflate(80.0D, 80.0D, 80.0D);
-                List<FallenStar> fallenStars = plevel.getEntitiesOfClass(FallenStar.class, area);
+                List<FallenStarEntity> fallenStars = plevel.getEntitiesOfClass(FallenStarEntity.class, area);
 
-                for (FallenStar foundStar : fallenStars) {
+                for (FallenStarEntity foundStar : fallenStars) {
                     if (foundStar.getIsTargeted()) {
                         foundStar.stopStarCatch();
                         pBlockEntity.catchCount--;
@@ -185,10 +188,10 @@ public class StarCatcherEntityBlock extends BlockEntity implements MenuProvider 
             // in order to set the spin speed in the renderer
 
             AABB area = pBlockEntity.getRenderBoundingBox().inflate(80.0D, 80.0D, 80.0D);
-            List<FallenStar> fallenStars = plevel.getEntitiesOfClass(FallenStar.class, area);
+            List<FallenStarEntity> fallenStars = plevel.getEntitiesOfClass(FallenStarEntity.class, area);
 
             pBlockEntity.catchCount = 0;
-            for (FallenStar foundStar : fallenStars) {
+            for (FallenStarEntity foundStar : fallenStars) {
                 pBlockEntity.catchCount++;
 
                 // Dummy statement to get linter to not complain about unused vars

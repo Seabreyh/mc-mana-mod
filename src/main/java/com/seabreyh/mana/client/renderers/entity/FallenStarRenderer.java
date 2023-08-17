@@ -1,7 +1,7 @@
 package com.seabreyh.mana.client.renderers.entity;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.entity.FallenStar;
+import com.seabreyh.mana.entity.FallenStarEntity;
 
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -34,7 +34,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class FallenStarRenderer<T extends FallenStar> extends EntityRenderer<T> {
+public class FallenStarRenderer<T extends FallenStarEntity> extends EntityRenderer<T> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(ManaMod.MOD_ID,
             "textures/entity/fallen_star/fallen_star.png");
     private static final float SIN_45 = (float) Math.sin((Math.PI / 4D));
@@ -64,22 +64,22 @@ public class FallenStarRenderer<T extends FallenStar> extends EntityRenderer<T> 
         float animSpeed = 3.0F;
         poseStack.pushPose();
         float f = getY(fallenStar, floatTwo);
-        float f1 = ((float) fallenStar.getAge() * animSpeed + floatTwo) * 3.0F;
+        float f1 = ((float) fallenStar.tickCount * animSpeed + floatTwo) * 3.0F;
         VertexConsumer vertexconsumer = multBuff.getBuffer(RenderType.entityTranslucent(TEXTURE, true));
         poseStack.pushPose();
-        poseStack.scale(0.45F, 0.45F, 0.45F);
-        poseStack.translate(0.0D, -0.25D, 0.0D);
+        poseStack.scale(0.35F, 0.35F, 0.35F);
+        poseStack.translate(0.0D, 0.25D, 0.0D);
         int i = OverlayTexture.NO_OVERLAY;
 
         poseStack.mulPose(Axis.YP.rotationDegrees(f1));
-        poseStack.translate(0.0D, (double) (1.5F + f / 2.0F), 0.0D);
-        poseStack.mulPose(new Quaternionf(((float) Math.PI / 3F), SIN_45, 0.0F, SIN_45));
+        poseStack.translate(0.0D, (double) (1.5F + f / 1.5F), 0.0D);
+        poseStack.mulPose(new Quaternionf(SIN_45, 0.0F, SIN_45, ((float) Math.PI / 6F)));
+        poseStack.scale(1.65F, 1.65F, 1.65F);
         this.glass.render(poseStack, vertexconsumer, 6029544, i);
 
-        poseStack.scale(0.375F, 0.375F, 0.375F);
-        poseStack.mulPose(new Quaternionf(((float) Math.PI / 3F), SIN_45, 0.0F, SIN_45));
+        poseStack.mulPose(new Quaternionf(SIN_45, 0.0F, SIN_45, ((float) Math.PI / 3F)));
         poseStack.mulPose(com.mojang.math.Axis.XP.rotationDegrees(f1));
-        poseStack.scale(0.65F, 0.65F, 0.65F);
+        poseStack.scale(0.25F, 0.25F, 0.25F);
         this.cube.render(poseStack, vertexconsumer, 6029544, i);
 
         poseStack.popPose();
@@ -93,12 +93,14 @@ public class FallenStarRenderer<T extends FallenStar> extends EntityRenderer<T> 
 
         this.renderNameTag(fallenStar, Component.literal(
                 "ID:" + fallenStar.getId() +
-                        " Age:" + fallenStar.getAge() + "/" + fallenStar.getMaxAge() +
-                        // " PickUp:" + fallenStar.pickup +
+                        " Age:" + fallenStar.getAge() +
+                        " PickUp:" + fallenStar.pickup
                         // " Targeted:" + fallenStar.getIsTargeted() +
                         // " MoveToCatcher: " + fallenStar.getMoveToCatcher() +
-                        " isFalling: " + fallenStar.isFalling
-        // + "This is clientThread data, needs to be server. Need Entity packet sync"
+                        // " isFalling: " + fallenStar.isFalling +
+                        // " moveToCatcher: " + fallenStar.getSyncMoveToCatcher() + " catcher: "
+                        // + fallenStar.getCatcher()
+                        + " [CLIENT THREAD]"
 
         ), poseStack, multBuff, intOne);
 
@@ -108,10 +110,12 @@ public class FallenStarRenderer<T extends FallenStar> extends EntityRenderer<T> 
     // DEV STAR DATA
     // -----------------
 
-    protected void renderNameTag(T fallenStar, Component text, PoseStack pose, MultiBufferSource multBuff,
+    protected void renderNameTag(T fallenStar, Component text, PoseStack pose,
+            MultiBufferSource multBuff,
             int p_114502_) {
         double d0 = this.entityRenderDispatcher.distanceToSqr(fallenStar);
-        if (net.minecraftforge.client.ForgeHooksClient.isNameplateInRenderDistance(fallenStar, d0)) {
+        if (net.minecraftforge.client.ForgeHooksClient.isNameplateInRenderDistance(fallenStar,
+                d0)) {
             boolean flag = !fallenStar.isDiscrete();
             float f = fallenStar.getNameTagOffsetY();
             int i = "deadmau5".equals(text.getString()) ? -10 : 0;
@@ -127,7 +131,8 @@ public class FallenStarRenderer<T extends FallenStar> extends EntityRenderer<T> 
             font.drawInBatch(text, f2, (float) i, 553648127, false, matrix4f, multBuff,
                     flag ? Font.DisplayMode.NORMAL : Font.DisplayMode.SEE_THROUGH, j, p_114502_);
             if (flag) {
-                font.drawInBatch(text, f2, (float) i, -1, false, matrix4f, multBuff, Font.DisplayMode.SEE_THROUGH, 0,
+                font.drawInBatch(text, f2, (float) i, -1, false, matrix4f, multBuff,
+                        Font.DisplayMode.SEE_THROUGH, 0,
                         p_114502_);
             }
 
@@ -135,14 +140,14 @@ public class FallenStarRenderer<T extends FallenStar> extends EntityRenderer<T> 
         }
     }
 
-    public static float getY(FallenStar fallenStar, float floatTwo) {
-        float f = (float) fallenStar.getAge() + floatTwo;
+    public static float getY(FallenStarEntity fallenStar, float floatTwo) {
+        float f = (float) fallenStar.tickCount + floatTwo;
         float f1 = Mth.sin(f * 0.2F) / 2.0F + 0.5F;
         f1 = (f1 * f1 + f1) * 0.4F;
         return f1 - 1.4F;
     }
 
-    public ResourceLocation getTextureLocation(FallenStar fallenStar) {
+    public ResourceLocation getTextureLocation(FallenStarEntity fallenStar) {
         return TEXTURE;
     }
 

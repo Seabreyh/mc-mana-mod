@@ -2,16 +2,24 @@ package com.seabreyh.mana.entity;
 
 import com.seabreyh.mana.ManaEntityDataSerializers;
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.blocks.StarCatcher;
 import com.seabreyh.mana.blocks.entity.StarCatcherEntityBlock;
 import com.seabreyh.mana.client.renderers.entity.FallenStarSyncData;
 import com.seabreyh.mana.event.player.PlayerWishEvent;
 import com.seabreyh.mana.registry.ManaItems;
 import com.seabreyh.mana.registry.ManaParticles;
+import com.seabreyh.mana.registry.damage.ManaDamageTypes;
 
 import java.util.Random;
 
+import net.minecraft.CrashReport;
+import net.minecraft.CrashReportCategory;
+import net.minecraft.ReportedException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -28,6 +36,7 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.boss.enderdragon.phases.EnderDragonPhase;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -47,18 +56,47 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class FallenStar extends AbstractArrow implements SpawnPredicate {
+public class FallenStarOLD extends AbstractArrow implements SpawnPredicate {
+
+    // CHANGES to MAKE------------------------------------
+    // setage, getage, age needs to be this.tickCount\
+
+    // Entity.class for data sync examples
+    // protected final SynchedEntityData entityData;
+
+    // packetPositionCodec
+    // hasVisualFire
+
+    // WHAT NEEDS TO SYNC?
+    //
+
+    // need to fail the star before hitting ground if goint to fail, it gets
+    // confuising seeing somethign hit ground but nothign there,
+
+    // saving data
+    // https:// docs.minecraftforge.net/en/1.20.x/blockentities/
+
+    // readAdditionalSaveData and addAdditionalSaveData
 
     // Define Data Sync
     private static final EntityDataAccessor<FallenStarSyncData> FALLEN_STAR_DATA = SynchedEntityData.defineId(
             FallenStar.class, ManaEntityDataSerializers.FALLEN_STAR_DATA);
 
+    private static final EntityDataAccessor<Boolean> DATA_MOVE_TO_CATCHER = SynchedEntityData.defineId(FallenStar.class,
+            EntityDataSerializers.BOOLEAN);
+
     // private static final EntityDataAccessor<Boolean> IS_FALLING =
     // SynchedEntityData.defineId(
     // FallenStar.class, EntityDataSerializers.BOOLEAN);
-    public Boolean isFalling;
 
-    private int age;
+    // Data Sync Copy ---------------------
+    public Boolean isFalling;
+    public int age;
+    public StarCatcherEntityBlock catcher;
+    // private StarCatcherEntityBlock pBlockEntity;
+    public FallenStarSyncData syncedData = this.entityData.get(FALLEN_STAR_DATA);
+    // END --------------------------------
+
     private int maxAge = 23000;
 
     public float bobOffs;
@@ -75,17 +113,15 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     private boolean madeFirstFall = false;
     public AbstractArrow.Pickup pickup = AbstractArrow.Pickup.ALLOWED;
 
-    private boolean moveToCatcher = false;
     private int clientSideCatchStarTickCount;
     private BlockPos catcherPos;
-    private StarCatcherEntityBlock pBlockEntity;
 
     private final SoundEvent HIT_SOUND = SoundEvents.AMETHYST_BLOCK_BREAK;
     private final SoundEvent HIT_GROUND_FAIL = SoundEvents.DRAGON_FIREBALL_EXPLODE;
     private final SoundEvent FALL_SOUND = SoundEvents.AMETHYST_BLOCK_CHIME;
     private final SoundEvent BUBBLE = SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT;
 
-    public FallenStar(EntityType<? extends FallenStar> getEntity, Level world) {
+    public FallenStarOLD(EntityType<? extends FallenStar> getEntity, Level world) {
         super(getEntity, world);
 
         setIsFalling(true);
@@ -102,7 +138,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
     }
 
-    public FallenStar(EntityType<? extends FallenStar> getEntity, Level world, Player ownPlayer) {
+    public FallenStarOLD(EntityType<? extends FallenStar> getEntity, Level world, Player ownPlayer) {
         this(getEntity, world);
         this.ownPlayer = ownPlayer;
 
@@ -111,22 +147,113 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     // DATA SYNCING
     // -------------------------------------------
 
+    public boolean getSyncMoveToCatcher() {
+        return this.entityData.get(DATA_MOVE_TO_CATCHER);
+    }
+
+    public void setSyncMoveToCatcher(boolean bool) {
+        this.entityData.set(DATA_MOVE_TO_CATCHER, bool);
+    }
+
+    // @Override
+    // public void onSyncedDataUpdated(EntityDataAccessor<?> p_31136_) {
+    // if (DATA_PHASE.equals(p_31136_) && this.level().isClientSide) {
+    // this.phaseManager.setPhase(EnderDragonPhase.getById(this.getEntityData().get(DATA_PHASE)));
+    // }
+
+    // super.onSyncedDataUpdated(p_31136_);
+    // }
+
+    // public StarCatcherEntityBlock getSyncStarCatcherEntityBlock() {
+
+    // ManaMod.LOGGER.info("GET SYNC CATCHER: " + data.catcher + " data: " + data);
+    // return data.catcher;
+    // }
+
+    // see if i can get falling data from this
+    // public void setSyncStarCatcherEntityBlock(StarCatcherEntityBlock catcher) {
+    // syncedData = getFallenStarData();
+    // syncedData.catcher = catcher;
+    // this.entityData.set(FALLEN_STAR_DATA, syncedData);
+
+    // ManaMod.LOGGER.info("SET SYNC CATCHER---: " + syncedData.getCatcher() + "
+    // data: " + syncedData);
+    // }
+
     @Override
+    public void load(CompoundTag compound) {
+        super.load(compound);
+        try {
+            if (Double.isFinite(this.getX()) && Double.isFinite(this.getY()) && Double.isFinite(this.getZ())) {
+                if (Double.isFinite((double) this.getYRot()) && Double.isFinite((double) this.getXRot())) {
+                    this.reapplyPosition();
+                    this.setRot(this.getYRot(), this.getXRot());
+                    if (compound.contains("CustomName", 8)) {
+                        String s = compound.getString("CustomName");
+
+                        try {
+                            this.setCustomName(Component.Serializer.fromJson(s));
+                        } catch (Exception exception) {
+                            ManaMod.LOGGER.warn("Failed to parse entity custom name {}", s, exception);
+                        }
+                    }
+
+                    // FallenStar Data
+                    this.setSyncMoveToCatcher(compound.getBoolean("MoveToCatcher"));
+
+                    if (this.repositionEntityAfterLoad()) {
+                        this.reapplyPosition();
+                    }
+
+                } else {
+                    throw new IllegalStateException("Entity has invalid rotation");
+                }
+            } else {
+                throw new IllegalStateException("Entity has invalid position");
+            }
+
+        } catch (Throwable throwable) {
+            CrashReport crashreport = CrashReport.forThrowable(throwable, "Loading entity NBT");
+            CrashReportCategory crashreportcategory = crashreport.addCategory("Entity being loaded");
+            this.fillCrashReportCategory(crashreportcategory);
+            throw new ReportedException(crashreport);
+        }
+    }
+
+    // public StarCatcherEntityBlock getSyncStarCatcherEntityBlock() {
+    // return this.catcher;
+    // }
+
+    @Override
+    public CompoundTag saveWithoutId(CompoundTag compound) {
+        super.saveWithoutId(compound);
+        try {
+
+            if (this.getSyncMoveToCatcher()) {
+                compound.putBoolean("MoveToCatcher", this.getSyncMoveToCatcher());
+            }
+
+            return compound;
+
+        } catch (Throwable throwable) {
+            CrashReport crashreport = CrashReport.forThrowable(throwable, "Saving entity NBT");
+            CrashReportCategory crashreportcategory = crashreport.addCategory("Entity being saved");
+            this.fillCrashReportCategory(crashreportcategory);
+            throw new ReportedException(crashreport);
+        }
+
+    }
+    // ------
+
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(FALLEN_STAR_DATA, new FallenStarSyncData());
+
+        entityData.define(DATA_MOVE_TO_CATCHER, false);
     }
 
     public FallenStarSyncData getFallenStarData() {
         return entityData.get(FALLEN_STAR_DATA);
-    }
-
-    public void syncFallenStarData() {
-        FallenStarSyncData fallenStarData = getFallenStarData();
-        if (fallenStarData == null)
-            return;
-
-        fallenStarData.update(this);
     }
 
     @Override
@@ -140,28 +267,45 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             FallenStarSyncData fallenStarData = getFallenStarData();
             if (fallenStarData == null)
                 return;
-            fallenStarData.apply(this);
         }
     }
 
     public void getIsFalling() {
         FallenStarSyncData data = getFallenStarData();
-
-        ManaMod.LOGGER.info("GetIsFalling: " + data);
-
         this.isFalling = data.isFalling;
-
     }
 
     public void setIsFalling(Boolean bool) {
+
         FallenStarSyncData data = getFallenStarData();
         data.isFalling = bool;
-
-        ManaMod.LOGGER.info("Set: " + data);
-        data = getFallenStarData();
-        ManaMod.LOGGER.info("BOOOL: " + data.isFalling + "id: " + this.getId());
         this.entityData.set(FALLEN_STAR_DATA, data);
-        getIsFalling();
+        this.isFalling = bool;
+    }
+
+    public StarCatcherEntityBlock getCatcher() {
+        FallenStarSyncData data = getFallenStarData();
+        this.catcher = data.catcher;
+        return data.catcher;
+    }
+
+    public void setCatcher(StarCatcherEntityBlock catcher) {
+        FallenStarSyncData data = getFallenStarData();
+        data.catcher = catcher;
+        this.entityData.set(FALLEN_STAR_DATA, data);
+        this.catcher = catcher;
+    }
+
+    public void setAge(int age) {
+        FallenStarSyncData data = getFallenStarData();
+        data.age = age;
+        this.entityData.set(FALLEN_STAR_DATA, data);
+    }
+
+    public int getAge() {
+        FallenStarSyncData data = getFallenStarData();
+        this.age = data.age;
+        return this.age;
     }
     // END ---------------------------------------
 
@@ -191,17 +335,17 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         this.shoot((double) f, (double) f1, (double) f2, p_37256_, p_37257_);
     }
 
-    public StarCatcherEntityBlock getStarCatcherEntityBlock() {
-        return this.pBlockEntity;
-    }
+    // public StarCatcherEntityBlock getStarCatcherEntityBlock() {
+    // return this.getSyncStarCatcherEntityBlock();
+    // }
 
     public boolean getIsTargeted() {
         return this.isTargeted;
     }
 
-    public boolean getMoveToCatcher() {
-        return this.moveToCatcher;
-    }
+    // public boolean getMoveToCatcher() {
+    // return this.moveToCatcher;
+    // }
 
     public void setIsTargeted(boolean isTargeted) {
         this.isTargeted = isTargeted;
@@ -209,20 +353,55 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
     public void toStarCatcher(BlockPos catcherPos, StarCatcherEntityBlock pBlockEntity) {
         this.catcherPos = catcherPos;
-        this.pBlockEntity = pBlockEntity;
-        this.moveToCatcher = true;
+        // this.setSyncStarCatcherEntityBlock(pBlockEntity);
+
+        setCatcher(pBlockEntity);
+
+        ManaMod.LOGGER
+                .info("CatcherID: " + this.catcher + " StarID: " + this.getId()
+                        + " MoveToCatcher: "
+                        + this.getSyncMoveToCatcher());
+        // this.moveToCatcher = true;
+
+        this.setSyncMoveToCatcher(true);
+
+        ManaMod.LOGGER.info(
+                "AFTER: CatcherID: " + this.catcher + " StarID: " + this.getId()
+                        + " MoveToCatcher: "
+                        + this.getSyncMoveToCatcher());
+
         // this.isFalling = false;
-        setIsFalling(false);
+        this.setIsFalling(false);
     }
 
     public void stopStarCatch() {
-        this.moveToCatcher = false;
+        // this.moveToCatcher = false;
+        this.setSyncMoveToCatcher(false);
         this.setNoPhysics(false);
         this.isTargeted = false;
         this.pickup = AbstractArrow.Pickup.ALLOWED;
     }
 
     public void tick() {
+        syncedData = this.entityData.get(FALLEN_STAR_DATA);
+
+        if (this.level().isClientSide) {
+            ManaMod.LOGGER.info("Client Side Get FALLEN_STAR_DATA");
+
+            ManaMod.LOGGER
+                    .info("Client Tick------- CatcherID: " + this.catcher + " StarID: " + this.getId()
+                            + " MoveToCatcher: "
+                            + this.getSyncMoveToCatcher() + " FALLING: " + this.isFalling);
+        } else {
+            ManaMod.LOGGER
+                    .info("Server Tick------- CatcherID: " + this.catcher + " StarID: " + this.getId()
+                            + " MoveToCatcher: "
+                            + this.getSyncMoveToCatcher() + " FALLING: " + this.isFalling);
+        }
+
+        if (this.inGround) {
+            setIsFalling(false);
+        }
         // ManaMod.LOGGER.info("ID:" + this.getId() +
         // " Age:" + this.getAge() +
         // // " PickUp:" + this.pickup +
@@ -231,13 +410,14 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         // " isFalling: " + this.getIsFalling());
         // Star Catcher -------------------------------------
         // SPEED TO MOVE STAR
-        // double catchSpeed = 0.8D;
-        double catchSpeed = 0.001D;
+        double catchSpeed = 0.8D;
         int timeTillStartCatch = 130;
-        if (moveToCatcher && pBlockEntity.isRemoved()) {
+
+        if (this.getSyncMoveToCatcher() && syncedData.isCatcherRemoved()) {
             stopStarCatch();
         }
-        if (moveToCatcher && clientSideCatchStarTickCount >= timeTillStartCatch) {
+
+        if (clientSideCatchStarTickCount >= timeTillStartCatch && this.getSyncMoveToCatcher()) {
             // Move to the star catcher
             this.pickup = AbstractArrow.Pickup.DISALLOWED;
             this.setNoPhysics(true);
@@ -256,10 +436,10 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                 this.playSound(SoundEvents.EVOKER_CAST_SPELL, 2.0F, 1.0F);
             }
 
-            // If within 0.7 blocks of catcher, catch.
+            // If within 0.7 blocks of catcher, catch and discard entity.
             if (Math.abs(vec3.x) < 0.7 && Math.abs(vec3.y) < 0.7 && Math.abs(vec3.z) < 0.7) {
                 this.playSound(SoundEvents.BOTTLE_FILL_DRAGONBREATH, 2.0F, 1.0F);
-                StarCatcherEntityBlock.craftItem(pBlockEntity);
+                StarCatcherEntityBlock.craftItem(this.catcher);
                 discardStar();
             }
         }
@@ -270,14 +450,15 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         super.tick();
         // SUPER TICK ----------- <<<
 
+        // Discard entity based on time
         currentTime = this.level().getTimeOfDay(1.0F);
         if (currentTime > 0.75) {
             discardStar();
         }
 
-        if (this.age != -32768) {
-            ++this.age;
-        }
+        // if (getAge() != -32768) {
+        // setAge(getAge() + 1);
+        // }
 
         // if (this.isFalling && this.ownPlayer != null &&
         // this.ownPlayer.getUseItem().is(Items.SPYGLASS) && !this.playerWishedOn) {
@@ -343,10 +524,10 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             } else if (!this.level().isClientSide) {
                 this.tickDespawn();
             }
-            ++this.inGroundTime;
+            // ++this.inGroundTime;
 
         } else {
-            this.inGroundTime = 0;
+            // this.inGroundTime = 0;
             Vec3 vec32 = this.position();
             Vec3 vec33 = vec32.add(vec3);
             HitResult hitresult = this.level()
@@ -390,7 +571,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             double deltaY = vec3.y;
             double deltaZ = vec3.z;
 
-            if (!this.onGround() && !moveToCatcher) {
+            if (!this.onGround() && !this.getSyncMoveToCatcher()) {
 
                 setIsFalling(true);
                 // play normal falling particles
@@ -406,29 +587,33 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
                             this.getZ() + this.random.nextGaussian() * 0.5,
                             0D, 0.4D, 0D);
                 }
-                if (this.age % 2 == 0) {
+                if (getAge() % 2 == 0) {
                     this.level().playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND,
                             SoundSource.AMBIENT, 20.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
                 }
 
-            } else if (!this.onGround() && moveToCatcher) {
+                // THIS USES ONGROUND()???? USE IN OR ONGROUND??
+            } else if (!this.onGround() && this.getSyncMoveToCatcher()) {
+                ManaMod.LOGGER.info("GOING TO CATCHER");
+                ManaMod.LOGGER.info("ID: " + this.getId() + " moveToCatcher: " + this.getSyncMoveToCatcher()
+                        + " Catcher:" + this.catcher);
                 // play star catcher particles
                 for (int i = 0; i < 4; ++i) {
-                    this.level().addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_STAR_CATCHER.get(),
-                            this.getX() + deltaX * (double) i / 4.0D - deltaX * 1.5,
-                            this.getY() + deltaY * (double) i / 4.0D - deltaY * 1.5 + 0.48D,
-                            this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 1.5,
-                            -deltaX,
-                            -deltaY,
-                            -deltaZ);
+                    // this.level().addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_STAR_CATCHER.get(),
+                    // this.getX() + deltaX * (double) i / 4.0D - deltaX * 1.5,
+                    // this.getY() + deltaY * (double) i / 4.0D - deltaY * 1.5 + 0.48D,
+                    // this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 1.5,
+                    // -deltaX,
+                    // -deltaY,
+                    // -deltaZ);
 
-                    this.level().addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
-                            this.getX() + this.random.nextGaussian() * 0.5,
-                            this.getY() + this.random.nextGaussian() * 0.7,
-                            this.getZ() + this.random.nextGaussian() * 0.5,
-                            0D, 0.4D, 0D);
+                    // this.level().addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
+                    // this.getX() + this.random.nextGaussian() * 0.5,
+                    // this.getY() + this.random.nextGaussian() * 0.7,
+                    // this.getZ() + this.random.nextGaussian() * 0.5,
+                    // 0D, 0.4D, 0D);
                 }
-                if (this.age % 2 == 0) {
+                if (getAge() % 2 == 0) {
                     this.level().playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND,
                             SoundSource.AMBIENT, 5.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
 
@@ -462,7 +647,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         }
 
         if (this.level().isClientSide) {
-            if (this.age % 3 == 0) {
+            if (getAge() % 3 == 0) {
                 this.level().addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
                         this.getX() + this.random.nextGaussian() * 0.3,
                         this.getY() + 0.4 + this.random.nextGaussian() * 0.5,
@@ -483,22 +668,26 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
             }
         }
 
-        if (isInWater() && this.age % 5 == 0) {
+        if (isInWater() && getAge() % 5 == 0) {
             this.level().playSound((Player) null, this.getOnPos(), BUBBLE, SoundSource.AMBIENT,
                     1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
         }
     }
 
+    // unneeded?
     private boolean shouldFall() {
         return this.inGround && this.level().noCollision((new AABB(this.position(), this.position())).inflate(0.06D));
     }
 
+    // unneeded? inground when we have onground?
+    // this seems to stop the entity from jerking around when fallign if you break a
+    // block from under it.
     private void startFalling() {
         this.inGround = false;
         Vec3 vec3 = this.getDeltaMovement();
         this.setDeltaMovement(vec3.multiply((double) (this.random.nextFloat() * 0.2F),
                 (double) (this.random.nextFloat() * 0.2F), (double) (this.random.nextFloat() * 0.2F)));
-        this.age = 0;
+        setAge(0);
     }
 
     @Override
@@ -506,13 +695,13 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         return new ItemStack(ManaItems.FALLEN_STAR_ITEM.get());
     }
 
-    public ItemStack getItem() {
-        return new ItemStack(ManaItems.FALLEN_STAR_ITEM.get());
-    }
+    // public ItemStack getItem() {
+    // return new ItemStack(ManaItems.FALLEN_STAR_ITEM.get());
+    // }
 
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult) {
-        setIsFalling(false);
+        // setIsFalling(false);
         // this.isFalling = false;
         Entity entity = entityHitResult.getEntity();
         float f = (float) this.getDeltaMovement().length();
@@ -520,16 +709,21 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
 
         Entity entity1 = this.getOwner();
         DamageSource damagesource;
+
         if (entity1 == null) {
+            // entityHitResult.getEntity().hurt(ManaDamageTypes.FALLEN_STAR.source(level(),
+            // this), 0.0F);
             entityHitResult.getEntity().hurt(this.damageSources().arrow(this, this), 0.0F);
         } else {
+            // ntityHitResult.getEntity().hurt(ManaDamageTypes.FALLEN_STAR.source(level(),
+            // entity1), 0.0F);
             entityHitResult.getEntity().hurt(this.damageSources().arrow(this, entity1), 0.0F);
             if (entity1 instanceof LivingEntity) {
                 ((LivingEntity) entity1).setLastHurtMob(entity);
             }
         }
 
-        if (entityHitResult.getEntity().hurt(this.damageSources().arrow(this, entity1), (float) i)) {
+        if (entityHitResult.getEntity().hurt(this.damageSources().arrow(this, this), (float) i)) {
             if (entity instanceof LivingEntity) {
                 LivingEntity livingentity = (LivingEntity) entity;
                 if (!this.level().isClientSide && this.getPierceLevel() <= 0) {
@@ -566,7 +760,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
     @Override
     protected void onHitBlock(BlockHitResult p_36755_) {
         // this.isFalling = false;
-        setIsFalling(false);
+
         this.lastState = this.level().getBlockState(p_36755_.getBlockPos());
         Vec3 vec3 = p_36755_.getLocation().subtract(this.getX(), this.getY(), this.getZ());
         this.setDeltaMovement(vec3);
@@ -575,6 +769,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         if (!isFailedLandingStar) {
             this.playHitSound();
         }
+
         this.inGround = true;
         this.shakeTime = 7;
         this.setCritArrow(false);
@@ -585,7 +780,7 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         if (getIsFailedLandingStar()) {
             discardStarFailedLanding();
         }
-
+        // setIsFalling(false);
     }
 
     public void discardStarFailedLanding() {
@@ -628,9 +823,9 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         return false;
     }
 
-    public int getAge() {
-        return this.age;
-    }
+    // public int getAge() {
+    // return this.age;
+    // }
 
     public int getMaxAge() {
         return this.maxAge;
@@ -655,11 +850,12 @@ public class FallenStar extends AbstractArrow implements SpawnPredicate {
         this.discard();
     }
 
+    // Discard entity of old age
     @Override
     protected void tickDespawn() {
-        ++this.age;
+        setAge(getAge() + 1);
         // After 23000 ticks, roughly a full day cycle, the star will be removed.
-        if (this.age >= this.maxAge) {
+        if (getAge() >= this.maxAge) {
             discardStar();
         }
     }
