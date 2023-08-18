@@ -8,6 +8,7 @@ import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.blocks.entity.StarCatcherEntityBlock;
 import com.seabreyh.mana.client.renderers.entity.FallenStarSyncData;
 import com.seabreyh.mana.event.player.PlayerWishEvent;
+import com.seabreyh.mana.event.world.ShootingStarEvent;
 import com.seabreyh.mana.registry.ManaParticles;
 
 import net.minecraft.core.BlockPos;
@@ -70,6 +71,9 @@ public abstract class AbstractStarEntity extends AbstractArrow {
     float currentTime;
     protected int inGroundTime;
     private SoundEvent soundEvent = this.getDefaultHitGroundSoundEvent();
+    private float starDespawnTime = ShootingStarEvent.getStarDespawnTime();
+    private float starSpawnStartTime = ShootingStarEvent.getStarSpawnStartTime();
+    private boolean hasDoneFirstSplash = false;
 
     private final SoundEvent HIT_SOUND = SoundEvents.AMETHYST_BLOCK_BREAK;
     private final SoundEvent HIT_GROUND_FAIL = SoundEvents.DRAGON_FIREBALL_EXPLODE;
@@ -99,6 +103,11 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         this.baseTick();
         if (moveToCatcher && catcher.isRemoved()) {
             stopStarCatch();
+        }
+
+        if (this.wasTouchingWater) {
+            hasDoneFirstSplash = true;
+            this.isFalling = false;
         }
 
         // moveToCatcher=true and travelTicks >= TotalTravelTicks
@@ -131,7 +140,10 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         ++this.clientSideCatchStarTickCount;
 
         currentTime = this.level().getTimeOfDay(1.0F);
-        if (currentTime > 0.75) {
+        ManaMod.LOGGER.info(
+                "Time: " + currentTime + " Despawn Time: " + starDespawnTime + " Spawn Time: " + starSpawnStartTime);
+
+        if (currentTime > starDespawnTime || currentTime < starSpawnStartTime) {
             discardEntity();
         }
         if (this.age != -32768) {
@@ -374,55 +386,58 @@ public abstract class AbstractStarEntity extends AbstractArrow {
 
     @Override
     protected void doWaterSplashEffect() {
-        Entity entity = (Entity) (this.isVehicle() && this.getControllingPassenger() != null
-                ? this.getControllingPassenger()
-                : this);
-        float f = entity == this ? 0.2F : 0.9F;
-        Vec3 vec3 = entity.getDeltaMovement();
-        float f1 = Math.min(1.0F,
-                (float) Math.sqrt(vec3.x * vec3.x * (double) 0.2F + vec3.y * vec3.y + vec3.z * vec3.z * (double) 0.2F)
-                        * f);
+        if (!hasDoneFirstSplash) {
+            Entity entity = (Entity) (this.isVehicle() && this.getControllingPassenger() != null
+                    ? this.getControllingPassenger()
+                    : this);
+            float f = entity == this ? 0.2F : 0.9F;
+            Vec3 vec3 = entity.getDeltaMovement();
+            float f1 = Math.min(1.0F,
+                    (float) Math
+                            .sqrt(vec3.x * vec3.x * (double) 0.2F + vec3.y * vec3.y + vec3.z * vec3.z * (double) 0.2F)
+                            * f);
 
-        float splashAmplifier = f1 * 5;
+            float splashAmplifier = f1 * 5;
 
-        ManaMod.LOGGER.info(" " + f1 + " am " + splashAmplifier);
-        this.level().playSound((Player) null, this.getX(), this.getY(), this.getZ(),
-                SoundEvents.PLAYER_SPLASH_HIGH_SPEED,
-                SoundSource.AMBIENT, 2.5F,
-                0.6F / (this.random.nextFloat() * 0.2F + 0.9F));
+            ManaMod.LOGGER.info(" " + f1 + " am " + splashAmplifier);
+            this.level().playSound((Player) null, this.getX(), this.getY(), this.getZ(),
+                    SoundEvents.PLAYER_SPLASH_HIGH_SPEED,
+                    SoundSource.AMBIENT, 2.5F,
+                    0.6F / (this.random.nextFloat() * 0.2F + 0.9F));
 
-        double d2 = (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.dimensions.width;
+            double d2 = (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.dimensions.width;
 
-        for (int i = 0; (float) i < 1.0F + this.dimensions.width * 20.0F; ++i) {
-            this.level().addParticle(ParticleTypes.SPIT, this.getX() + d2,
-                    this.getY() + this.random.nextGaussian() * 2.2,
-                    this.getZ() + this.random.nextGaussian() * 0.5,
-                    0D, 1.8D, 0D);
+            for (int i = 0; (float) i < 1.0F + this.dimensions.width * 20.0F; ++i) {
+                this.level().addParticle(ParticleTypes.SPIT, this.getX() + d2,
+                        this.getY() + this.random.nextGaussian() * 2.2,
+                        this.getZ() + this.random.nextGaussian() * 0.5,
+                        0D, 1.8D, 0D);
 
-            this.level().addParticle(ParticleTypes.SPIT, this.getX() + d2,
-                    this.getY() + this.random.nextGaussian() * 2.2,
-                    this.getZ() + this.random.nextGaussian() * 0.5,
-                    0D, 1.8D, 0D);
+                this.level().addParticle(ParticleTypes.SPIT, this.getX() + d2,
+                        this.getY() + this.random.nextGaussian() * 2.2,
+                        this.getZ() + this.random.nextGaussian() * 0.5,
+                        0D, 1.8D, 0D);
+            }
+
+            for (int j = 0; (float) j < 1.0F + this.dimensions.width * 20.0F; ++j) {
+                this.level().addParticle(ParticleTypes.SPIT, this.getX() + d2,
+                        this.getY() + this.random.nextGaussian() * 1.2,
+                        this.getZ() + this.random.nextGaussian() * 0.5,
+                        0D, 0.9D, 0D);
+
+                this.level().addParticle(ParticleTypes.SPIT, this.getX() + d2 + this.random.nextGaussian() * 0.5,
+                        this.getY() + this.random.nextGaussian() * 0.7,
+                        this.getZ() + this.random.nextGaussian() * 0.5,
+                        0D, 0.4D, 0D);
+
+                this.level().addParticle(ParticleTypes.SMOKE, this.getX() + d2,
+                        this.getY() + this.random.nextGaussian() * 1.2,
+                        this.getZ() + this.random.nextGaussian() * 0.5,
+                        0D, 0.9D, 0D);
+            }
+
+            this.gameEvent(GameEvent.SPLASH);
         }
-
-        for (int j = 0; (float) j < 1.0F + this.dimensions.width * 20.0F; ++j) {
-            this.level().addParticle(ParticleTypes.SPIT, this.getX() + d2,
-                    this.getY() + this.random.nextGaussian() * 1.2,
-                    this.getZ() + this.random.nextGaussian() * 0.5,
-                    0D, 0.9D, 0D);
-
-            this.level().addParticle(ParticleTypes.SPIT, this.getX() + d2 + this.random.nextGaussian() * 0.5,
-                    this.getY() + this.random.nextGaussian() * 0.7,
-                    this.getZ() + this.random.nextGaussian() * 0.5,
-                    0D, 0.4D, 0D);
-
-            this.level().addParticle(ParticleTypes.SMOKE, this.getX() + d2,
-                    this.getY() + this.random.nextGaussian() * 1.2,
-                    this.getZ() + this.random.nextGaussian() * 0.5,
-                    0D, 0.9D, 0D);
-        }
-
-        this.gameEvent(GameEvent.SPLASH);
     }
 
     @Override

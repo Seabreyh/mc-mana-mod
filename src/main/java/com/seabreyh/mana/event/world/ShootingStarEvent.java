@@ -15,6 +15,9 @@ public class ShootingStarEvent {
     private static final Random random = new Random();
     private static int worldTime = 0;
     private static final float SECONDS_BETWEEN_EVENT = 50F;
+    private static final float TIME_SPAWN_START = 0.3F;
+    private static final float TIME_SPAWN_STOP = 0.7F;
+    private static final float TIME_DESPAWN = 0.75F;
 
     public static void processPlayerEvent(final LivingTickEvent event) {
         if (event.getEntity() instanceof Player) {
@@ -25,7 +28,7 @@ public class ShootingStarEvent {
             int timer = (int) (random.nextFloat() * 20.0F * SECONDS_BETWEEN_EVENT);
             timer = timer > 0 ? timer : 1;
             float currentTime = world.getTimeOfDay(1.0F);
-            if (worldTime % timer == 0 && currentTime > 0.3 && currentTime < 0.7 &&
+            if (worldTime % timer == 0 && currentTime > TIME_SPAWN_START && currentTime < TIME_SPAWN_STOP &&
                     !world.isRaining()
                     && world.dimension() == Level.OVERWORLD) {
                 if (!world.isClientSide) {
@@ -56,5 +59,13 @@ public class ShootingStarEvent {
             }
             worldTime++;
         }
+    }
+
+    public static float getStarDespawnTime() {
+        return TIME_DESPAWN;
+    }
+
+    public static float getStarSpawnStartTime() {
+        return TIME_SPAWN_START;
     }
 }
