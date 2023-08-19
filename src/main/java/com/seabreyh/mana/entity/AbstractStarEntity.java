@@ -51,7 +51,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
 
     // protected boolean inGround;
     private int age; // server var
-    private int maxAge = 23000;
+    private final int maxAge = 23000;
     private double catchSpeed = 0.8D;
     private int timeTillStartCatch = 130;
     private boolean moveToCatcher;
@@ -70,9 +70,11 @@ public abstract class AbstractStarEntity extends AbstractArrow {
     private EntityDimensions dimensions;
     float currentTime;
     protected int inGroundTime;
+    private Vec3 lastPosition = this.position();
+    private double travelDistance;
     private SoundEvent soundEvent = this.getDefaultHitGroundSoundEvent();
-    private float starDespawnTime = ShootingStarEvent.getStarDespawnTime();
-    private float starSpawnStartTime = ShootingStarEvent.getStarSpawnStartTime();
+    private final float starDespawnTime = ShootingStarEvent.getStarDespawnTime();
+    private final float starSpawnStartTime = ShootingStarEvent.getStarSpawnStartTime();
     private boolean hasDoneFirstSplash = false;
 
     private final SoundEvent HIT_SOUND = SoundEvents.AMETHYST_BLOCK_BREAK;
@@ -100,15 +102,23 @@ public abstract class AbstractStarEntity extends AbstractArrow {
 
     @Override
     public void tick() {
+
         this.baseTick();
+
+        // If moving to catcher and catcher is removed, stop the catch
         if (moveToCatcher && catcher.isRemoved()) {
             stopStarCatch();
         }
 
-        if (this.wasTouchingWater) {
-            hasDoneFirstSplash = true;
-            this.isFalling = false;
+        // distance
+        if (!this.firstTick) {
+            travelDistance = lastPosition.distanceTo(this.position());
         }
+        this.lastPosition = this.position();
+
+        // if (this.wasTouchingWater) {
+        // hasDoneFirstSplash = true;
+        // }
 
         // moveToCatcher=true and travelTicks >= TotalTravelTicks
         if (moveToCatcher && clientSideCatchStarTickCount >= timeTillStartCatch) {
@@ -140,12 +150,10 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         ++this.clientSideCatchStarTickCount;
 
         currentTime = this.level().getTimeOfDay(1.0F);
-        ManaMod.LOGGER.info(
-                "Time: " + currentTime + " Despawn Time: " + starDespawnTime + " Spawn Time: " + starSpawnStartTime);
-
         if (currentTime > starDespawnTime || currentTime < starSpawnStartTime) {
             discardEntity();
         }
+
         if (this.age != -32768) {
             ++this.age;
         }
@@ -171,7 +179,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
             }
         }
 
-        boolean flag = this.isNoPhysics();
+        boolean noPhysics = this.isNoPhysics();
         Vec3 vec3 = this.getDeltaMovement();
 
         if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
@@ -185,8 +193,9 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         // Get the block position and the block type that the entity is currently in
         BlockPos blockpos = this.blockPosition();
         BlockState blockstate = this.level().getBlockState(blockpos);
+        BlockState blockstateBelow = this.level().getBlockState(blockpos.below());
 
-        if (!blockstate.isAir() && !flag) {
+        if (!blockstate.isAir() && !noPhysics) {
             VoxelShape voxelshape = blockstate.getCollisionShape(this.level(), blockpos);
             if (!voxelshape.isEmpty()) {
                 Vec3 vec31 = this.position();
@@ -199,7 +208,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
             }
         }
 
-        if (this.inGround && !flag) {
+        if (this.inGround && !noPhysics) {
             if (this.lastState != blockstate && this.shouldFall()) {
                 this.startFalling();
             } else if (!this.level().isClientSide) {
@@ -234,7 +243,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
                     }
                 }
 
-                if (hitresult != null && hitresult.getType() != HitResult.Type.MISS && !flag
+                if (hitresult != null && hitresult.getType() != HitResult.Type.MISS && !noPhysics
                         && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
                     this.onHit(hitresult);
                     this.hasImpulse = true;
@@ -250,7 +259,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
             double deltaY = vec3.y;
             double deltaZ = vec3.z;
 
-            if (!this.onGround() && !moveToCatcher) {
+            if (!this.onGround() && !moveToCatcher && (this.travelDistance > 0.16)) {
                 // play normal falling particles
                 for (int i = 0; i < 8; ++i) {
                     this.level().addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_FALLING_STAR.get(),
@@ -275,7 +284,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
                             SoundSource.AMBIENT, 20.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
                 }
 
-            } else if (!this.onGround() && moveToCatcher) {
+            } else if (!this.inGround && moveToCatcher) {
                 // play star catcher particles
                 for (int i = 0; i < 4; ++i) {
                     this.level().addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_STAR_CATCHER.get(),
@@ -304,7 +313,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
             double d3 = this.getZ() + deltaZ;
             double d4 = vec3.horizontalDistance();
 
-            if (flag) {
+            if (noPhysics) {
                 this.setYRot((float) (Mth.atan2(-deltaX, -deltaZ) * (double) (180F / (float) Math.PI)));
             } else {
                 this.setYRot((float) (Mth.atan2(deltaX, deltaZ) * (double) (180F / (float) Math.PI)));
@@ -319,7 +328,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
             }
             this.setDeltaMovement(vec3.scale((double) f));
 
-            if (!this.isNoGravity() && !flag) {
+            if (!this.isNoGravity() && !noPhysics) {
                 Vec3 vec34 = this.getDeltaMovement();
                 this.setDeltaMovement(vec34.x, vec34.y - (double) 0.05F, vec34.z);
             }
@@ -399,7 +408,6 @@ public abstract class AbstractStarEntity extends AbstractArrow {
 
             float splashAmplifier = f1 * 5;
 
-            ManaMod.LOGGER.info(" " + f1 + " am " + splashAmplifier);
             this.level().playSound((Player) null, this.getX(), this.getY(), this.getZ(),
                     SoundEvents.PLAYER_SPLASH_HIGH_SPEED,
                     SoundSource.AMBIENT, 2.5F,
@@ -438,6 +446,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
 
             this.gameEvent(GameEvent.SPLASH);
         }
+        hasDoneFirstSplash = true;
     }
 
     @Override
@@ -642,7 +651,6 @@ public abstract class AbstractStarEntity extends AbstractArrow {
 
     // Used by setter funcs that update vars which are synced between client/server
     private void updateSyncedData(String dataName) {
-        ManaMod.LOGGER.info("updateSyncedData() called with dataName: " + dataName);
         FallenStarSyncData data = getSyncedStarData();
         switch (dataName) {
             case "noPhysics":
