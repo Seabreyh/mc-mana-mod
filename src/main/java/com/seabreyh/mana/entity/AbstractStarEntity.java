@@ -75,7 +75,6 @@ public abstract class AbstractStarEntity extends AbstractArrow {
     private SoundEvent soundEvent = this.getDefaultHitGroundSoundEvent();
     private final float starDespawnTime = ShootingStarEvent.getStarDespawnTime();
     private final float starSpawnStartTime = ShootingStarEvent.getStarSpawnStartTime();
-    private boolean hasDoneFirstSplash = false;
 
     private final SoundEvent HIT_SOUND = SoundEvents.AMETHYST_BLOCK_BREAK;
     private final SoundEvent HIT_GROUND_FAIL = SoundEvents.DRAGON_FIREBALL_EXPLODE;
@@ -361,7 +360,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
 
         }
 
-        if (isInWater() && this.age % 5 == 0) {
+        if (isInWater() && this.age % 9 == 0) {
             this.level().playSound((Player) null, this.getOnPos(), BUBBLE, SoundSource.AMBIENT,
                     1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
         }
@@ -395,19 +394,39 @@ public abstract class AbstractStarEntity extends AbstractArrow {
 
     @Override
     protected void doWaterSplashEffect() {
-        if (!hasDoneFirstSplash) {
-            Entity entity = (Entity) (this.isVehicle() && this.getControllingPassenger() != null
-                    ? this.getControllingPassenger()
-                    : this);
-            float f = entity == this ? 0.2F : 0.9F;
-            Vec3 vec3 = entity.getDeltaMovement();
-            float f1 = Math.min(1.0F,
-                    (float) Math
-                            .sqrt(vec3.x * vec3.x * (double) 0.2F + vec3.y * vec3.y + vec3.z * vec3.z * (double) 0.2F)
-                            * f);
+        Entity entity = (Entity) (this.isVehicle() && this.getControllingPassenger() != null
+                ? this.getControllingPassenger()
+                : this);
+        float f = entity == this ? 0.2F : 0.9F;
+        Vec3 vec3 = entity.getDeltaMovement();
 
-            float splashAmplifier = f1 * 5;
+        float f1 = Math.min(1.0F,
+                (float) Math
+                        .sqrt(vec3.x * vec3.x * (double) 0.2F + vec3.y * vec3.y + vec3.z * vec3.z * (double) 0.2F)
+                        * f);
 
+        ManaMod.LOGGER.info("f1 " + f1);
+        if (f1 < 0.22F) {
+
+            this.playSound(this.getSwimSplashSound(), f1,
+                    1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
+
+            float f2 = (float) Mth.floor(this.getY());
+
+            for (int i = 0; (float) i < 1.0F + this.dimensions.width * 20.0F; ++i) {
+                double d0 = (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.dimensions.width;
+                double d1 = (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.dimensions.width;
+                this.level().addParticle(ParticleTypes.BUBBLE, this.getX() + d0, (double) (f2 + 1.0F), this.getZ() + d1,
+                        vec3.x, vec3.y - this.random.nextDouble() * (double) 0.2F, vec3.z);
+            }
+
+            for (int j = 0; (float) j < 1.0F + this.dimensions.width * 20.0F; ++j) {
+                double d2 = (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.dimensions.width;
+                double d3 = (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.dimensions.width;
+                this.level().addParticle(ParticleTypes.SPLASH, this.getX() + d2, (double) (f2 + 1.0F), this.getZ() + d3,
+                        vec3.x, vec3.y, vec3.z);
+            }
+        } else {
             this.level().playSound((Player) null, this.getX(), this.getY(), this.getZ(),
                     SoundEvents.PLAYER_SPLASH_HIGH_SPEED,
                     SoundSource.AMBIENT, 2.5F,
@@ -444,8 +463,80 @@ public abstract class AbstractStarEntity extends AbstractArrow {
                         0D, 0.9D, 0D);
             }
 
-            this.gameEvent(GameEvent.SPLASH);
         }
+        // if (!hasDoneFirstSplash) {
+
+        // this.level().playSound((Player) null, this.getX(), this.getY(), this.getZ(),
+        // SoundEvents.PLAYER_SPLASH_HIGH_SPEED,
+        // SoundSource.AMBIENT, 2.5F,
+        // 0.6F / (this.random.nextFloat() * 0.2F + 0.9F));
+
+        // double d2 = (this.random.nextDouble() * 2.0D - 1.0D) * (double)
+        // this.dimensions.width;
+
+        // for (int i = 0; (float) i < 1.0F + this.dimensions.width * 20.0F; ++i) {
+        // this.level().addParticle(ParticleTypes.SPIT, this.getX() + d2,
+        // this.getY() + this.random.nextGaussian() * 2.2,
+        // this.getZ() + this.random.nextGaussian() * 0.5,
+        // 0D, 1.8D, 0D);
+
+        // this.level().addParticle(ParticleTypes.SPIT, this.getX() + d2,
+        // this.getY() + this.random.nextGaussian() * 2.2,
+        // this.getZ() + this.random.nextGaussian() * 0.5,
+        // 0D, 1.8D, 0D);
+        // }
+
+        // for (int j = 0; (float) j < 1.0F + this.dimensions.width * 20.0F; ++j) {
+        // this.level().addParticle(ParticleTypes.SPIT, this.getX() + d2,
+        // this.getY() + this.random.nextGaussian() * 1.2,
+        // this.getZ() + this.random.nextGaussian() * 0.5,
+        // 0D, 0.9D, 0D);
+
+        // this.level().addParticle(ParticleTypes.SPIT, this.getX() + d2 +
+        // this.random.nextGaussian() * 0.5,
+        // this.getY() + this.random.nextGaussian() * 0.7,
+        // this.getZ() + this.random.nextGaussian() * 0.5,
+        // 0D, 0.4D, 0D);
+
+        // this.level().addParticle(ParticleTypes.SMOKE, this.getX() + d2,
+        // this.getY() + this.random.nextGaussian() * 1.2,
+        // this.getZ() + this.random.nextGaussian() * 0.5,
+        // 0D, 0.9D, 0D);
+        // }
+
+        // } else {
+        // //Splash effect after doing first splash effect
+        // if (f1 < 0.25F) {
+        // this.playSound(this.getSwimSplashSound(), f1,
+        // 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
+        // } else {
+        // this.playSound(this.getSwimHighSpeedSplashSound(), f1,
+        // 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
+        // }
+
+        // float f2 = (float) Mth.floor(this.getY());
+
+        // for (int i = 0; (float) i < 1.0F + this.dimensions.width * 20.0F; ++i) {
+        // double d0 = (this.random.nextDouble() * 2.0D - 1.0D) * (double)
+        // this.dimensions.width;
+        // double d1 = (this.random.nextDouble() * 2.0D - 1.0D) * (double)
+        // this.dimensions.width;
+        // this.level().addParticle(ParticleTypes.BUBBLE, this.getX() + d0, (double) (f2
+        // + 1.0F), this.getZ() + d1,
+        // vec3.x, vec3.y - this.random.nextDouble() * (double) 0.2F, vec3.z);
+        // }
+
+        // for (int j = 0; (float) j < 1.0F + this.dimensions.width * 20.0F; ++j) {
+        // double d2 = (this.random.nextDouble() * 2.0D - 1.0D) * (double)
+        // this.dimensions.width;
+        // double d3 = (this.random.nextDouble() * 2.0D - 1.0D) * (double)
+        // this.dimensions.width;
+        // this.level().addParticle(ParticleTypes.SPLASH, this.getX() + d2, (double) (f2
+        // + 1.0F), this.getZ() + d3,
+        // vec3.x, vec3.y, vec3.z);
+        // }
+        // }
+        this.gameEvent(GameEvent.SPLASH);
         hasDoneFirstSplash = true;
     }
 
