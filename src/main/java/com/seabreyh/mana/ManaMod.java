@@ -1,28 +1,31 @@
 package com.seabreyh.mana;
 
 import com.mojang.logging.LogUtils;
-import com.seabreyh.mana.event.ManaClientEvents;
-import com.seabreyh.mana.networking.ManaMessages;
-import com.seabreyh.mana.recipes.StaffTableRecipes;
-import com.seabreyh.mana.registry.ManaBlockEntities;
-import com.seabreyh.mana.registry.ManaBlocks;
+import com.seabreyh.mana.foundation.event.ManaClientEvents;
+import com.seabreyh.mana.foundation.networking.ManaMessages;
+import com.seabreyh.mana.foundation.proxy.ClientProxy;
+import com.seabreyh.mana.foundation.proxy.CommonProxy;
+import com.seabreyh.mana.registries.ManaEntityDataSerializers;
+// import com.seabreyh.mana.recipes.StaffTableRecipes;
+import com.seabreyh.mana.registries.ManaBlockEntities;
+import com.seabreyh.mana.registries.ManaBlocks;
 // import com.seabreyh.mana.event.ManaClientEvents;
-import com.seabreyh.mana.registry.ManaCreativeTab;
-import com.seabreyh.mana.registry.ManaEntities;
+import com.seabreyh.mana.registries.ManaCreativeTab;
+import com.seabreyh.mana.registries.ManaEntities;
 // import com.seabreyh.mana.gui.ManaMenuTypes;
 // import com.seabreyh.mana.networking.ManaMessages;
 // import com.seabreyh.mana.registry.ManaBlockEntities;
 // import com.seabreyh.mana.registry.ManaBlocks;
 // import com.seabreyh.mana.registry.ManaCreativeTab;
 // import com.seabreyh.mana.registry.ManaEntities;
-import com.seabreyh.mana.registry.ManaItems;
+import com.seabreyh.mana.registries.ManaItems;
 // import com.seabreyh.mana.registry.ManaPotions;
 // import com.seabreyh.mana.registry.ManaRecipes;
 // import com.seabreyh.mana.registry.ManaSounds;
-import com.seabreyh.mana.registry.ManaParticles;
-import com.seabreyh.mana.registry.damage.DamageTypeDataProvider;
-import com.seabreyh.mana.registry.damage.DamageTypeTagGen;
-import com.seabreyh.mana.screen.ManaMenuTypes;
+import com.seabreyh.mana.registries.ManaParticles;
+import com.seabreyh.mana.registries.damage.DamageTypeDataProvider;
+import com.seabreyh.mana.registries.damage.DamageTypeTagGen;
+import com.seabreyh.mana.content.screens.ManaMenuTypes;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -65,8 +68,8 @@ public class ManaMod {
 
         ManaItems.register(eventBus);
         ManaCreativeTab.register(eventBus);
-        ManaEntities.ENTITIES.register(eventBus);
-        ManaParticles.PARTICLE_TYPES.register(eventBus);
+        ManaEntities.register(eventBus);
+        ManaParticles.register(eventBus);
         ManaEntityDataSerializers.register(eventBus);
         // ManaSounds.SOUND_EVENTS.register(eventBus);
 
