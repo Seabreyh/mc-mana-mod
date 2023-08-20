@@ -1,8 +1,8 @@
-package com.seabreyh.mana.client.renderers.entity;
+package com.seabreyh.mana.foundation.client.renderers.entity;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.client.renderers.item.ManaItemStackRenderer;
-import com.seabreyh.mana.entity.FallenStarEntity;
+import com.seabreyh.mana.content.entities.FallenStarEntity;
+import com.seabreyh.mana.foundation.client.renderers.item.ManaItemStackRenderer;
 
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;

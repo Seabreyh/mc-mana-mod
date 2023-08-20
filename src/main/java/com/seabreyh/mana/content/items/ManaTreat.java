@@ -1,8 +1,7 @@
-package com.seabreyh.mana.items;
+package com.seabreyh.mana.content.items;
 
-import com.seabreyh.mana.event.player.PlayerManaEvent;
-// import com.seabreyh.mana.event.player.PlayerManaEvent;
-import com.seabreyh.mana.mana_stat.PlayerManaStatProvider;
+import com.seabreyh.mana.content.mana_stat.PlayerManaStatProvider;
+import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 
 import java.util.List;
 import java.util.Random;

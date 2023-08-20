@@ -1,3 +1,4 @@
+package com.seabreyh.mana.content.items.brewing.effects;
 // package com.seabreyh.mana.items.brewing.effects;
 
 // import net.minecraft.world.entity.Entity;

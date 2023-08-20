@@ -1,10 +1,10 @@
-package com.seabreyh.mana.items;
-
-import com.seabreyh.mana.event.player.PlayerWishEvent;
-import com.seabreyh.mana.event.player.PlayerWishEvent.WishType;
+package com.seabreyh.mana.content.items;
 
 import java.util.List;
 import javax.annotation.Nullable;
+
+import com.seabreyh.mana.foundation.event.player.PlayerWishEvent;
+import com.seabreyh.mana.foundation.event.player.PlayerWishEvent.WishType;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;

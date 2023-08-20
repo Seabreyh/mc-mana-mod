@@ -1,4 +1,4 @@
-package com.seabreyh.mana.mana_stat;
+package com.seabreyh.mana.content.mana_stat;
 
 import net.minecraft.nbt.CompoundTag;
 

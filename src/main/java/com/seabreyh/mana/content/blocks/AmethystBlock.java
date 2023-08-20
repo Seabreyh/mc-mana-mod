@@ -1,4 +1,4 @@
-package com.seabreyh.mana.blocks;
+package com.seabreyh.mana.content.blocks;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;

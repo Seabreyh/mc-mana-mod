@@ -1,4 +1,4 @@
-package com.seabreyh.mana.items;
+package com.seabreyh.mana.content.items;
 
 // import com.seabreyh.mana.event.player.PlayerManaEvent;
 
@@ -6,7 +6,7 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.client.renderers.item.ManaItemStackRenderer;
+import com.seabreyh.mana.foundation.client.renderers.item.ManaItemStackRenderer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -28,7 +28,7 @@ public class FallenStarItem extends Item {
         super(p_41383_);
     }
 
-    //Use Block Entity model for Item model
+    // Use Block Entity model for Item model
     @Override
     public void initializeClient(java.util.function.Consumer<IClientItemExtensions> consumer) {
         consumer.accept((IClientItemExtensions) ManaMod.PROXY.getISTERProperties());

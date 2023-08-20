@@ -1,8 +1,7 @@
-package com.seabreyh.mana.items;
+package com.seabreyh.mana.content.items;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.entity.EmeraldEnergyBall;
-// import com.seabreyh.mana.event.player.PlayerManaEvent;
+import com.seabreyh.mana.content.entities.EmeraldEnergyBall;
 
 import java.util.List;
 import java.util.Random;

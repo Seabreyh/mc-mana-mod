@@ -1,4 +1,4 @@
-package com.seabreyh.mana.items;
+package com.seabreyh.mana.content.items;
 
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.core.BlockPos;

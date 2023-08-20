@@ -1,4 +1,4 @@
-package com.seabreyh.mana.client.renderers;
+package com.seabreyh.mana.foundation.client.renderers;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColors;

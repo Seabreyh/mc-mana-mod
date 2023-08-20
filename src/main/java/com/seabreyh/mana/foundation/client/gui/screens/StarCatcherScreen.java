@@ -1,4 +1,4 @@
-package com.seabreyh.mana.screen;
+package com.seabreyh.mana.foundation.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -34,19 +34,28 @@ public class StarCatcherScreen extends AbstractContainerScreen<StarCatcherMenu> 
         RenderSystem.setShaderTexture(0, TEXTURE);
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
-        this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
+        // this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
+        pPoseStack.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
-    protected void renderLabels(PoseStack p_97808_, int p_97809_, int p_97810_) {
-        this.font.draw(p_97808_, this.title, (float) this.titleLabelX, (float) 6,
+    protected void renderLabels(GuiGraphics graphics, int p_97809_, int p_97810_) {
+        // this.font.draw(graphics, this.title, (float) this.titleLabelX, (float) 6,
+        // 4210752);
+
+        graphics.drawString(font, this.title, (int) this.titleLabelX, (int) 6,
                 4210752);
-        this.font.draw(p_97808_, this.playerInventoryTitle, (float) 8, (float) this.imageHeight - 98,
+
+        // this.font.draw(graphics, this.playerInventoryTitle, (float) 8, (float)
+        // this.imageHeight - 98,
+        // 4210752);
+
+        graphics.drawString(font, this.playerInventoryTitle, (int) 8, (int) this.imageHeight - 98,
                 4210752);
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics pPoseStack, int mouseX, int mouseY, float delta) {
         renderBackground(pPoseStack);
         super.render(pPoseStack, mouseX, mouseY, delta);
         renderTooltip(pPoseStack, mouseX, mouseY);

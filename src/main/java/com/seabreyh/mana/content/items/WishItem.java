@@ -1,7 +1,7 @@
-package com.seabreyh.mana.items;
+package com.seabreyh.mana.content.items;
 
-import com.seabreyh.mana.networking.ManaMessages;
-import com.seabreyh.mana.networking.packet.OpenWishS2CPacket;
+import com.seabreyh.mana.foundation.networking.ManaMessages;
+import com.seabreyh.mana.foundation.networking.packet.OpenWishS2CPacket;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;

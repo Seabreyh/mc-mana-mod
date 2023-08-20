@@ -1,7 +1,4 @@
-package com.seabreyh.mana.items;
-
-import com.seabreyh.mana.entity.AmethystEnergyBall;
-//import com.seabreyh.mana.event.player.PlayerManaEvent;
+package com.seabreyh.mana.content.items;
 
 import java.util.Random;
 
@@ -20,6 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.Nullable;
+
+import com.seabreyh.mana.content.entities.AmethystEnergyBall;
 
 import java.util.List;
 

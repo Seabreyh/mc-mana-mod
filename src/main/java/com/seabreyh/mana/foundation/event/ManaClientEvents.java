@@ -8,7 +8,10 @@ import com.seabreyh.mana.content.particles.MagicPloomParticleFire;
 import com.seabreyh.mana.content.particles.MagicPloomParticleStarCatcher;
 import com.seabreyh.mana.content.particles.StarPowerParticle;
 import com.seabreyh.mana.content.particles.TwinkleParticle;
-import com.seabreyh.mana.foundation.client.gui.ManaHudOverlay;
+import com.seabreyh.mana.foundation.client.gui.hud.ManaHudOverlay;
+import com.seabreyh.mana.foundation.client.gui.screens.ManaMenuTypes;
+import com.seabreyh.mana.foundation.client.gui.screens.StarCatcherScreen;
+import com.seabreyh.mana.foundation.client.gui.screens.WishViewScreen;
 import com.seabreyh.mana.foundation.client.renderers.block_entity.RendererBlockEntityStarCatcher;
 import com.seabreyh.mana.foundation.client.renderers.entity.AmethystEnergyBallRenderer;
 import com.seabreyh.mana.foundation.client.renderers.entity.EmeraldEnergyBallRenderer;
@@ -20,8 +23,6 @@ import com.seabreyh.mana.registries.ManaEntities;
 // import com.seabreyh.mana.screen.ManaMenuTypes;
 // import com.seabreyh.mana.screen.StarCatcherScreen;
 import com.seabreyh.mana.registries.ManaParticles;
-import com.seabreyh.mana.content.screens.ManaMenuTypes;
-import com.seabreyh.mana.content.screens.StarCatcherScreen;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
@@ -42,9 +43,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 @Mod.EventBusSubscriber(modid = ManaMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ManaClientEvents {
 
-        // public static void WishScreen(WishViewScreen screen) {
-        // Minecraft.getInstance().setScreen(screen);
-        // }
+        public static void WishScreen(WishViewScreen screen) {
+                Minecraft.getInstance().setScreen(screen);
+        }
 
         @SubscribeEvent
         public static void registerEntityRenderers(FMLClientSetupEvent event) {

@@ -1,5 +1,5 @@
-package com.seabreyh.mana.foundation.client.gui;
-package com.seabreyh.mana.foundation.client.gui;
+package com.seabreyh.mana.foundation.client.gui.screens;
+// package com.seabreyh.mana.foundation.client.gui.screens;
 
 import com.seabreyh.mana.foundation.event.player.PlayerWishEvent;
 
@@ -17,7 +17,12 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import javax.annotation.Nullable;
+
+import org.apache.commons.codec.language.bm.Lang;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
@@ -85,13 +90,31 @@ public class WishViewScreen extends Screen {
         this.createPageControlButtons();
     }
 
-protected void createMenuControls() {
-this.addRenderableWidget( new Button(this.width / 2 - 100, 196, 200, 20, Component.translatable(("gui.mana.select_wish"),
-(p_98299_) -> {
-this.minecraft.setScreen((Screen) null);
-PlayerWishEvent.makeWishFromIndx(this.currentPage);
-}));
-}
+    protected void createMenuControls() {
+
+        PageButton forward = new PageButton(this.width / 2 - 100, 196, true,
+                $ -> PlayerWishEvent.makeWishFromIndx(this.currentPage), true);
+        addRenderableWidget(forward);
+
+        // IconButton confirmButton = new IconButton(x + background.width - 33, y +
+        // background.height - 24, AllIcons.I_CONFIRM);
+        // confirmButton.withCallback(() -> {
+        // onClose();
+        // });
+        // addRenderableWidget(confirmButton);
+
+        // this.addRenderableWidget(
+        // new Button(this.width / 2 - 100, 196, 200, 20,
+        // Component.translatable("gui.mana.select_wish"),
+        // () -> {
+        // this.minecraft.setScreen((Screen) null);
+        // PlayerWishEvent.makeWishFromIndx(this.currentPage);
+        // }));
+
+        // .bounds(center - 100, yStart + 92, bLongWidth, bHeight)
+        //
+        // .build());
+    }
 
     protected void createPageControlButtons() {
         int i = (this.width - 192) / 2;
@@ -149,14 +172,15 @@ PlayerWishEvent.makeWishFromIndx(this.currentPage);
         }
     }
 
-    public void render(PoseStack p_98282_, int p_98283_, int p_98284_, float p_98285_) {
-        this.renderBackground(p_98282_);
+    public void render(GuiGraphics graphics, int p_98283_, int p_98284_, float p_98285_) {
+        this.renderBackground(graphics);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, BOOK_LOCATION);
         int i = (this.width - 192) / 2;
         // int j = 2;
-        this.blit(p_98282_, i, 2, 0, 0, 192, 192);
+        graphics.blit(BOOK_LOCATION, i, 2, 0, 0, 192, 192);
+        // this.blit(graphics, i, 2, 0, 0, 192, 192);
         if (this.cachedPage != this.currentPage) {
             FormattedText formattedtext = this.getPageRaw(this.currentPage);
             this.cachedPageComponents = this.font.split(formattedtext, 114);
@@ -167,22 +191,35 @@ PlayerWishEvent.makeWishFromIndx(this.currentPage);
 
         this.cachedPage = this.currentPage;
         int i1 = this.font.width(this.pageMsg);
-        this.font.draw(p_98282_, this.pageMsg, (float) (i - i1 + 192 - 44), 18.0F,
-                0);
+
+        // this.font.draw(graphics, this.pageMsg, (float) (i - i1 + 192 - 44), 18.0F,
+        // 0);
+
+        graphics.drawString(font, this.pageMsg,
+                (int) (i - i1 + 192 - 44), 18, 0);
+
         int k = Math.min(128 / 9, this.cachedPageComponents.size());
 
         for (int l = 0; l < k; ++l) {
             FormattedCharSequence formattedcharsequence = this.cachedPageComponents.get(l);
-            this.font.draw(p_98282_, formattedcharsequence, (float) (i + 36), (float) (32
-                    + l * 9), 0);
+
+            // this.font.draw(graphics, formattedcharsequence, (float) (i + 36), (float) (32
+            // + l * 9), 0);
+
+            graphics.drawString(font, formattedcharsequence,
+                    (int) (i + 36), (int) (32
+                            + l * 9),
+                    0);
         }
 
         Style style = this.getClickedComponentStyleAt((double) p_98283_, (double) p_98284_);
         if (style != null) {
-            this.renderComponentHoverEffect(p_98282_, style, p_98283_, p_98284_);
+            // this.renderComponentHoverEffect(graphics, style, p_98283_, p_98284_);
+
+            graphics.renderComponentHoverEffect(font, style, p_98283_, p_98284_);
         }
 
-        super.render(p_98282_, p_98283_, p_98284_, p_98285_);
+        super.render(graphics, p_98283_, p_98284_, p_98285_);
     }
 
     public boolean mouseClicked(double p_98272_, double p_98273_, int p_98274_) {

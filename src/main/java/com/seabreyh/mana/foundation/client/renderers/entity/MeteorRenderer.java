@@ -1,3 +1,4 @@
+package com.seabreyh.mana.foundation.client.renderers.entity;
 // package com.seabreyh.mana.client.renderers.entity;
 
 // import com.seabreyh.mana.ManaMod;

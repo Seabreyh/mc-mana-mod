@@ -1,3 +1,4 @@
+package com.seabreyh.mana.content.entities;
 // package com.seabreyh.mana.entity;
 
 // import com.google.common.collect.ImmutableList;

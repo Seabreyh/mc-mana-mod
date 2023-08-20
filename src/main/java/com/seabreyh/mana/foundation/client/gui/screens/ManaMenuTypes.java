@@ -1,4 +1,4 @@
-package com.seabreyh.mana.screen;
+package com.seabreyh.mana.foundation.client.gui.screens;
 
 import com.seabreyh.mana.ManaMod;
 

@@ -1,8 +1,8 @@
-package com.seabreyh.mana.event.player;
+package com.seabreyh.mana.foundation.event.player;
 
-import com.seabreyh.mana.mana_stat.PlayerManaStatProvider;
-import com.seabreyh.mana.networking.ManaMessages;
-import com.seabreyh.mana.networking.packet.ManaStatSyncS2CPacket;
+import com.seabreyh.mana.content.mana_stat.PlayerManaStatProvider;
+import com.seabreyh.mana.foundation.networking.ManaMessages;
+import com.seabreyh.mana.foundation.networking.packet.ManaStatSyncS2CPacket;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;

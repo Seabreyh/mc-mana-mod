@@ -1,8 +1,8 @@
-package com.seabreyh.mana.content.screens;
+package com.seabreyh.mana.foundation.client.gui.screens;
 
 import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
 import com.seabreyh.mana.registries.ManaBlocks;
-import com.seabreyh.mana.content.screens.slot.ManaResultSlot;
+import com.seabreyh.mana.foundation.client.gui.screens.slot.ManaResultSlot;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

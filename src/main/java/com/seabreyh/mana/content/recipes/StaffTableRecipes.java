@@ -1,3 +1,4 @@
+package com.seabreyh.mana.content.recipes;
 // package com.seabreyh.mana.recipes;
 
 // import com.google.gson.JsonArray;

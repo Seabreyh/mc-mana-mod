@@ -1,7 +1,7 @@
-package com.seabreyh.mana.client.gui;
+package com.seabreyh.mana.foundation.client.gui.hud;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.client.ClientManaStatData;
+import com.seabreyh.mana.foundation.client.ClientManaStatData;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 

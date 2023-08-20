@@ -1,8 +1,8 @@
-package com.seabreyh.mana.networking.packet;
-
-import com.seabreyh.mana.client.ClientManaStatData;
+package com.seabreyh.mana.foundation.networking.packet;
 
 import java.util.function.Supplier;
+
+import com.seabreyh.mana.foundation.client.ClientManaStatData;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;

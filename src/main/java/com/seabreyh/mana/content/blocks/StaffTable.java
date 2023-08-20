@@ -1,3 +1,4 @@
+package com.seabreyh.mana.content.blocks;
 // package com.seabreyh.mana.blocks;
 
 // import com.seabreyh.mana.blocks.entity.StaffTableBlockEntity;

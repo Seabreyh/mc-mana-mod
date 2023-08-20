@@ -1,8 +1,8 @@
-package com.seabreyh.mana.items;
+package com.seabreyh.mana.content.items;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.event.player.PlayerWishEvent;
-import com.seabreyh.mana.event.player.PlayerWishEvent.WishType;
+import com.seabreyh.mana.foundation.event.player.PlayerWishEvent;
+import com.seabreyh.mana.foundation.event.player.PlayerWishEvent.WishType;
 
 import java.util.List;
 import java.util.Random;

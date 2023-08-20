@@ -1,6 +1,6 @@
 package com.seabreyh.mana.foundation.networking.packet;
 
-
+import com.seabreyh.mana.foundation.client.gui.screens.WishViewScreen;
 import com.seabreyh.mana.foundation.event.ManaClientEvents;
 
 import java.util.function.Supplier;

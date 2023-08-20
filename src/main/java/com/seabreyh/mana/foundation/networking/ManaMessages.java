@@ -1,9 +1,9 @@
-package com.seabreyh.mana.networking;
+package com.seabreyh.mana.foundation.networking;
 
 import com.seabreyh.mana.ManaMod;
-// import com.seabreyh.mana.networking.packet.ChoseWishC2SPacket;
-import com.seabreyh.mana.networking.packet.ManaStatSyncS2CPacket;
-import com.seabreyh.mana.networking.packet.OpenWishS2CPacket;
+import com.seabreyh.mana.foundation.networking.packet.ManaStatSyncS2CPacket;
+import com.seabreyh.mana.foundation.networking.packet.OpenWishS2CPacket;
+import com.seabreyh.mana.foundation.networking.packet.ChoseWishC2SPacket;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,12 +31,12 @@ public class ManaMessages {
 
         INSTANCE = net;
 
-        // net.messageBuilder(ChoseWishC2SPacket.class, id(),
-        // NetworkDirection.PLAY_TO_SERVER)
-        // .decoder(ChoseWishC2SPacket::new)
-        // .encoder(ChoseWishC2SPacket::toBytes)
-        // .consumerNetworkThread(ChoseWishC2SPacket::handle)
-        // .add();
+        net.messageBuilder(ChoseWishC2SPacket.class, id(),
+                NetworkDirection.PLAY_TO_SERVER)
+                .decoder(ChoseWishC2SPacket::new)
+                .encoder(ChoseWishC2SPacket::toBytes)
+                .consumerNetworkThread(ChoseWishC2SPacket::handle)
+                .add();
 
         net.messageBuilder(ManaStatSyncS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
                 .decoder(ManaStatSyncS2CPacket::new)

@@ -2,7 +2,7 @@ package com.seabreyh.mana.content.blocks.block_entities;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.entities.FallenStarEntity;
-import com.seabreyh.mana.content.screens.StarCatcherMenu;
+import com.seabreyh.mana.foundation.client.gui.screens.StarCatcherMenu;
 import com.seabreyh.mana.registries.ManaBlockEntities;
 import com.seabreyh.mana.registries.ManaItems;
 

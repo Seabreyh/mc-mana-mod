@@ -1,4 +1,6 @@
-package com.seabreyh.mana;
+package com.seabreyh.mana.foundation.proxy;
+
+import com.seabreyh.mana.ManaMod;
 
 import net.minecraftforge.fml.common.Mod;
 

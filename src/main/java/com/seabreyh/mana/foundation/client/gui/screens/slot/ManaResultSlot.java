@@ -1,4 +1,4 @@
-package com.seabreyh.mana.screen.slot;
+package com.seabreyh.mana.foundation.client.gui.screens.slot;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
@@ -13,4 +13,4 @@ public class ManaResultSlot extends SlotItemHandler {
     public boolean mayPlace(ItemStack stack) {
         return false;
     }
-} 
+}

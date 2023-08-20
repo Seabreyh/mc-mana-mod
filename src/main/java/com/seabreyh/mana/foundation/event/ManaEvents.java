@@ -1,14 +1,14 @@
-package com.seabreyh.mana.event;
+package com.seabreyh.mana.foundation.event;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.entity.AbstractStarEntity;
-import com.seabreyh.mana.entity.StarImpactEvent;
-import com.seabreyh.mana.event.player.PlayerManaEvent;
-import com.seabreyh.mana.event.world.ShootingStarEvent;
-import com.seabreyh.mana.mana_stat.PlayerManaStat;
-import com.seabreyh.mana.mana_stat.PlayerManaStatProvider;
-import com.seabreyh.mana.networking.ManaMessages;
-import com.seabreyh.mana.networking.packet.ManaStatSyncS2CPacket;
+import com.seabreyh.mana.content.entities.AbstractStarEntity;
+import com.seabreyh.mana.content.entities.StarImpactEvent;
+import com.seabreyh.mana.content.mana_stat.PlayerManaStat;
+import com.seabreyh.mana.content.mana_stat.PlayerManaStatProvider;
+import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
+import com.seabreyh.mana.foundation.event.world.ShootingStarEvent;
+import com.seabreyh.mana.foundation.networking.ManaMessages;
+import com.seabreyh.mana.foundation.networking.packet.ManaStatSyncS2CPacket;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;

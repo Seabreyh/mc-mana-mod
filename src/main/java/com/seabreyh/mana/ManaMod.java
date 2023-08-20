@@ -1,6 +1,7 @@
 package com.seabreyh.mana;
 
 import com.mojang.logging.LogUtils;
+import com.seabreyh.mana.foundation.client.gui.screens.ManaMenuTypes;
 import com.seabreyh.mana.foundation.event.ManaClientEvents;
 import com.seabreyh.mana.foundation.networking.ManaMessages;
 import com.seabreyh.mana.foundation.proxy.ClientProxy;
@@ -25,7 +26,6 @@ import com.seabreyh.mana.registries.ManaItems;
 import com.seabreyh.mana.registries.ManaParticles;
 import com.seabreyh.mana.registries.damage.DamageTypeDataProvider;
 import com.seabreyh.mana.registries.damage.DamageTypeTagGen;
-import com.seabreyh.mana.content.screens.ManaMenuTypes;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;

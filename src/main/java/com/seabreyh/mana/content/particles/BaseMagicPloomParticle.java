@@ -1,4 +1,4 @@
-package com.seabreyh.mana.particle;
+package com.seabreyh.mana.content.particles;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.SimpleAnimatedParticle;

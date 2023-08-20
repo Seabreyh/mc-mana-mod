@@ -1,4 +1,4 @@
-package com.seabreyh.mana.items.brewing;
+package com.seabreyh.mana.content.items.brewing;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;

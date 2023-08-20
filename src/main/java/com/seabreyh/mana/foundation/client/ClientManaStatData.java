@@ -1,4 +1,4 @@
-package com.seabreyh.mana.client;
+package com.seabreyh.mana.foundation.client;
 
 public class ClientManaStatData {
     private static int playerManaStat;

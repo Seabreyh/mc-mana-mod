@@ -1,4 +1,4 @@
-package com.seabreyh.mana.client.renderers.entity;
+package com.seabreyh.mana.foundation.client.renderers.entity;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;

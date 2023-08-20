@@ -1,4 +1,4 @@
-package com.seabreyh.mana.blocks.botany.flowers;
+package com.seabreyh.mana.content.blocks.botany.flowers;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BushBlock;

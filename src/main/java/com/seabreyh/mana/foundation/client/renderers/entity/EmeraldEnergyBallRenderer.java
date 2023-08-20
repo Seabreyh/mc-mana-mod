@@ -1,6 +1,6 @@
-package com.seabreyh.mana.client.renderers.entity;
+package com.seabreyh.mana.foundation.client.renderers.entity;
 
-import com.seabreyh.mana.entity.EmeraldEnergyBall;
+import com.seabreyh.mana.content.entities.EmeraldEnergyBall;
 
 import net.minecraft.client.model.ShulkerBulletModel;
 import net.minecraft.client.model.geom.ModelLayers;
