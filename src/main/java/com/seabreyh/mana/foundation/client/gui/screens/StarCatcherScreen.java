@@ -40,18 +40,15 @@ public class StarCatcherScreen extends AbstractContainerScreen<StarCatcherMenu> 
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int p_97809_, int p_97810_) {
-        // this.font.draw(graphics, this.title, (float) this.titleLabelX, (float) 6,
-        // 4210752);
+
+        // WdColor enumeration
+        // https://learn.microsoft.com/en-us/office/vba/api/word.wdcolor
 
         graphics.drawString(font, this.title, (int) this.titleLabelX, (int) 6,
-                4210752);
-
-        // this.font.draw(graphics, this.playerInventoryTitle, (float) 8, (float)
-        // this.imageHeight - 98,
-        // 4210752);
+                16777215);
 
         graphics.drawString(font, this.playerInventoryTitle, (int) 8, (int) this.imageHeight - 98,
-                4210752);
+                16777215);
     }
 
     @Override

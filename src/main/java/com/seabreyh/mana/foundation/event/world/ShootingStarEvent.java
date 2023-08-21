@@ -18,7 +18,7 @@ public class ShootingStarEvent {
     private static final float TIME_SPAWN_START = 0.3F;
     private static final float TIME_SPAWN_STOP = 0.7F;
     private static final float TIME_DESPAWN = 0.75F;
-    private static boolean allowStarEvent = false;
+    private static boolean allowStarEvent = true;
 
     public static void processPlayerEvent(final LivingTickEvent event) {
         if (event.getEntity() instanceof Player && allowStarEvent) {
