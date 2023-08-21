@@ -43,12 +43,9 @@ public class StarCatcherScreen extends AbstractContainerScreen<StarCatcherMenu> 
 
         // WdColor enumeration
         // https://learn.microsoft.com/en-us/office/vba/api/word.wdcolor
+        graphics.drawString(this.font, this.title, this.titleLabelX, 6, 4210752, false);
 
-        graphics.drawString(font, this.title, (int) this.titleLabelX, (int) 6,
-                16777215);
-
-        graphics.drawString(font, this.playerInventoryTitle, (int) 8, (int) this.imageHeight - 98,
-                16777215);
+        graphics.drawString(this.font, this.playerInventoryTitle, 8, this.imageHeight - 98, 4210752, false);
     }
 
     @Override

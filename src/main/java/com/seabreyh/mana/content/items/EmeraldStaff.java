@@ -2,6 +2,7 @@ package com.seabreyh.mana.content.items;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.entities.EmeraldEnergyBall;
+import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 
 import java.util.List;
 import java.util.Random;
@@ -42,19 +43,18 @@ public class EmeraldStaff extends Item {
         ManaMod.LOGGER.info("EmeraldStaff.use() called");
 
         ItemStack itemstack = player.getItemInHand(hand);
-        boolean hasMana = true;
+        boolean hasMana = false;
 
         if (!world.isClientSide) {
             ManaMod.LOGGER.info("EmeraldStaff.use() called, not client side");
             if (this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
                 // Handle depletion of player mana from use
-                // hasMana = PlayerManaEvent.consumeMana(player, 3);
+                hasMana = PlayerManaEvent.consumeMana(player, 3);
                 hasMana |= player.isCreative();
 
                 ManaMod.LOGGER.info("EmeraldStaff.use() called, hasMana = " + hasMana);
             }
-            // if (hasMana && this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
-            if (hasMana) {
+            if (hasMana && this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
                 EmeraldEnergyBall energyBall = new EmeraldEnergyBall(world, player);
                 energyBall.shootFromRotation(player, player.getXRot(), player.getYRot(),
                         0.0F, 1.5F, 1.0F);
