@@ -115,7 +115,7 @@ public class ManaMod {
         ManaClientEvents.registerEntityRenderers(event);
         ManaClientEvents.registerBlockRenderers(event);
         ManaClientEvents.registerBlockEntityRenderers(event);
-        ManaClientEvents.registerOverlays(event);
+        // ManaClientEvents.registerGuiOverlays(event);
         ManaClientEvents.registerMenuScreens();
         ManaClientEvents.registerParticleFactories(null);
 

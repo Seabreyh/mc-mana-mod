@@ -15,11 +15,14 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 public class ManaHudOverlay implements IGuiOverlay {
+    public static final ManaHudOverlay MANA_STAT_HUD = new ManaHudOverlay();
 
     private static final ResourceLocation FULL_MANA = new ResourceLocation(ManaMod.MOD_ID,
             "textures/gui/mana_star_full.png");
     private static final ResourceLocation EMPTY_MANA = new ResourceLocation(ManaMod.MOD_ID,
             "textures/gui/mana_star_empty.png");
+    private static final ResourceLocation HALF_MANA = new ResourceLocation(ManaMod.MOD_ID,
+            "textures/gui/mana_star_half.png");
 
     @Override
     public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
@@ -41,7 +44,7 @@ public class ManaHudOverlay implements IGuiOverlay {
         RenderSystem.setShaderTexture(0, EMPTY_MANA);
         int max = ClientManaStatData.getPlayerManaCapacity() / 2 + ClientManaStatData.getPlayerManaCapacity() % 2;
         for (int i = 0; i < max; i++) {
-            guiGraphics.blit(FULL_MANA, x - 94 + (i * 8), y - 54, 0, 0, 22, 22,
+            guiGraphics.blit(EMPTY_MANA, x - 94 + (i * 8), y - 54, 0, 0, 22, 22,
                     22, 22);
         }
 
@@ -49,21 +52,13 @@ public class ManaHudOverlay implements IGuiOverlay {
             int j = i * 2;
 
             if (ClientManaStatData.getPlayerManaStat() % 2 != 0 && (j == ClientManaStatData.getPlayerManaStat() - 1)) {
-                RenderSystem.setShaderTexture(0, new ResourceLocation(ManaMod.MOD_ID,
-                        "textures/gui/mana_star_half.png"));
-                guiGraphics.blit(EMPTY_MANA, x - 94 + (i * 8), y - 54, 0, 0, 21, 21,
+                RenderSystem.setShaderTexture(0, HALF_MANA);
+                guiGraphics.blit(HALF_MANA, x - 94 + (i * 8), y - 54, 0, 0, 21, 21,
                         21, 21);
             } else if (ClientManaStatData.getPlayerManaStat() > j) {
-                // if ((i == ClientManaStatData.getPlayerManaStat() - 1) && (i % 2 == 0)) {
-                // RenderSystem.setShaderTexture(0, new ResourceLocation(ManaMod.MOD_ID,
-                // "textures/gui/mana_star_half.png"));
-                // GuiComponent.blit(poseStack, x - 94 + (i * 8), y - 54, 0, 0, 21, 21,
-                // 21, 21);
-                // } else {
                 RenderSystem.setShaderTexture(0, FULL_MANA);
                 guiGraphics.blit(FULL_MANA, x - 94 + (i * 8), y - 54, 0, 0, 21, 21,
                         21, 21);
-                // }
             } else {
                 break;
             }

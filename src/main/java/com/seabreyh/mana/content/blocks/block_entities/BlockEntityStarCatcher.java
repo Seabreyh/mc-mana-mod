@@ -55,7 +55,7 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
 
     public BlockEntityStarCatcher(BlockPos pWorldPosition, BlockState pBlockState) {
         super(ManaBlockEntities.STAR_CATCHER_ENTITY_BLOCK.get(), pWorldPosition, pBlockState);
-        ManaMod.LOGGER.info("StarCatcher ENTITY BLOCK init");
+        // ManaMod.LOGGER.info("StarCatcher ENTITY BLOCK init");
     }
 
     @Override

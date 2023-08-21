@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.foundation.client.renderers.item.ManaItemStackRenderer;
+import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -42,7 +43,7 @@ public class FallenStarItem extends Item {
         boolean fullMana = false;
         if (!world.isClientSide) {
             // Handle regeneration of player mana from using star
-            // fullMana = PlayerManaEvent.regenMana(player, 1);
+            fullMana = PlayerManaEvent.regenMana(player, 1);
 
             if (fullMana) {
                 return InteractionResultHolder.pass(itemstack);

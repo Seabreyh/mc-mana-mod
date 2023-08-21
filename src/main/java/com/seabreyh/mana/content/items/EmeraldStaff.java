@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class EmeraldStaff extends Item {
 
-    public static final Properties PROPERTIES = new Item.Properties().stacksTo(1);
+    public static final Properties PROPERTIES = new Item.Properties().stacksTo(1).durability(500);
 
     public EmeraldStaff(Properties properties) {
         super(properties);

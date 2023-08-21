@@ -18,13 +18,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.Nullable;
 
+import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.entities.AmethystEnergyBall;
+import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 
 import java.util.List;
 
 public class AmethystStaff extends Item {
 
-    public static final Properties PROPERTIES = new Item.Properties().stacksTo(1);
+    public static final Properties PROPERTIES = new Item.Properties().stacksTo(1).durability(500);
 
     public AmethystStaff(Properties properties) {
         super(properties);
@@ -40,17 +42,16 @@ public class AmethystStaff extends Item {
             InteractionHand hand) {
 
         ItemStack itemstack = player.getItemInHand(hand);
-        boolean hasMana = true;
+        boolean hasMana = false;
         if (!world.isClientSide) {
-
             if (this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
                 // Handle depletion of player mana from use
-                // hasMana = PlayerManaEvent.consumeMana(player, 1);
+                ManaMod.LOGGER.info("Check mana: ");
+                hasMana = PlayerManaEvent.consumeMana(player, 1);
                 hasMana |= player.isCreative();
             }
 
-            // if (hasMana && this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
-            if (hasMana) {
+            if (hasMana && this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
                 AmethystEnergyBall energyBall = new AmethystEnergyBall(world, player);
                 energyBall.shootFromRotation(player, player.getXRot(), player.getYRot(),
                         0.0F, 1.5F, 1.0F);

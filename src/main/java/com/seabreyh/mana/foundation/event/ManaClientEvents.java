@@ -25,7 +25,10 @@ import com.seabreyh.mana.registries.ManaEntities;
 import com.seabreyh.mana.registries.ManaParticles;
 
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraft.client.Minecraft;
@@ -94,10 +97,8 @@ public class ManaClientEvents {
         }
 
         @SubscribeEvent
-        public static void registerOverlays(FMLClientSetupEvent event) {
-                // OverlayRegistry.registerOverlayAbove(ForgeIngameGui.HOTBAR_ELEMENT, "Mana
-                // Level",
-                // ManaHudOverlay.MANA_STAT_HUD);
+        public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
+                event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "mana_level", ManaHudOverlay.MANA_STAT_HUD);
         }
 
         @SubscribeEvent
