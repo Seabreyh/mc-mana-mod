@@ -12,7 +12,7 @@ import com.seabreyh.mana.foundation.client.gui.hud.ManaHudOverlay;
 import com.seabreyh.mana.foundation.client.gui.screens.ManaMenuTypes;
 import com.seabreyh.mana.foundation.client.gui.screens.StarCatcherScreen;
 import com.seabreyh.mana.foundation.client.gui.screens.WishViewScreen;
-import com.seabreyh.mana.foundation.client.renderers.block_entity.RendererBlockEntityStarCatcher;
+import com.seabreyh.mana.foundation.client.renderers.block_entities.RendererBlockEntityStarCatcher;
 import com.seabreyh.mana.foundation.client.renderers.entity.AmethystEnergyBallRenderer;
 import com.seabreyh.mana.foundation.client.renderers.entity.EmeraldEnergyBallRenderer;
 import com.seabreyh.mana.foundation.client.renderers.entity.FallenStarRenderer;

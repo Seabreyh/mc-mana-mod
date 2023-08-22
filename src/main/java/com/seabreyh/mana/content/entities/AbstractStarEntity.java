@@ -8,12 +8,16 @@ import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
 import com.seabreyh.mana.foundation.client.renderers.entity.FallenStarSyncData;
 import com.seabreyh.mana.foundation.event.player.PlayerWishEvent;
 import com.seabreyh.mana.foundation.event.world.ShootingStarEvent;
+import com.seabreyh.mana.foundation.networking.ManaMessages;
+import com.seabreyh.mana.foundation.networking.packet.FallenStarS2CPacket;
+import com.seabreyh.mana.foundation.networking.packet.ManaStatSyncS2CPacket;
 import com.seabreyh.mana.registries.ManaEntityDataSerializers;
 import com.seabreyh.mana.registries.ManaParticles;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -38,6 +42,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
@@ -90,7 +95,6 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         this.isFalling = true;
         this.dimensions = entityType.getDimensions();
 
-        ManaMod.LOGGER.info("[Mana]: Creating AbstractStarEntity");
     }
 
     public AbstractStarEntity(EntityType<? extends AbstractStarEntity> getEntity, Level world, Player ownPlayer) {
@@ -101,6 +105,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
 
     @Override
     public void tick() {
+        ManaMod.LOGGER.info("catcher: " + this.catcher);
 
         this.baseTick();
 
@@ -142,7 +147,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
             // If within 0.7 blocks of catcher, catch and discard entity.
             if (Math.abs(vec3.x) < 0.7 && Math.abs(vec3.y) < 0.7 && Math.abs(vec3.z) < 0.7) {
                 this.playSound(SoundEvents.BOTTLE_FILL_DRAGONBREATH, 2.0F, 1.0F);
-                BlockEntityStarCatcher.craftItem(catcher);
+                catcher.craftItem();
                 discard();
             }
         }
@@ -502,10 +507,11 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         }
     }
 
-    public void toStarCatcher(BlockPos catcherPos, BlockEntityStarCatcher pBlockEntity) {
+    public void toStarCatcher(BlockPos catcherPos) {
         // MAKE THIS RUN IN CLIENT TOO WHEN CALLED FROM SERVER
+        ManaMod.LOGGER.info("To catcher");
         this.catcherPos = catcherPos;
-        setCatcher(pBlockEntity);
+        setCatcher(catcherPos);
         this.moveToCatcher = true;
         this.isFalling = false;
     }
@@ -657,6 +663,10 @@ public abstract class AbstractStarEntity extends AbstractArrow {
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
         this.moveToCatcher = compoundTag.getBoolean("moveToCatcher");
+        if (compoundTag.contains("catcherPos")) {
+            catcherPos = NbtUtils.readBlockPos(compoundTag.getCompound("catcherPos"));
+            setCatcher(catcherPos);
+        }
     }
 
     // Runs when saving/pausing/leaving world - Save entity data
@@ -664,6 +674,10 @@ public abstract class AbstractStarEntity extends AbstractArrow {
     public void addAdditionalSaveData(CompoundTag compoundTag) {
         super.addAdditionalSaveData(compoundTag);
         compoundTag.putBoolean("moveToCatcher", this.moveToCatcher);
+        if (catcherPos != null) {
+            compoundTag.put("catcherPos", NbtUtils.writeBlockPos(catcherPos));
+        }
+
     }
 
     // Data Sync Getters/Setters---------------------
@@ -750,7 +764,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
     // isTargeted SETTER
     public void setIsTargeted(boolean bool) {
         this.isTargeted = bool;
-        this.updateSyncedData("isTargeted");
+        // this.updateSyncedData("isTargeted");
     }
 
     // catcher GETTER - returns client/server value
@@ -763,9 +777,14 @@ public abstract class AbstractStarEntity extends AbstractArrow {
     }
 
     // catcher SETTER
-    public void setCatcher(BlockEntityStarCatcher starCatcher) {
-        this.catcher = starCatcher;
-        this.updateSyncedData("catcher");
+    public void setCatcher(BlockPos catcherPos) {
+
+        BlockEntity blockEntity = level().getBlockEntity(catcherPos);
+        if (blockEntity instanceof BlockEntityStarCatcher) {
+            this.catcher = (BlockEntityStarCatcher) blockEntity;
+        } else {
+            ManaMod.LOGGER.warn("setCatcher() called with invalid starCatcher: " + catcherPos);
+        }
     }
 
     // moveToCatcher GETTER - returns client/server value

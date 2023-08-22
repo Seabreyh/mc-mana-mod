@@ -60,8 +60,8 @@ public class FallenStarSyncData {
         buffer.writeBoolean(noPhysics);
     }
 
-    public void read(FriendlyByteBuf buffer) {
-        noPhysics = buffer.readBoolean();
+    public BlockEntityStarCatcher read(FriendlyByteBuf buffer) {
+        return catcher;
     }
 
 }

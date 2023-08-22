@@ -1,4 +1,4 @@
-package com.seabreyh.mana.content.mana_stat;
+package com.seabreyh.mana.foundation.mana_stat;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

@@ -7,7 +7,7 @@ import com.seabreyh.mana.foundation.networking.packet.ManaStatSyncS2CPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
-public class PlayerManaEvent {
+public class FallenStarUpdateEvent {
     private static boolean hasMana;
     private static boolean maxCapacity;
 

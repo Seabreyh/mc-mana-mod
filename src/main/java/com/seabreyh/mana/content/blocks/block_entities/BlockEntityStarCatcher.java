@@ -3,6 +3,8 @@ package com.seabreyh.mana.content.blocks.block_entities;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.entities.FallenStarEntity;
 import com.seabreyh.mana.foundation.client.gui.screens.StarCatcherMenu;
+import com.seabreyh.mana.foundation.networking.ManaMessages;
+import com.seabreyh.mana.foundation.networking.packet.FallenStarS2CPacket;
 import com.seabreyh.mana.registries.ManaBlockEntities;
 import com.seabreyh.mana.registries.ManaItems;
 
@@ -16,7 +18,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
@@ -40,8 +42,8 @@ import net.minecraftforge.items.IItemHandler;
 public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider {
     public int tickCount;
     public int catchCount;
-    private float activeRotation;
-    private float rotationSpeed = 6F;
+    public float activeRotation;
+    public float rotationSpeed = 1F;
     private final List<BlockPos> effectBlocks = Lists.newArrayList();
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(4) {
@@ -67,9 +69,14 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
         return rotationSpeed;
     }
 
-    public static void setRotationSpeed(float speed, BlockEntityStarCatcher entity) {
-        entity.rotationSpeed = speed;
-    }
+    // public static void setRotationSpeed(float speed, BlockEntityStarCatcher
+    // entity) {
+    // entity.rotationSpeed = speed;
+    // }
+
+    // private void setRotationSpeedInternal(float speed) {
+    // this.rotationSpeed = speed;
+    // }
 
     @Nullable
     @Override
@@ -122,19 +129,27 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, BlockEntityStarCatcher pBlockEntity) {
-        if (pLevel.isClientSide()) {
+
+        if (pLevel.isClientSide) {
+            // ManaMod.LOGGER
+            // .info("ID" + pBlockEntity.worldPosition.getZ() + " speed: " +
+            // pBlockEntity.rotationSpeed
+            // + " catchCount: "
+            // + pBlockEntity.catchCount);
+
             if (pBlockEntity.catchCount > 0) {
                 float modifier = Math.min((float) pBlockEntity.catchCount * 10.0f, 20.0f);
-                BlockEntityStarCatcher.setRotationSpeed(6.0f + modifier, pBlockEntity);
+                pBlockEntity.rotationSpeed = (3.0f + modifier);
             } else {
-                BlockEntityStarCatcher.setRotationSpeed(3.0F, pBlockEntity);
+
+                pBlockEntity.rotationSpeed = (1.0f);
             }
         }
 
-        locateStars(pLevel, pBlockEntity, pPos, pState);
+        pBlockEntity.locateStars(pLevel, pPos, pState, pBlockEntity);
 
         List<BlockPos> list = pBlockEntity.effectBlocks;
-        animationTick(pLevel, pPos, list, pBlockEntity.tickCount);
+        // animationTick(pLevel, pPos, list, pBlockEntity.tickCount);
         ++pBlockEntity.activeRotation;
     }
 
@@ -143,29 +158,32 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
         d0 = (d0 * d0 + d0) * (double) 0.3F;
     }
 
-    public float getActiveRotation(float p_59198_) {
-        return (this.activeRotation + p_59198_) * -0.0375F * getRotationSpeed();
-    }
-
-    private static void locateStars(Level plevel, BlockEntityStarCatcher pBlockEntity, BlockPos pPos,
-            BlockState pState) {
-
+    private static void locateStars(Level plevel, BlockPos pPos, BlockState pState,
+            BlockEntityStarCatcher pBlockEntity) {
         if (!plevel.isClientSide()) {
-            if (hasNotReachedStackLimit(pBlockEntity)) {
+
+            if (pBlockEntity.hasNotReachedStackLimit()) {
 
                 AABB area = pBlockEntity.getRenderBoundingBox().inflate(80.0D, 80.0D, 80.0D);
                 List<FallenStarEntity> fallenStars = plevel.getEntitiesOfClass(FallenStarEntity.class, area);
 
                 for (FallenStarEntity foundStar : fallenStars) {
                     // make sure star can only be targeted by one star catcher
-                    if (foundStar.isFalling == false
-                            && foundStar.getIsTargeted() == false) {
+
+                    if (foundStar.isFalling == false) {
+
                         if (foundStar instanceof FallenStarEntity) {
+
                             if (foundStar.getIsTargeted() == false) {
+
                                 ManaMod.LOGGER.info("FOUDN STAR: " + foundStar);
                                 foundStar.setIsTargeted(true);
-                                foundStar.toStarCatcher(pBlockEntity.getBlockPos(), pBlockEntity);
-                                pBlockEntity.catchCount++;
+                                foundStar.toStarCatcher(pBlockEntity.getBlockPos());
+
+                                if (plevel instanceof ServerLevel)
+                                    ManaMessages.sendToNear(plevel, pBlockEntity.getBlockPos(), 60,
+                                            new FallenStarS2CPacket(pBlockEntity.getBlockPos(), foundStar.getId()));
+                                // this.catchCount++;
                             }
                         }
 
@@ -179,7 +197,7 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
                 for (FallenStarEntity foundStar : fallenStars) {
                     if (foundStar.getIsTargeted()) {
                         foundStar.stopStarCatch();
-                        pBlockEntity.catchCount--;
+                        // this.catchCount--;
                     }
                 }
             }
@@ -192,23 +210,29 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
 
             pBlockEntity.catchCount = 0;
             for (FallenStarEntity foundStar : fallenStars) {
-                pBlockEntity.catchCount++;
 
-                // Dummy statement to get linter to not complain about unused vars
-                foundStar.equals(foundStar);
+                // ManaMod.LOGGER.info("Stars catcher: " + foundStar.getCatcher() + " this
+                // catcher: " + pBlockEntity);
+
+                if (foundStar.getIsTargeted() && foundStar.getCatcher() == pBlockEntity) {
+                    ++pBlockEntity.catchCount;
+                }
+
+                // // Dummy statement to get linter to not complain about unused vars
+                // foundStar.equals(foundStar);
             }
         }
     }
 
-    public static void craftItem(BlockEntityStarCatcher entity) {
-        if (hasNotReachedStackLimit(entity)) {
-            entity.itemHandler.setStackInSlot(0, new ItemStack(ManaItems.FALLEN_STAR_ITEM.get(),
-                    entity.itemHandler.getStackInSlot(0).getCount() + 1));
+    public void craftItem() {
+        if (hasNotReachedStackLimit()) {
+            this.itemHandler.setStackInSlot(0, new ItemStack(ManaItems.FALLEN_STAR_ITEM.get(),
+                    this.itemHandler.getStackInSlot(0).getCount() + 1));
         }
     }
 
-    private static boolean hasNotReachedStackLimit(BlockEntityStarCatcher entity) {
-        return entity.itemHandler.getStackInSlot(0).getCount() < entity.itemHandler.getStackInSlot(0).getMaxStackSize();
+    private boolean hasNotReachedStackLimit() {
+        return this.itemHandler.getStackInSlot(0).getCount() < this.itemHandler.getStackInSlot(0).getMaxStackSize();
     }
 
 }

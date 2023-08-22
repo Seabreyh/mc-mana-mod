@@ -1,7 +1,7 @@
 package com.seabreyh.mana.content.items;
 
-import com.seabreyh.mana.content.mana_stat.PlayerManaStatProvider;
 import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
+import com.seabreyh.mana.foundation.mana_stat.PlayerManaStatProvider;
 
 import java.util.List;
 import java.util.Random;

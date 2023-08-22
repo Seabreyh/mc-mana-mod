@@ -45,9 +45,4 @@ public class ChoseWishC2SPacket {
         return success.get();
     }
 
-    private boolean hasWaterAroundThem(ServerPlayer player, ServerLevel level,
-            int size) {
-        return level.getBlockStates(player.getBoundingBox().inflate(size))
-                .filter(state -> state.is(Blocks.WATER)).toArray().length > 0;
-    }
 }

@@ -3,10 +3,10 @@ package com.seabreyh.mana.foundation.event;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.entities.AbstractStarEntity;
 import com.seabreyh.mana.content.entities.StarImpactEvent;
-import com.seabreyh.mana.content.mana_stat.PlayerManaStat;
-import com.seabreyh.mana.content.mana_stat.PlayerManaStatProvider;
 import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 import com.seabreyh.mana.foundation.event.world.ShootingStarEvent;
+import com.seabreyh.mana.foundation.mana_stat.PlayerManaStat;
+import com.seabreyh.mana.foundation.mana_stat.PlayerManaStatProvider;
 import com.seabreyh.mana.foundation.networking.ManaMessages;
 import com.seabreyh.mana.foundation.networking.packet.ManaStatSyncS2CPacket;
 

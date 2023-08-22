@@ -1,4 +1,4 @@
-package com.seabreyh.mana.foundation.client.renderers.block_entity;
+package com.seabreyh.mana.foundation.client.renderers.block_entities;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
@@ -41,7 +41,7 @@ public class RendererBlockEntityStarCatcher implements BlockEntityRenderer<Block
         this.cube = modelpart.getChild("cube");
         this.context = context;
     }
-    
+
     public static LayerDefinition createBodyLayer() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
@@ -57,7 +57,8 @@ public class RendererBlockEntityStarCatcher implements BlockEntityRenderer<Block
             MultiBufferSource buffer, int combinedOverlay, int packedLight) {
 
         stack.pushPose();
-        float f1 = entityBlock.getActiveRotation(partialTicks) * (180F / (float) Math.PI);
+        float f1 = ((entityBlock.activeRotation + partialTicks) * -0.0375F * entityBlock.rotationSpeed)
+                * (180F / (float) Math.PI);
 
         VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entityTranslucent(TEXTURE, true));
         stack.pushPose();
