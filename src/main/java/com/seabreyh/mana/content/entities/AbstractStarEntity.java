@@ -57,7 +57,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
     // protected boolean inGround;
     private int age; // server var
     private final int maxAge = 23000;
-    private double catchSpeed = 0.8D;
+    private double catchSpeed = 0.2D;
     private int timeTillStartCatch = 130;
     private boolean moveToCatcher;
     private boolean isTargeted;
@@ -105,7 +105,6 @@ public abstract class AbstractStarEntity extends AbstractArrow {
 
     @Override
     public void tick() {
-        ManaMod.LOGGER.info("catcher: " + this.catcher);
 
         this.baseTick();
 
@@ -114,15 +113,11 @@ public abstract class AbstractStarEntity extends AbstractArrow {
             stopStarCatch();
         }
 
-        // distance
+        // distance for splash particles
         if (!this.firstTick) {
             travelDistance = lastPosition.distanceTo(this.position());
         }
         this.lastPosition = this.position();
-
-        // if (this.wasTouchingWater) {
-        // hasDoneFirstSplash = true;
-        // }
 
         // moveToCatcher=true and travelTicks >= TotalTravelTicks
         if (moveToCatcher && clientSideCatchStarTickCount >= timeTillStartCatch) {
@@ -153,14 +148,12 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         }
         ++this.clientSideCatchStarTickCount;
 
+        // despawn checker
         currentTime = this.level().getTimeOfDay(1.0F);
-        if (currentTime > starDespawnTime || currentTime < starSpawnStartTime) {
+        if (currentTime > starDespawnTime || currentTime < starSpawnStartTime)
             discardEntity();
-        }
-
-        if (this.age != -32768) {
+        if (this.age != -32768)
             ++this.age;
-        }
 
         if (this.isFalling && this.ownPlayer != null && this.ownPlayer.getUseItem().is(Items.SPYGLASS)
                 && !this.playerWishedOn) {
@@ -183,7 +176,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
             }
         }
 
-        boolean noPhysics = this.isNoPhysics();
+        boolean flag = this.isNoPhysics();
         Vec3 vec3 = this.getDeltaMovement();
 
         if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
@@ -197,9 +190,8 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         // Get the block position and the block type that the entity is currently in
         BlockPos blockpos = this.blockPosition();
         BlockState blockstate = this.level().getBlockState(blockpos);
-        BlockState blockstateBelow = this.level().getBlockState(blockpos.below());
 
-        if (!blockstate.isAir() && !noPhysics) {
+        if (!blockstate.isAir() && !flag) {
             VoxelShape voxelshape = blockstate.getCollisionShape(this.level(), blockpos);
             if (!voxelshape.isEmpty()) {
                 Vec3 vec31 = this.position();
@@ -212,7 +204,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
             }
         }
 
-        if (this.inGround && !noPhysics) {
+        if (this.inGround && !flag) {
             if (this.lastState != blockstate && this.shouldFall()) {
                 this.startFalling();
             } else if (!this.level().isClientSide) {
@@ -247,7 +239,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
                     }
                 }
 
-                if (hitresult != null && hitresult.getType() != HitResult.Type.MISS && !noPhysics
+                if (hitresult != null && hitresult.getType() != HitResult.Type.MISS && !flag
                         && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, hitresult)) {
                     this.onHit(hitresult);
                     this.hasImpulse = true;
@@ -317,7 +309,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
             double d3 = this.getZ() + deltaZ;
             double d4 = vec3.horizontalDistance();
 
-            if (noPhysics) {
+            if (flag) {
                 this.setYRot((float) (Mth.atan2(-deltaX, -deltaZ) * (double) (180F / (float) Math.PI)));
             } else {
                 this.setYRot((float) (Mth.atan2(deltaX, deltaZ) * (double) (180F / (float) Math.PI)));
@@ -332,7 +324,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
             }
             this.setDeltaMovement(vec3.scale((double) f));
 
-            if (!this.isNoGravity() && !noPhysics) {
+            if (!this.isNoGravity() && !flag) {
                 Vec3 vec34 = this.getDeltaMovement();
                 this.setDeltaMovement(vec34.x, vec34.y - (double) 0.05F, vec34.z);
             }
@@ -498,18 +490,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         return SoundEvents.AMETHYST_BLOCK_BREAK;
     }
 
-    @Override
-    public boolean isNoPhysics() {
-        if (!this.level().isClientSide) {
-            return this.noPhysics;
-        } else {
-            return (getSyncedStarData().noPhysics);
-        }
-    }
-
     public void toStarCatcher(BlockPos catcherPos) {
-        // MAKE THIS RUN IN CLIENT TOO WHEN CALLED FROM SERVER
-        ManaMod.LOGGER.info("To catcher");
         this.catcherPos = catcherPos;
         setCatcher(catcherPos);
         this.moveToCatcher = true;
@@ -666,6 +647,8 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         if (compoundTag.contains("catcherPos")) {
             catcherPos = NbtUtils.readBlockPos(compoundTag.getCompound("catcherPos"));
             setCatcher(catcherPos);
+            // SET IS TARGETED?
+            // CALL toStarCatcher
         }
     }
 
@@ -682,83 +665,45 @@ public abstract class AbstractStarEntity extends AbstractArrow {
 
     // Data Sync Getters/Setters---------------------
 
-    // Used by setter funcs that update vars which are synced between client/server
-    private void updateSyncedData(String dataName) {
-        FallenStarSyncData data = getSyncedStarData();
-        switch (dataName) {
-            case "noPhysics":
-                data.noPhysics = this.noPhysics;
-                this.entityData.set(FALLEN_STAR_DATA, data);
-                break;
-            case "inGround":
-                data.inGround = this.inGround;
-                this.entityData.set(FALLEN_STAR_DATA, data);
-                break;
-            case "pickup":
-                data.pickup = this.pickup;
-                this.entityData.set(FALLEN_STAR_DATA, data);
-                break;
-            case "isTargeted":
-                data.isTargeted = this.isTargeted;
-                this.entityData.set(FALLEN_STAR_DATA, data);
-                break;
-            case "catcher":
-                data.catcher = this.catcher;
-                this.entityData.set(FALLEN_STAR_DATA, data);
-                break;
-            case "moveToCatcher":
-                data.moveToCatcher = this.moveToCatcher;
-                this.entityData.set(FALLEN_STAR_DATA, data);
-                break;
-            default:
-                ManaMod.LOGGER.warn("updateSyncedData() called with invalid dataName: " + dataName);
-                break;
-        }
-    }
-
-    // Get synced star data
-    public FallenStarSyncData getSyncedStarData() {
-        return entityData.get(FALLEN_STAR_DATA);
-    }
-
-    // // noPhysics GETTER - returns client/server value
-    // public boolean getNoPhysics() {
-    // if (!this.level().isClientSide) {
-    // return this.noPhysics;
-    // } else {
-    // return getSyncedStarData().noPhysics;
+    // // Used by setter funcs that update vars which are synced between
+    // client/server
+    // private void updateSyncedData(String dataName) {
+    // FallenStarSyncData data = getSyncedStarData();
+    // switch (dataName) {
+    // case "noPhysics":
+    // data.noPhysics = this.noPhysics;
+    // this.entityData.set(FALLEN_STAR_DATA, data);
+    // break;
+    // case "inGround":
+    // data.inGround = this.inGround;
+    // this.entityData.set(FALLEN_STAR_DATA, data);
+    // break;
+    // case "pickup":
+    // data.pickup = this.pickup;
+    // this.entityData.set(FALLEN_STAR_DATA, data);
+    // break;
+    // case "isTargeted":
+    // data.isTargeted = this.isTargeted;
+    // this.entityData.set(FALLEN_STAR_DATA, data);
+    // break;
+    // case "catcher":
+    // data.catcher = this.catcher;
+    // this.entityData.set(FALLEN_STAR_DATA, data);
+    // break;
+    // case "moveToCatcher":
+    // data.moveToCatcher = this.moveToCatcher;
+    // this.entityData.set(FALLEN_STAR_DATA, data);
+    // break;
+    // default:
+    // ManaMod.LOGGER.warn("updateSyncedData() called with invalid dataName: " +
+    // dataName);
+    // break;
     // }
     // }
-
-    // // noPhysics SETTER
-    // @Override
-    // public void setNoPhysics(boolean bool) {
-    // this.noPhysics = bool;
-    // this.updateSyncedData("noPhysics");
-    // }
-
-    // // InGround GETTER - returns client/server value
-    // public boolean getInGround() {
-    // if (!this.level().isClientSide) {
-    // return this.noPhysics;
-    // } else {
-    // return getSyncedStarData().noPhysics;
-    // }
-    // }
-
-    // InGround SETTER
-    public void setInGround(boolean bool) {
-        this.inGround = bool;
-        this.updateSyncedData("inGround");
-    }
 
     // isTargeted GETTER - returns client/server value
     public boolean getIsTargeted() {
-        if (!this.level().isClientSide) {
-            return this.isTargeted;
-        } else {
-            return getSyncedStarData().isTargeted;
-        }
+        return this.isTargeted;
     }
 
     // isTargeted SETTER
@@ -769,11 +714,11 @@ public abstract class AbstractStarEntity extends AbstractArrow {
 
     // catcher GETTER - returns client/server value
     public BlockEntityStarCatcher getCatcher() {
-        if (!this.level().isClientSide) {
-            return this.catcher;
-        } else {
-            return getSyncedStarData().catcher;
-        }
+        // if (!this.level().isClientSide) {
+        return this.catcher;
+        // } else {
+        // return getSyncedStarData().catcher;
+        // }
     }
 
     // catcher SETTER
@@ -787,22 +732,6 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         }
     }
 
-    // moveToCatcher GETTER - returns client/server value
-    public boolean getMoveToCatcher() {
-        if (!this.level().isClientSide) {
-            // Return this if server
-            return this.moveToCatcher;
-        } else {
-            // Return this if client
-            return getSyncedStarData().moveToCatcher;
-        }
-    }
-
-    // moveToCatcher SETTER
-    public void setMoveToCatcher(boolean bool) {
-        this.moveToCatcher = bool;
-        this.updateSyncedData("moveToCatcher");
-    }
     // ---------------------------------
     // BASIC SETTERS AND GETTERS
     // ---------------------------------

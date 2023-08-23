@@ -176,14 +176,13 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
 
                             if (foundStar.getIsTargeted() == false) {
 
-                                ManaMod.LOGGER.info("FOUDN STAR: " + foundStar);
                                 foundStar.setIsTargeted(true);
                                 foundStar.toStarCatcher(pBlockEntity.getBlockPos());
 
                                 if (plevel instanceof ServerLevel)
                                     ManaMessages.sendToNear(plevel, pBlockEntity.getBlockPos(), 60,
                                             new FallenStarS2CPacket(pBlockEntity.getBlockPos(), foundStar.getId()));
-                                // this.catchCount++;
+
                             }
                         }
 
@@ -197,7 +196,7 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
                 for (FallenStarEntity foundStar : fallenStars) {
                     if (foundStar.getIsTargeted()) {
                         foundStar.stopStarCatch();
-                        // this.catchCount--;
+
                     }
                 }
             }

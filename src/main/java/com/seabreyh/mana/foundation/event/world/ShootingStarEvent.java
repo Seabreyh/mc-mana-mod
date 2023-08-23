@@ -14,7 +14,8 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 public class ShootingStarEvent {
     private static final Random random = new Random();
     private static int worldTime = 0;
-    private static final float SECONDS_BETWEEN_EVENT = 50F;
+    // private static final float SECONDS_BETWEEN_EVENT = 50F;
+    private static final float SECONDS_BETWEEN_EVENT = 3F;
     private static final float TIME_SPAWN_START = 0.3F;
     private static final float TIME_SPAWN_STOP = 0.7F;
     private static final float TIME_DESPAWN = 0.75F;
