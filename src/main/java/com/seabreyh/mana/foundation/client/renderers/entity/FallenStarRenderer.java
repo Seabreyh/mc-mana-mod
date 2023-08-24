@@ -96,12 +96,11 @@ public class FallenStarRenderer<T extends FallenStarEntity> extends EntityRender
         this.renderNameTag(fallenStar, Component.literal(
                 "ID:" + fallenStar.getId() +
                         " Age:" + fallenStar.getAge() +
-                        " PickUp:" + fallenStar.pickup
-                        // " Targeted:" + fallenStar.getIsTargeted() +
-                        // " MoveToCatcher: " + fallenStar.getMoveToCatcher() +
-                        // " isFalling: " + fallenStar.isFalling +
-                        // " moveToCatcher: " + fallenStar.getSyncMoveToCatcher() + " catcher: "
-                        // + fallenStar.getCatcher()
+                        " PickUp:" + fallenStar.pickup +
+                        " Targeted:" + fallenStar.getIsTargeted() +
+                        " MoveToCatcher: " + fallenStar.moveToCatcher +
+                        " isFalling: " + fallenStar.isFalling +
+                        " catcher: " + fallenStar.catcherPos
                         + " [CLIENT THREAD]"
 
         ), poseStack, multBuff, intOne);

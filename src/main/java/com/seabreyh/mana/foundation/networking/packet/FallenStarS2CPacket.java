@@ -34,7 +34,6 @@ public class FallenStarS2CPacket {
     }
 
     public void toBytes(FriendlyByteBuf buf) {
-        // buf.writeInt(star_catcher);
         buf.writeBlockPos(catcherPos);
         buf.writeInt(entityId);
     }
@@ -54,7 +53,9 @@ public class FallenStarS2CPacket {
                 fsE.setIsTargeted(true);
 
             } else {
-                ManaMod.LOGGER.warn("setCatcher() called with invalid starCatcher: " + catcherPos);
+                ManaMod.LOGGER.warn(
+                        "HANDEL() called with invalid Entity Lookup by id is: " + entityByID + " Entity Number(id):"
+                                + entityId);
             }
             ClientFallenStarData.setCatcherPos(catcherPos);
         });

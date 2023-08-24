@@ -51,18 +51,19 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.registries.RegistryObject;
 
 public abstract class AbstractStarEntity extends AbstractArrow {
 
     // protected boolean inGround;
     private int age; // server var
     private final int maxAge = 23000;
-    private double catchSpeed = 0.2D;
+    private double catchSpeed = 0.8D;
     private int timeTillStartCatch = 130;
-    private boolean moveToCatcher;
+    public boolean moveToCatcher;
     private boolean isTargeted;
-    private BlockEntityStarCatcher catcher;
-    private BlockPos catcherPos;
+    public BlockEntityStarCatcher catcher;
+    public BlockPos catcherPos;
     private int clientSideCatchStarTickCount;
     public Boolean isFalling;
     private Player ownPlayer;
@@ -74,7 +75,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
     private float waterInertia = 0.7F;
     private EntityDimensions dimensions;
     float currentTime;
-    protected int inGroundTime;
+
     private Vec3 lastPosition = this.position();
     private double travelDistance;
     private SoundEvent soundEvent = this.getDefaultHitGroundSoundEvent();
@@ -103,14 +104,22 @@ public abstract class AbstractStarEntity extends AbstractArrow {
 
     }
 
+    protected AbstractStarEntity(EntityType<? extends AbstractStarEntity> p_36711_, double p_36712_, double p_36713_,
+            double p_36714_, Level p_36715_) {
+        this(p_36711_, p_36715_);
+        this.setPos(p_36712_, p_36713_, p_36714_);
+    }
+
     @Override
     public void tick() {
 
         this.baseTick();
 
-        // If moving to catcher and catcher is removed, stop the catch
-        if (moveToCatcher && catcher.isRemoved()) {
-            stopStarCatch();
+        if (catcher != null) {
+            // If moving to catcher and catcher is removed or full, stop the catch
+            if (catcher.isRemoved() || !catcher.hasNotReachedStackLimit()) {
+                stopStarCatch();
+            }
         }
 
         // distance for splash particles
@@ -146,7 +155,9 @@ public abstract class AbstractStarEntity extends AbstractArrow {
                 discard();
             }
         }
-        ++this.clientSideCatchStarTickCount;
+        if (this.inGround) {
+            ++this.clientSideCatchStarTickCount;
+        }
 
         // despawn checker
         currentTime = this.level().getTimeOfDay(1.0F);
@@ -402,7 +413,6 @@ public abstract class AbstractStarEntity extends AbstractArrow {
                         .sqrt(vec3.x * vec3.x * (double) 0.2F + vec3.y * vec3.y + vec3.z * vec3.z * (double) 0.2F)
                         * f);
 
-        ManaMod.LOGGER.info("f1 " + f1);
         if (f1 < 0.22F) {
             // big splash
             this.playSound(this.getSwimSplashSound(), f1,
@@ -495,6 +505,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         setCatcher(catcherPos);
         this.moveToCatcher = true;
         this.isFalling = false;
+
     }
 
     @Override
@@ -598,6 +609,8 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         this.setNoPhysics(false);
         this.isTargeted = false;
         this.pickup = AbstractArrow.Pickup.ALLOWED;
+        this.catcher = null;
+        this.catcherPos = null;
     }
 
     // Despawn timer
@@ -728,13 +741,18 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         if (blockEntity instanceof BlockEntityStarCatcher) {
             this.catcher = (BlockEntityStarCatcher) blockEntity;
         } else {
-            ManaMod.LOGGER.warn("setCatcher() called with invalid starCatcher: " + catcherPos);
+            ManaMod.LOGGER
+                    .warn("setCatcher() called with invalid starCatcher: " + catcherPos + "cathcer : " + blockEntity);
         }
     }
 
     // ---------------------------------
     // BASIC SETTERS AND GETTERS
     // ---------------------------------
+
+    public boolean isInGround() {
+        return this.inGround;
+    }
 
     public int getAge() {
         return this.age;

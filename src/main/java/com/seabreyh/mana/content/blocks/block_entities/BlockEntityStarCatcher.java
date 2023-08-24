@@ -170,20 +170,16 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
                 for (FallenStarEntity foundStar : fallenStars) {
                     // make sure star can only be targeted by one star catcher
 
-                    if (foundStar.isFalling == false) {
+                    if (foundStar.isInGround()) {
 
-                        if (foundStar instanceof FallenStarEntity) {
-
-                            if (foundStar.getIsTargeted() == false) {
-
-                                foundStar.setIsTargeted(true);
-                                foundStar.toStarCatcher(pBlockEntity.getBlockPos());
-
-                                if (plevel instanceof ServerLevel)
-                                    ManaMessages.sendToNear(plevel, pBlockEntity.getBlockPos(), 60,
-                                            new FallenStarS2CPacket(pBlockEntity.getBlockPos(), foundStar.getId()));
-
+                        if (foundStar.getIsTargeted() == false) {
+                            if (plevel instanceof ServerLevel) {
+                                ManaMessages.sendToNear(plevel, pBlockEntity.getBlockPos(), 60,
+                                        new FallenStarS2CPacket(pBlockEntity.getBlockPos(), foundStar.getId()));
                             }
+                            foundStar.setIsTargeted(true);
+                            foundStar.toStarCatcher(pBlockEntity.getBlockPos());
+
                         }
 
                     }
@@ -230,7 +226,7 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
         }
     }
 
-    private boolean hasNotReachedStackLimit() {
+    public boolean hasNotReachedStackLimit() {
         return this.itemHandler.getStackInSlot(0).getCount() < this.itemHandler.getStackInSlot(0).getMaxStackSize();
     }
 

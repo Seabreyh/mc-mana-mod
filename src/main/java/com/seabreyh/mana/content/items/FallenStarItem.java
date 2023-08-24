@@ -6,27 +6,44 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.content.entities.FallenStarEntity;
 import com.seabreyh.mana.foundation.client.renderers.item.ManaItemStackRenderer;
 import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.tags.BlockTags;
 
 public class FallenStarItem extends Item {
 
     public FallenStarItem(Properties p_41383_) {
         super(p_41383_);
+        DispenserBlock.registerBehavior(this, DISPENSER_BEHAVIOR);
     }
 
     // Use Block Entity model for Item model
@@ -35,8 +52,8 @@ public class FallenStarItem extends Item {
         consumer.accept((IClientItemExtensions) ManaMod.PROXY.getISTERProperties());
     }
 
+    // Right click functionality
     @Override
-    // Called when player right clicks star
     public InteractionResultHolder<ItemStack> use(Level world, Player player,
             InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
@@ -69,8 +86,46 @@ public class FallenStarItem extends Item {
                 (random.nextFloat() - random.nextFloat()) * 0.2F + 1.5F);
     }
 
+    // Make fuel source for furnace
     @Override
     public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
         return 3200;
     }
+
+    // Block Dispenser functionality
+    private static final DispenseItemBehavior DISPENSER_BEHAVIOR = new DefaultDispenseItemBehavior() {
+
+        @Override
+        public ItemStack execute(BlockSource source, ItemStack stack) {
+            Level level = source.getLevel();
+            Position position = DispenserBlock.getDispensePosition(source);
+            Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+            Projectile projectile = this.getProjectile(level, position, stack);
+            projectile.shoot((double) direction.getStepX(), (double) ((float) direction.getStepY() + 0.1F),
+                    (double) direction.getStepZ(), this.getPower(), this.getUncertainty());
+            level.addFreshEntity(projectile);
+            stack.shrink(1);
+            return stack;
+        }
+
+        protected Projectile getProjectile(Level level, Position pos, ItemStack stack) {
+            FallenStarEntity fallenStar = new FallenStarEntity(level, pos.x(), pos.y(), pos.z());
+            fallenStar.pickup = AbstractArrow.Pickup.ALLOWED;
+            return fallenStar;
+        }
+
+        @Override
+        protected void playSound(BlockSource source) {
+            source.getLevel()
+                    .levelEvent(1000, source.getPos(), 0);
+        }
+
+        protected float getUncertainty() {
+            return 6.0F;
+        }
+
+        protected float getPower() {
+            return 1.1F;
+        }
+    };
 }
