@@ -8,6 +8,7 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -63,7 +64,11 @@ public class ManaTreat extends Item {
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents,
             TooltipFlag pIsAdvanced) {
 
-        pTooltipComponents.add(Component.translatable("tooltip.mana.manatreat.tooltip"));
+        if (Screen.hasShiftDown()) {
+            pTooltipComponents.add(Component.translatable("tooltip.mana.manatreat.tooltip"));
+        } else {
+            pTooltipComponents.add(Component.translatable("tooltip.mana.lshift.tooltip"));
+        }
     }
 
 }

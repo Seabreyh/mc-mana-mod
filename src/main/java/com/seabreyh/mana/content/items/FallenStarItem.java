@@ -11,10 +11,12 @@ import com.seabreyh.mana.foundation.client.renderers.item.ManaItemStackRenderer;
 import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -26,10 +28,12 @@ import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -127,5 +131,17 @@ public class FallenStarItem extends Item {
         protected float getPower() {
             return 1.1F;
         }
+
     };
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents,
+            TooltipFlag pIsAdvanced) {
+
+        if (Screen.hasShiftDown()) {
+            pTooltipComponents.add(Component.translatable("tooltip.mana.fallen_star.tooltip"));
+        } else {
+            pTooltipComponents.add(Component.translatable("tooltip.mana.lshift.tooltip"));
+        }
+    }
 }

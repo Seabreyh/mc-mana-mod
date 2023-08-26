@@ -4,19 +4,24 @@ import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
 import com.seabreyh.mana.registries.ManaBlockEntities;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -200,6 +205,18 @@ public class StarCatcher extends BaseEntityBlock implements SimpleWaterloggedBlo
             BlockEntityType<T> pBlockEntityType) {
         return createTickerHelper(pBlockEntityType, ManaBlockEntities.STAR_CATCHER_ENTITY_BLOCK.get(),
                 BlockEntityStarCatcher::tick);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter p_49817_, List<Component> pTooltipComponents,
+            TooltipFlag pIsAdvanced) {
+
+        if (Screen.hasShiftDown()) {
+            pTooltipComponents.add(Component.translatable("tooltip.mana.star_catcher.tooltip"));
+            pTooltipComponents.add(Component.translatable("tooltip.mana.underwater"));
+        } else {
+            pTooltipComponents.add(Component.translatable("tooltip.mana.lshift.tooltip"));
+        }
     }
 
 }

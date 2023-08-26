@@ -51,10 +51,15 @@
   "item.minecraft.lingering_potion.effect.mana_instant": "Lingering Potion of Instant Mana",
   "item.minecraft.lingering_potion.effect.mana_regen": "Lingering Potion of Mana Regeneration",
 
+  "tooltip.mana.lshift.tooltip": "§7Hold §8[§fLSHIFT§8] §7for more info",
+  "tooltip.mana.underwater": "§fCan be placed §9underwater§f!",
   "tooltip.mana.amethyst_staff.tooltip": "§7Does not react well to fire... or does it?",
   "tooltip.mana.emerald_staff.tooltip": "§7Auto targeted magic",
-  "tooltip.mana.lshift.tooltip": "§7Hold §8[§bLSHIFT§8] §7for more info",
   "tooltip.mana.manatreat.tooltip": "§7Eat to increase your mana level",
+  "tooltip.mana.star_catcher.tooltip": "§7Will automatically gather stars that fall from the night sky.",
+  "tooltip.mana.star_bottle.tooltip": "§7A bottle with a cute little star.",
+  "tooltip.mana.celestial_torch.tooltip": "§7A very bright torch.",
+  "tooltip.mana.fallen_star.tooltip": "§7A strange source of magic, fallen from the sky...",
 
   "creativetab.mana_tab": "Mana Mod"
 }

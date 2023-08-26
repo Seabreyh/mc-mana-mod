@@ -1,6 +1,9 @@
 package com.seabreyh.mana.content.blocks;
 
+import java.util.List;
 import java.util.Random;
+
+import javax.annotation.Nullable;
 
 import com.ibm.icu.text.MessagePattern.Part;
 import com.seabreyh.mana.ManaMod;
@@ -11,11 +14,15 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.TorchBlock;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -166,4 +173,15 @@ public class CelestialTorch extends TorchBlock implements SimpleWaterloggedBlock
         builder.add(FACING, WATERLOGGED, FLOWING_WATER);
     }
 
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter p_49817_, List<Component> pTooltipComponents,
+            TooltipFlag pIsAdvanced) {
+
+        if (Screen.hasShiftDown()) {
+            pTooltipComponents.add(Component.translatable("tooltip.mana.celestial_torch.tooltip"));
+            pTooltipComponents.add(Component.translatable("tooltip.mana.underwater"));
+        } else {
+            pTooltipComponents.add(Component.translatable("tooltip.mana.lshift.tooltip"));
+        }
+    }
 }
