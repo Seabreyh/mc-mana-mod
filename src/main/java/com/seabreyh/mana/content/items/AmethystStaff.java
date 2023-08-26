@@ -19,7 +19,7 @@ import net.minecraft.world.item.TooltipFlag;
 import org.jetbrains.annotations.Nullable;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.entities.AmethystEnergyBall;
+import com.seabreyh.mana.content.entities.AmethystStaffProjectile;
 import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 
 import java.util.List;
@@ -52,7 +52,7 @@ public class AmethystStaff extends Item {
             }
 
             if (hasMana && this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
-                AmethystEnergyBall energyBall = new AmethystEnergyBall(world, player);
+                AmethystStaffProjectile energyBall = new AmethystStaffProjectile(world, player);
                 energyBall.shootFromRotation(player, player.getXRot(), player.getYRot(),
                         0.0F, 1.5F, 1.0F);
                 energyBall.setNoGravity(true);

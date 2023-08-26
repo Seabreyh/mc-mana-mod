@@ -1,7 +1,7 @@
 package com.seabreyh.mana.content.items;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.entities.EmeraldEnergyBall;
+import com.seabreyh.mana.content.entities.EmeraldStaffProjectile;
 import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 
 import java.util.List;
@@ -55,7 +55,7 @@ public class EmeraldStaff extends Item {
                 ManaMod.LOGGER.info("EmeraldStaff.use() called, hasMana = " + hasMana);
             }
             if (hasMana && this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
-                EmeraldEnergyBall energyBall = new EmeraldEnergyBall(world, player);
+                EmeraldStaffProjectile energyBall = new EmeraldStaffProjectile(world, player);
                 energyBall.shootFromRotation(player, player.getXRot(), player.getYRot(),
                         0.0F, 1.5F, 1.0F);
                 energyBall.setNoGravity(true);

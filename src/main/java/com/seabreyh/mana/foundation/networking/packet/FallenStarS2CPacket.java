@@ -22,20 +22,24 @@ public class FallenStarS2CPacket {
     private BlockPos catcherPos;
     private int entityId;
     private FallenStarEntity fsE;
+    private boolean toStarCatcher;
 
-    public FallenStarS2CPacket(BlockPos catcherPos, int entityId) {
+    public FallenStarS2CPacket(BlockPos catcherPos, int entityId, boolean toStarCatcher) {
         this.catcherPos = catcherPos;
         this.entityId = entityId;
+        this.toStarCatcher = toStarCatcher;
     }
 
     public FallenStarS2CPacket(FriendlyByteBuf buf) {
         this.catcherPos = (buf.readBlockPos());
         this.entityId = (buf.readInt());
+        this.toStarCatcher = (buf.readBoolean());
     }
 
     public void toBytes(FriendlyByteBuf buf) {
         buf.writeBlockPos(catcherPos);
         buf.writeInt(entityId);
+        buf.writeBoolean(toStarCatcher);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
@@ -48,9 +52,15 @@ public class FallenStarS2CPacket {
 
             Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
             if (entityByID instanceof FallenStarEntity) {
-                fsE = (FallenStarEntity) entityByID;
-                fsE.toStarCatcher(catcherPos);
-                fsE.setIsTargeted(true);
+                // Call stars to Star catcher function
+                if (toStarCatcher) {
+                    fsE = (FallenStarEntity) entityByID;
+                    fsE.toStarCatcher(catcherPos);
+                } else {
+                    // call stars stop star catch function
+                    fsE = (FallenStarEntity) entityByID;
+                    fsE.stopStarCatch();
+                }
 
             } else {
                 ManaMod.LOGGER.warn(

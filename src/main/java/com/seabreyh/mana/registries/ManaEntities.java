@@ -1,8 +1,8 @@
 package com.seabreyh.mana.registries;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.entities.AmethystEnergyBall;
-import com.seabreyh.mana.content.entities.EmeraldEnergyBall;
+import com.seabreyh.mana.content.entities.AmethystStaffProjectile;
+import com.seabreyh.mana.content.entities.EmeraldStaffProjectile;
 import com.seabreyh.mana.content.entities.FallenStarEntity;
 
 import net.minecraft.world.entity.EntityType;
@@ -18,15 +18,18 @@ public class ManaEntities {
                         ForgeRegistries.ENTITY_TYPES,
                         ManaMod.MOD_ID);
 
-        public static final RegistryObject<EntityType<AmethystEnergyBall>> AMETHYST_ENERGY_BALL = ENTITIES.register(
-                        "amethyst_energy_ball",
-                        () -> EntityType.Builder.<AmethystEnergyBall>of(AmethystEnergyBall::new,
-                                        MobCategory.MISC)
-                                        .sized(0.3f, 0.3f).build("amethyst_energy_ball"));
+        public static final RegistryObject<EntityType<AmethystStaffProjectile>> AMETHYST_ENERGY_BALL = ENTITIES
+                        .register(
+                                        "amethyst_energy_ball",
+                                        () -> EntityType.Builder
+                                                        .<AmethystStaffProjectile>of(AmethystStaffProjectile::new,
+                                                                        MobCategory.MISC)
+                                                        .sized(0.3f, 0.3f).build("amethyst_energy_ball"));
 
-        public static final RegistryObject<EntityType<EmeraldEnergyBall>> EMERALD_ENERGY_BALL = ENTITIES.register(
+        public static final RegistryObject<EntityType<EmeraldStaffProjectile>> EMERALD_ENERGY_BALL = ENTITIES.register(
                         "emerald_energy_ball",
-                        () -> EntityType.Builder.<EmeraldEnergyBall>of(EmeraldEnergyBall::new, MobCategory.MISC)
+                        () -> EntityType.Builder
+                                        .<EmeraldStaffProjectile>of(EmeraldStaffProjectile::new, MobCategory.MISC)
                                         .sized(0.3f, 0.3f).build("emerald_energy_ball"));
 
         public static final RegistryObject<EntityType<FallenStarEntity>> FALLEN_STAR = ENTITIES.register(

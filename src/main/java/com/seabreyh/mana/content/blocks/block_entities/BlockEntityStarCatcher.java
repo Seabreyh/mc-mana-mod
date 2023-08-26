@@ -175,9 +175,8 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
                         if (foundStar.getIsTargeted() == false) {
                             if (plevel instanceof ServerLevel) {
                                 ManaMessages.sendToNear(plevel, pBlockEntity.getBlockPos(), 60,
-                                        new FallenStarS2CPacket(pBlockEntity.getBlockPos(), foundStar.getId()));
+                                        new FallenStarS2CPacket(pBlockEntity.getBlockPos(), foundStar.getId(), true));
                             }
-                            foundStar.setIsTargeted(true);
                             foundStar.toStarCatcher(pBlockEntity.getBlockPos());
 
                         }
@@ -190,7 +189,13 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
                 List<FallenStarEntity> fallenStars = plevel.getEntitiesOfClass(FallenStarEntity.class, area);
 
                 for (FallenStarEntity foundStar : fallenStars) {
-                    if (foundStar.getIsTargeted()) {
+
+                    if (foundStar.getIsTargeted() && foundStar.getCatcher() == pBlockEntity) {
+                        if (plevel instanceof ServerLevel) {
+                            ManaMessages.sendToNear(plevel, pBlockEntity.getBlockPos(), 60,
+                                    new FallenStarS2CPacket(pBlockEntity.getBlockPos(), foundStar.getId(), false));
+                        }
+
                         foundStar.stopStarCatch();
 
                     }

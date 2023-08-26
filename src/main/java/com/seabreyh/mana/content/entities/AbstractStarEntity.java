@@ -122,6 +122,10 @@ public abstract class AbstractStarEntity extends AbstractArrow {
             }
         }
 
+        if (catcher != null && !catcher.hasNotReachedStackLimit()) {
+            ManaMod.LOGGER.info("Catcher is full");
+        }
+
         // distance for splash particles
         if (!this.firstTick) {
             travelDistance = lastPosition.distanceTo(this.position());
@@ -501,6 +505,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
     }
 
     public void toStarCatcher(BlockPos catcherPos) {
+        this.isTargeted = true;
         this.catcherPos = catcherPos;
         setCatcher(catcherPos);
         this.moveToCatcher = true;
@@ -611,6 +616,7 @@ public abstract class AbstractStarEntity extends AbstractArrow {
         this.pickup = AbstractArrow.Pickup.ALLOWED;
         this.catcher = null;
         this.catcherPos = null;
+        this.clientSideCatchStarTickCount = 0;
     }
 
     // Despawn timer

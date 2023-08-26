@@ -27,13 +27,13 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 
-public class AmethystEnergyBall extends ThrowableProjectile {
+public class AmethystStaffProjectile extends ThrowableProjectile {
     private int life;
     private int explosionPower = 2;
     private boolean fireCharged;
     private Double speedModifier = 8.0D;
 
-    public AmethystEnergyBall(Level world, LivingEntity player) {
+    public AmethystStaffProjectile(Level world, LivingEntity player) {
         super(ManaEntities.AMETHYST_ENERGY_BALL.get(), player, world);
 
         double xPos = player.getX();
@@ -45,7 +45,7 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         this.life = 0;
     }
 
-    public AmethystEnergyBall(EntityType<? extends AmethystEnergyBall> p_37391_,
+    public AmethystStaffProjectile(EntityType<? extends AmethystStaffProjectile> p_37391_,
             Level p_37392_) {
         super(p_37391_, p_37392_);
     }
@@ -192,42 +192,50 @@ public class AmethystEnergyBall extends ThrowableProjectile {
 
         // discard entity on hitblock unless LEAVES, GLASS, or ICE
         BlockState blockState = this.level().getBlockState(hitBlock.getBlockPos());
-        // if (blockState.getMaterial() != Material.LEAVES && blockState.getMaterial()
-        // != Material.GLASS && blockState.getMaterial() != Material.ICE) {
+        if (blockState.getBlock() != Blocks.OAK_LEAVES &&
+                blockState.getBlock() != Blocks.SPRUCE_LEAVES &&
+                blockState.getBlock() != Blocks.BIRCH_LEAVES &&
+                blockState.getBlock() != Blocks.JUNGLE_LEAVES &&
+                blockState.getBlock() != Blocks.ACACIA_LEAVES &&
+                blockState.getBlock() != Blocks.CHERRY_LEAVES &&
+                blockState.getBlock() != Blocks.DARK_OAK_LEAVES &&
+                blockState.getBlock() != Blocks.MANGROVE_LEAVES &&
+                blockState.getBlock() != Blocks.AZALEA_LEAVES &&
+                blockState.getBlock() != Blocks.FLOWERING_AZALEA_LEAVES &&
+                blockState.getBlock() != Blocks.GLASS &&
+                blockState.getBlock() != Blocks.ICE) {
 
-        if (fireCharged || this.wasOnFire || blockstateAbove.getBlock() == Blocks.FIRE
-                || blockstateAbove.getBlock() == Blocks.SOUL_FIRE) {
-            // if (!this.level().isClientSide) {
-            // boolean flag =
-            // net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(),
-            // this.getOwner());
-            // this.level().explode((Entity) null, this.getX(), this.getY(), this.getZ(),
-            // (float) this.explosionPower,
-            // flag, flag ? Explosion.BlockInteraction.DESTROY :
-            // Explosion.BlockInteraction.NONE);
-            // this.discard();
-            // }
-        } else {
-            this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
+            if (fireCharged || this.wasOnFire || blockstateAbove.getBlock() == Blocks.FIRE
+                    || blockstateAbove.getBlock() == Blocks.SOUL_FIRE) {
+                if (!this.level().isClientSide) {
+                    boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(),
+                            this.getOwner());
+                    this.level().explode((Entity) null, this.getX(), this.getY(), this.getZ(),
+                            (float) this.explosionPower,
+                            flag, flag ? Level.ExplosionInteraction.MOB : Level.ExplosionInteraction.NONE);
+                    this.discard();
+                }
+            } else {
+                this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
+            }
+
+            if (!this.level().isClientSide) { // qty spread velocity
+                ((ServerLevel) this.level()).sendParticles(ParticleTypes.FLASH, this.getX(),
+                        this.getY(), this.getZ(),
+                        1,
+                        0D,
+                        0D, 0D, 0D);
+                ((ServerLevel) this.level()).sendParticles(ParticleTypes.END_ROD,
+                        this.getX(), this.getY(), this.getZ(),
+                        20,
+                        1D, 1D, 1D, 0.3D);
+
+                this.discard();
+            }
+
+            super.onHitBlock(hitBlock);
+
         }
-
-        if (!this.level().isClientSide) { // qty spread velocity
-            ((ServerLevel) this.level()).sendParticles(ParticleTypes.FLASH, this.getX(),
-                    this.getY(), this.getZ(),
-                    1,
-                    0D,
-                    0D, 0D, 0D);
-            ((ServerLevel) this.level()).sendParticles(ParticleTypes.END_ROD,
-                    this.getX(), this.getY(), this.getZ(),
-                    20,
-                    1D, 1D, 1D, 0.3D);
-
-            this.discard();
-        }
-
-        super.onHitBlock(hitBlock);
-
-        // }
     }
 
     protected void onHit(HitResult hitResult) {
@@ -239,34 +247,34 @@ public class AmethystEnergyBall extends ThrowableProjectile {
         Entity entity = hitEntity.getEntity();
         Entity entity1 = this.getOwner();
         LivingEntity livingentity = entity1 instanceof LivingEntity ? (LivingEntity) entity1 : null;
-        // boolean flag = entity.hurt(DamageSource.indirectMobAttack(this,
-        // livingentity).setProjectile(), 3F);
 
-        // if (flag && entity != entity1) {
-        if (entity != entity1) {
-            this.doEnchantDamageEffects(livingentity, entity);
-            this.playSound(SoundEvents.ZOMBIE_VILLAGER_CURE, 1.2F, 1.5F);
+        boolean flag = entity.hurt(this.damageSources().indirectMagic(this, livingentity), 3F);
 
-            if (!this.level().isClientSide) {
-                ((ServerLevel) this.level()).sendParticles(ParticleTypes.CRIT, this.getX(),
-                        this.getY(), this.getZ(),
-                        20,
-                        0.15D, 0.15D, 0.15D, 0.2D);
-            }
+        if (flag && entity != entity1) {
+            if (entity != entity1) {
+                this.doEnchantDamageEffects(livingentity, entity);
+                this.playSound(SoundEvents.ZOMBIE_VILLAGER_CURE, 1.2F, 1.5F);
 
-            if (fireCharged || this.wasOnFire) {
                 if (!this.level().isClientSide) {
-                    boolean flag2 = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(),
-                            this.getOwner());
-                    // this.level().explode((Entity) null, this.getX(), this.getY(), this.getZ(),
-                    // (float) this.explosionPower, flag2,
-                    // flag2 ? Explosion.BlockInteraction.DESTROY :
-                    // Explosion.BlockInteraction.NONE);
+                    ((ServerLevel) this.level()).sendParticles(ParticleTypes.CRIT, this.getX(),
+                            this.getY(), this.getZ(),
+                            20,
+                            0.15D, 0.15D, 0.15D, 0.2D);
+                }
+
+                if (fireCharged || this.wasOnFire) {
+                    if (!this.level().isClientSide) {
+                        boolean flag2 = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level(),
+                                this.getOwner());
+                        this.level().explode((Entity) null, this.getX(), this.getY(), this.getZ(),
+                                (float) this.explosionPower, flag2,
+                                flag2 ? Level.ExplosionInteraction.MOB : Level.ExplosionInteraction.NONE);
+                        this.discard();
+                    }
+                }
+                if (!this.level().isClientSide) {
                     this.discard();
                 }
-            }
-            if (!this.level().isClientSide) {
-                this.discard();
             }
         }
     }

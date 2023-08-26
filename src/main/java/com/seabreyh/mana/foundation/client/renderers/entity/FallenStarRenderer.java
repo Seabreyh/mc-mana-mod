@@ -93,17 +93,17 @@ public class FallenStarRenderer<T extends FallenStarEntity> extends EntityRender
                 fallenStar.getDisplayName(), this, poseStack, multBuff, intOne, floatTwo);
         net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(renderNameTagEvent);
 
-        this.renderNameTag(fallenStar, Component.literal(
-                "ID:" + fallenStar.getId() +
-                        " Age:" + fallenStar.getAge() +
-                        " PickUp:" + fallenStar.pickup +
-                        " Targeted:" + fallenStar.getIsTargeted() +
-                        " MoveToCatcher: " + fallenStar.moveToCatcher +
-                        " isFalling: " + fallenStar.isFalling +
-                        " catcher: " + fallenStar.catcherPos
-                        + " [CLIENT THREAD]"
+        // this.renderNameTag(fallenStar, Component.literal(
+        // "ID:" + fallenStar.getId() +
+        // " Age:" + fallenStar.getAge() +
+        // " PickUp:" + fallenStar.pickup +
+        // " Targeted:" + fallenStar.getIsTargeted() +
+        // " MoveToCatcher: " + fallenStar.moveToCatcher +
+        // " isFalling: " + fallenStar.isFalling +
+        // " catcher: " + fallenStar.catcherPos
+        // + " [CLIENT THREAD]"
 
-        ), poseStack, multBuff, intOne);
+        // ), poseStack, multBuff, intOne);
 
     }
 
