@@ -27,7 +27,13 @@ import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.GlassBlock;
+import net.minecraft.world.level.block.IceBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.StainedGlassBlock;
+import net.minecraft.world.level.block.StainedGlassPaneBlock;
+import net.minecraft.world.level.block.TintedGlassBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -320,18 +326,14 @@ public class EmeraldStaffProjectile extends ThrowableProjectile {
     protected void onHitBlock(BlockHitResult hitBlock) {
         // discard entity on hitblock unless LEAVES, GLASS, or ICE
         BlockState blockState = this.level().getBlockState(hitBlock.getBlockPos());
-        if (blockState.getBlock() != Blocks.OAK_LEAVES &&
-                blockState.getBlock() != Blocks.SPRUCE_LEAVES &&
-                blockState.getBlock() != Blocks.BIRCH_LEAVES &&
-                blockState.getBlock() != Blocks.JUNGLE_LEAVES &&
-                blockState.getBlock() != Blocks.ACACIA_LEAVES &&
-                blockState.getBlock() != Blocks.CHERRY_LEAVES &&
-                blockState.getBlock() != Blocks.DARK_OAK_LEAVES &&
-                blockState.getBlock() != Blocks.MANGROVE_LEAVES &&
-                blockState.getBlock() != Blocks.AZALEA_LEAVES &&
-                blockState.getBlock() != Blocks.FLOWERING_AZALEA_LEAVES &&
-                blockState.getBlock() != Blocks.GLASS &&
-                blockState.getBlock() != Blocks.ICE) {
+        if (!(blockState.getBlock() instanceof LeavesBlock) &&
+                !(blockState.getBlock() instanceof GlassBlock) &&
+                !(blockState.getBlock() instanceof StainedGlassBlock) &&
+                !(blockState.getBlock() instanceof TintedGlassBlock) &&
+                !(blockState.getBlock() instanceof IronBarsBlock) &&
+                !(blockState.getBlock() instanceof StainedGlassPaneBlock) &&
+                !(blockState.getBlock() instanceof IceBlock)) {
+
             this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 1.0F);
 
             if (!this.level().isClientSide) { // qty spread velocity
@@ -361,12 +363,6 @@ public class EmeraldStaffProjectile extends ThrowableProjectile {
 
         boolean flag = entity.hurt(this.damageSources().indirectMagic(this, livingentity), 2F);
 
-        // boolean onServer = !level().isClientSide;
-        // if (onServer && !target.hurt(causePotatoDamage(), 2F)) {
-        // // target.setRemainingFireTicks(k);
-        // kill();
-        // return;
-        // }
         if (flag && entity != owner) {
             if (entity != owner) {
                 this.doEnchantDamageEffects(livingentity, entity);
