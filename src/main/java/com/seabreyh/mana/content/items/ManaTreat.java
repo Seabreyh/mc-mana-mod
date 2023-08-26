@@ -8,8 +8,11 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -26,9 +29,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 
 public class ManaTreat extends Item {
+    private final Minecraft minecraft;
 
     public ManaTreat(Properties p_41383_) {
         super(p_41383_);
+        minecraft = Minecraft.getInstance();
     }
 
     public static final FoodProperties FOOD_PROPERTIES = new FoodProperties.Builder().nutrition(2).saturationMod(0.2f)
@@ -41,11 +46,26 @@ public class ManaTreat extends Item {
             if (!world.isClientSide) {
                 this.playSound(world, ((Player) livingEntity));
 
+                ((ServerLevel) world).sendParticles(ParticleTypes.FLASH, livingEntity.getX(),
+                        livingEntity.getY(), livingEntity.getZ(), 1,
+                        0D,
+                        0D, 0D, 0D);
+                ((ServerLevel) world).sendParticles(ParticleTypes.END_ROD,
+                        livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(),
+                        20,
+                        1D, 1D, 1D, 0.3D);
+
+                ((ServerLevel) world).sendParticles(ParticleTypes.TOTEM_OF_UNDYING,
+                        livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(),
+                        20,
+                        1D, 1D, 1D, 0.3D);
+
                 ((Player) livingEntity).getCapability(PlayerManaStatProvider.PLAYER_MANA_STAT).ifPresent(mana_stat -> {
                     PlayerManaEvent.increaseManaCapacity(((Player) livingEntity), 1);
                 });
 
                 return this.isEdible() ? livingEntity.eat(world, itemStack) : itemStack;
+
             }
         }
 
@@ -56,7 +76,7 @@ public class ManaTreat extends Item {
         RandomSource random = level.getRandom();
         level.playSound((Player) null, player.getX(), player.getY(), player.getZ(),
                 SoundEvents.EVOKER_PREPARE_SUMMON,
-                SoundSource.BLOCKS, 10.25F,
+                SoundSource.BLOCKS, 5F,
                 (random.nextFloat() - random.nextFloat()) * 0.1F + 1.5F);
     }
 
