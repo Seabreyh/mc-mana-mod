@@ -1,7 +1,7 @@
 package com.seabreyh.mana.content.items.block_entity_items.renderers;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
+import com.seabreyh.mana.content.blocks.block_entities.StarCatcherBlockEntity;
 import com.seabreyh.mana.content.entities.AbstractFallingSpaceEntity;
 
 import org.joml.Quaternionf;
@@ -53,7 +53,7 @@ public class FallenStarBlockEntityItemRenderer implements BlockEntityRenderer<Fa
     }
 
     @Override
-    public void render(BlockEntityStarCatcher entityBlock, float partialTicks, PoseStack stack,
+    public void render(StarCatcherBlockEntity entityBlock, float partialTicks, PoseStack stack,
             MultiBufferSource buffer, int combinedOverlay, int packedLight) {
 
         stack.pushPose();

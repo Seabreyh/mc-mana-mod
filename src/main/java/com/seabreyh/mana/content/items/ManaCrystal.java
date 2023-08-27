@@ -5,6 +5,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class ManaCrystal extends Item {
 
+    public static final Properties PROPERTIES = new Item.Properties();
+
     public ManaCrystal(Properties p_41383_) {
         super(p_41383_);
     }

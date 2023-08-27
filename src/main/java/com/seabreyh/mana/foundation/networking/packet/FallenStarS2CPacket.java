@@ -1,20 +1,15 @@
 package com.seabreyh.mana.foundation.networking.packet;
 
-import java.util.UUID;
 import java.util.function.Supplier;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
 import com.seabreyh.mana.content.entities.FallenStarEntity;
 import com.seabreyh.mana.foundation.client.ClientFallenStarData;
-import com.seabreyh.mana.foundation.client.ClientManaStatData;
-// import com.seabreyh.mana.foundation.client.renderers.entities.FallenStarSyncData;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -63,8 +58,9 @@ public class FallenStarS2CPacket {
                 }
 
             } else {
-                ManaMod.LOGGER.warn(
-                        "HANDEL() called with invalid Entity Lookup by id is: " + entityByID + " Entity Number(id):"
+                ManaMod.LOGGER.error(
+                        "FallenStarS2CPacket: handle() called with invalid Entity Lookup by id is: " + entityByID
+                                + " Entity Number(id):"
                                 + entityId);
             }
             ClientFallenStarData.setCatcherPos(catcherPos);

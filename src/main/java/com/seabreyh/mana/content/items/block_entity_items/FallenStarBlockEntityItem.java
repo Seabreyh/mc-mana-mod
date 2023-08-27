@@ -47,13 +47,13 @@ public class FallenStarBlockEntityItem extends BlockEntity implements MenuProvid
     @Override
     @Nullable
     public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
-        // TODO Auto-generated method stub
+        // FIXME Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'createMenu'");
     }
 
     @Override
     public Component getDisplayName() {
-        // TODO Auto-generated method stub
+        // FIXME Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getDisplayName'");
     }
 

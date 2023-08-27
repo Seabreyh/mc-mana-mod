@@ -1,6 +1,5 @@
 package com.seabreyh.mana.foundation.event.world;
 
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.entities.FallenStarEntity;
 import com.seabreyh.mana.registries.ManaEntities;
 

@@ -1,11 +1,9 @@
 package com.seabreyh.mana.content.items;
 
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.foundation.event.player.PlayerWishEvent;
 import com.seabreyh.mana.foundation.event.player.PlayerWishEvent.WishType;
 
 import java.util.List;
-import java.util.Random;
 import javax.annotation.Nullable;
 
 import net.minecraft.ChatFormatting;
@@ -24,7 +22,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.SoundType;
 
 public class GrantedWishItem extends SealedWishItem {
 

@@ -1,20 +1,13 @@
 package com.seabreyh.mana.content.entities;
 
-import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
-// import com.seabreyh.mana.foundation.client.renderers.entities.FallenStarSyncData;
 import com.seabreyh.mana.foundation.event.player.PlayerWishEvent;
 import com.seabreyh.mana.foundation.event.world.ShootingStarEvent;
-import com.seabreyh.mana.registries.ManaEntityDataSerializers;
 import com.seabreyh.mana.registries.ManaParticles;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -32,7 +25,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
@@ -84,8 +76,10 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
     protected AbstractFallingSpaceEntity(EntityType<? extends AbstractFallingSpaceEntity> entityType, Level level) {
         super(entityType, level);
         this.dimensions = entityType.getDimensions();
+        this.soundEvent = this.getDefaultHitGroundSoundEvent();
     }
 
+    // Shooting Star Event
     public AbstractFallingSpaceEntity(EntityType<? extends AbstractFallingSpaceEntity> getEntity, Level world,
             Player ownPlayer) {
         this(getEntity, world);
@@ -165,14 +159,13 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
                     if (aabb.move(blockpos).contains(vec31)) {
                         this.inGround = true; // use this func that will be overwritten by child
                         this.isFalling = false;
-
                         break;
                     }
                 }
             }
         }
 
-        // TODO update this to make more reliable inGround and flag, just always tick
+        // FIXME update this to make more reliable inGround and flag, just always tick
         // despawn once entity created
         if (this.inGround && !flag) {
             if (this.lastState != blockstate && this.shouldFall()) {
@@ -458,7 +451,6 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
 
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult) {
-
         Entity entity = entityHitResult.getEntity();
         float f = (float) this.getDeltaMovement().length();
         int i = Mth.ceil(Mth.clamp((double) f * this.baseDamage, 0.0D, 2.147483647E9D));
@@ -485,7 +477,7 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
                 // this.doPostHurtEffects(livingentity);
                 if (entity1 != null && livingentity != entity1 && livingentity instanceof Player
                         && entity1 instanceof ServerPlayer && !this.isSilent()) {
-                    // TODO ???
+                    // FIXME ???
                     ((ServerPlayer) entity1).connection
                             .send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
                 }

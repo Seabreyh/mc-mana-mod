@@ -1,6 +1,5 @@
 package com.seabreyh.mana.foundation.networking.packet;
 
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.foundation.event.player.PlayerWishEvent;
 import com.seabreyh.mana.foundation.event.player.PlayerWishEvent.WishType;
 
@@ -10,7 +9,6 @@ import java.util.function.Supplier;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.network.NetworkEvent;
 
 public class ChoseWishC2SPacket {
@@ -36,7 +34,7 @@ public class ChoseWishC2SPacket {
         context.enqueueWork(() -> {
             WishType recvWishType = this.wishType;
             ServerPlayer player = context.getSender();
-            ServerLevel level = (ServerLevel) player.level(); // TODO
+            ServerLevel level = (ServerLevel) player.level(); // FIXME
             PlayerWishEvent.serverHandlePlayerWish(player, level, recvWishType);
             success.set(true);
         });

@@ -1,12 +1,9 @@
 package com.seabreyh.mana.foundation.event.player;
 
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.items.SealedWishItem;
 import com.seabreyh.mana.foundation.networking.ManaMessages;
 import com.seabreyh.mana.foundation.networking.packet.ChoseWishC2SPacket;
 import com.seabreyh.mana.registries.ManaItems;
-
-import java.util.Random;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;

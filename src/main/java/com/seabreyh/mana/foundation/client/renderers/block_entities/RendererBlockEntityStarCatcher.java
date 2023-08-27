@@ -1,7 +1,7 @@
 package com.seabreyh.mana.foundation.client.renderers.block_entities;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
+import com.seabreyh.mana.content.blocks.block_entities.StarCatcherBlockEntity;
 import com.seabreyh.mana.content.entities.AbstractFallingSpaceEntity;
 
 import org.joml.Quaternionf;
@@ -26,7 +26,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class RendererBlockEntityStarCatcher implements BlockEntityRenderer<BlockEntityStarCatcher> {
+public class RendererBlockEntityStarCatcher implements BlockEntityRenderer<StarCatcherBlockEntity> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(ManaMod.MOD_ID,
             "textures/entity/fallen_star/fallen_star.png");
@@ -53,7 +53,7 @@ public class RendererBlockEntityStarCatcher implements BlockEntityRenderer<Block
     }
 
     @Override
-    public void render(BlockEntityStarCatcher entityBlock, float partialTicks, PoseStack stack,
+    public void render(StarCatcherBlockEntity entityBlock, float partialTicks, PoseStack stack,
             MultiBufferSource buffer, int combinedOverlay, int packedLight) {
 
         stack.pushPose();

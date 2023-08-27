@@ -4,20 +4,11 @@ import com.seabreyh.mana.ManaMod;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraft.world.item.EnchantedBookItem;
-
-import java.lang.reflect.Field;
 
 public class ManaCreativeTab {
 

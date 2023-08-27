@@ -20,14 +20,11 @@ import com.seabreyh.mana.foundation.client.renderers.items.ManaItemStackRenderer
 import com.seabreyh.mana.registries.ManaBlockEntities;
 import com.seabreyh.mana.registries.ManaBlocks;
 import com.seabreyh.mana.registries.ManaEntities;
-// import com.seabreyh.mana.screen.ManaMenuTypes;
-// import com.seabreyh.mana.screen.StarCatcherScreen;
 import com.seabreyh.mana.registries.ManaParticles;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -37,11 +34,8 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-// import net.minecraftforge.client.gui.ForgeIngameGui;
-// import net.minecraftforge.client.gui.OverlayRegistry;
 
 @Mod.EventBusSubscriber(modid = ManaMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ManaClientEvents {
@@ -76,7 +70,7 @@ public class ManaClientEvents {
         // EntityRenderers.register(null, null);
         // }v
 
-        // TODO NEEDED???
+        // FIXME NEEDED???
         @SubscribeEvent
         public void clientTick(TickEvent.ClientTickEvent event) {
                 if (event.phase == TickEvent.Phase.START) {

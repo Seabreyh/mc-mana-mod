@@ -1,7 +1,7 @@
 package com.seabreyh.mana.content.entities;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
+import com.seabreyh.mana.content.blocks.block_entities.StarCatcherBlockEntity;
 import com.seabreyh.mana.foundation.event.player.PlayerWishEvent;
 import com.seabreyh.mana.registries.ManaItems;
 import com.seabreyh.mana.registries.ManaParticles;
@@ -63,7 +63,7 @@ public class Meteor extends AbstractArrow implements SpawnPredicate {
     private boolean moveToCatcher = false;
     private int clientSideCatchStarTickCount;
     private BlockPos catcherPos;
-    private BlockEntityStarCatcher pBlockEntity;
+    private StarCatcherBlockEntity pBlockEntity;
 
     private final SoundEvent HIT_SOUND = SoundEvents.AMETHYST_BLOCK_BREAK;
     private final SoundEvent FALL_SOUND = SoundEvents.AMETHYST_BLOCK_CHIME;
@@ -120,7 +120,7 @@ public class Meteor extends AbstractArrow implements SpawnPredicate {
         this.isTargeted = isTargeted;
     }
 
-    public void toStarCatcher(BlockPos catcherPos, BlockEntityStarCatcher pBlockEntity) {
+    public void toStarCatcher(BlockPos catcherPos, StarCatcherBlockEntity pBlockEntity) {
         this.catcherPos = catcherPos;
         this.pBlockEntity = pBlockEntity;
         this.moveToCatcher = true;
@@ -165,7 +165,7 @@ public class Meteor extends AbstractArrow implements SpawnPredicate {
             // If within 0.7 blocks of catcher, catch.
             if (Math.abs(vec3.x) < 0.7 && Math.abs(vec3.y) < 0.7 && Math.abs(vec3.z) < 0.7) {
                 this.playSound(SoundEvents.BOTTLE_FILL_DRAGONBREATH, 2.0F, 1.0F);
-                BlockEntityStarCatcher.craftItem(pBlockEntity);
+                StarCatcherBlockEntity.craftItem(pBlockEntity);
                 discardStar();
             }
         }

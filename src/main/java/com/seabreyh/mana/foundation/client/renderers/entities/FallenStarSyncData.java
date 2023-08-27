@@ -1,45 +1,16 @@
 package com.seabreyh.mana.foundation.client.renderers.entities;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.Set;
-import java.util.Vector;
-
-import org.apache.commons.lang3.mutable.MutableBoolean;
-
-import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
-import com.seabreyh.mana.content.entities.AbstractFallingSpaceEntity;
-import com.seabreyh.mana.content.entities.FallenStarEntity;
+import com.seabreyh.mana.content.blocks.block_entities.StarCatcherBlockEntity;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.PriorityQueue;
-import java.util.Set;
-import java.util.Vector;
-
-import org.apache.commons.lang3.mutable.MutableBoolean;
-
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
 
 public class FallenStarSyncData {
     public boolean noPhysics;
     public boolean inGround;
     public AbstractArrow.Pickup pickup;
     public boolean isTargeted;
-    public BlockEntityStarCatcher catcher;
+    public StarCatcherBlockEntity catcher;
     public boolean moveToCatcher;
 
     public FallenStarSyncData() {
@@ -60,7 +31,7 @@ public class FallenStarSyncData {
         buffer.writeBoolean(noPhysics);
     }
 
-    public BlockEntityStarCatcher read(FriendlyByteBuf buffer) {
+    public StarCatcherBlockEntity read(FriendlyByteBuf buffer) {
         return catcher;
     }
 

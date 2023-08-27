@@ -18,6 +18,8 @@ import net.minecraft.world.level.Level;
 
 public class StarDust extends Item {
 
+    public static final Properties PROPERTIES = new Item.Properties();
+
     public StarDust(Properties properties) {
         super(properties);
     }

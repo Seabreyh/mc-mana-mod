@@ -4,10 +4,7 @@ import java.util.function.Supplier;
 
 import com.seabreyh.mana.foundation.client.ClientManaStatData;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.network.NetworkEvent;
 
 public class ManaStatSyncS2CPacket {

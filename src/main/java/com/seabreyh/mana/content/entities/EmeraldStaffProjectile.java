@@ -1,22 +1,14 @@
 package com.seabreyh.mana.content.entities;
 
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.registries.ManaEntities;
 import com.seabreyh.mana.registries.ManaParticles;
 
 import javax.annotation.Nonnull;
-
-import org.apache.commons.compress.compressors.lz77support.LZ77Compressor.Block.BlockType;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,8 +17,6 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GlassBlock;
 import net.minecraft.world.level.block.IceBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
@@ -45,7 +35,6 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.DamageTypeTags;
 
 public class EmeraldStaffProjectile extends ThrowableProjectile {
     private int life;

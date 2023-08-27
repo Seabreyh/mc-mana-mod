@@ -1,25 +1,19 @@
-package com.seabreyh.mana.content.blocks;
+package com.seabreyh.mana.content.blocks.functional;
 
-import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
+import com.seabreyh.mana.content.blocks.block_entities.StarCatcherBlockEntity;
 import com.seabreyh.mana.registries.ManaBlockEntities;
 
 import java.util.List;
 import java.util.stream.Stream;
-
 import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -31,7 +25,6 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -41,7 +34,6 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -55,22 +47,19 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class StarCatcher extends BaseEntityBlock implements SimpleWaterloggedBlock {
+
+    public static final Properties PROPERTIES = Properties.of()
+            .strength(0.2f)
+            .destroyTime(0.3f)
+            .lightLevel(BlockState -> 15);
+
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final IntegerProperty FLOWING_WATER = IntegerProperty.create("water_level", 1, 8);
 
-    public StarCatcher() {
-        this(Properties.of()
-                .strength(0.2f)
-                .destroyTime(0.3f)
-                .lightLevel(BlockState -> 15));
-
-    }
-
     public StarCatcher(Properties properties) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(WATERLOGGED, false));
-        ManaMod.LOGGER.info("StarCatcher init");
     }
 
     private static final VoxelShape SHAPE = Stream.of(
@@ -158,22 +147,12 @@ public class StarCatcher extends BaseEntityBlock implements SimpleWaterloggedBlo
         return RenderShape.MODEL;
     }
 
-    // public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos
-    // pos) {
-    // BlockEntity te = level.getBlockEntity(pos);
-    // return new SimpleMenuProvider((i, inv, player) -> {
-    // return new MenuTransmutationTable(i, inv, ContainerLevelAccess.create(level,
-    // pos), player, te instanceof TileEntityTransmutationTable ?
-    // (TileEntityTransmutationTable)te : null);
-    // }, CONTAINER_TITLE);
-    // }
-
     @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (pState.getBlock() != pNewState.getBlock()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if (blockEntity instanceof BlockEntityStarCatcher) {
-                ((BlockEntityStarCatcher) blockEntity).drops();
+            if (blockEntity instanceof StarCatcherBlockEntity) {
+                ((StarCatcherBlockEntity) blockEntity).drops();
             }
         }
         super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
@@ -184,8 +163,8 @@ public class StarCatcher extends BaseEntityBlock implements SimpleWaterloggedBlo
             Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
-            if (entity instanceof BlockEntityStarCatcher) {
-                NetworkHooks.openScreen(((ServerPlayer) pPlayer), (BlockEntityStarCatcher) entity, pPos);
+            if (entity instanceof StarCatcherBlockEntity) {
+                NetworkHooks.openScreen(((ServerPlayer) pPlayer), (StarCatcherBlockEntity) entity, pPos);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }
@@ -196,7 +175,7 @@ public class StarCatcher extends BaseEntityBlock implements SimpleWaterloggedBlo
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new BlockEntityStarCatcher(pPos, pState);
+        return new StarCatcherBlockEntity(pPos, pState);
     }
 
     @Nullable
@@ -204,7 +183,7 @@ public class StarCatcher extends BaseEntityBlock implements SimpleWaterloggedBlo
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState,
             BlockEntityType<T> pBlockEntityType) {
         return createTickerHelper(pBlockEntityType, ManaBlockEntities.STAR_CATCHER_BLOCK_ENTITY.get(),
-                BlockEntityStarCatcher::tick);
+                StarCatcherBlockEntity::tick);
     }
 
     @Override

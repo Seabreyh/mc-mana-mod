@@ -8,8 +8,9 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
+
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class PlayerManaStatProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
     public static Capability<PlayerManaStat> PLAYER_MANA_STAT = CapabilityManager

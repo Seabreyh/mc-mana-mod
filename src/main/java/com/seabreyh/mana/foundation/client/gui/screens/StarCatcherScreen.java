@@ -1,7 +1,6 @@
 package com.seabreyh.mana.foundation.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.seabreyh.mana.ManaMod;
 
 import net.minecraft.client.gui.GuiGraphics;

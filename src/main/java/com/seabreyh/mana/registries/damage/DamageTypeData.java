@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.registries.damage.WorldAttached;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;

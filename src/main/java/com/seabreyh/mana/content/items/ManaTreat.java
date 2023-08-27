@@ -4,11 +4,8 @@ import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 import com.seabreyh.mana.foundation.mana_stat.PlayerManaStatProvider;
 
 import java.util.List;
-import java.util.Random;
 import javax.annotation.Nullable;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -16,34 +13,35 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.SoundType;
 
 public class ManaTreat extends Item {
-    private final Minecraft minecraft;
+
+    public static final Properties PROPERTIES = new Item.Properties()
+            .food(ManaTreat.FOOD_PROPERTIES);
+
+    public static final FoodProperties FOOD_PROPERTIES = new FoodProperties.Builder()
+            .nutrition(2)
+            .saturationMod(0.2f)
+            .alwaysEat()
+            .build();
 
     public ManaTreat(Properties p_41383_) {
         super(p_41383_);
-        minecraft = Minecraft.getInstance();
     }
-
-    public static final FoodProperties FOOD_PROPERTIES = new FoodProperties.Builder().nutrition(2).saturationMod(0.2f)
-            .alwaysEat().build();
 
     @Override
     public ItemStack finishUsingItem(ItemStack itemStack, Level world,
             LivingEntity livingEntity) {
         if (livingEntity instanceof Player) {
             if (!world.isClientSide) {
+                // play mana treat effects
                 this.playSound(world, ((Player) livingEntity));
 
                 ((ServerLevel) world).sendParticles(ParticleTypes.FLASH, livingEntity.getX(),
@@ -60,6 +58,7 @@ public class ManaTreat extends Item {
                         20,
                         1D, 1D, 1D, 0.3D);
 
+                // call event packet
                 ((Player) livingEntity).getCapability(PlayerManaStatProvider.PLAYER_MANA_STAT).ifPresent(mana_stat -> {
                     PlayerManaEvent.increaseManaCapacity(((Player) livingEntity), 1);
                 });

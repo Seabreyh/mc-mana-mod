@@ -1,8 +1,6 @@
 package com.seabreyh.mana.foundation.event;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.entities.AbstractFallingSpaceEntity;
-import com.seabreyh.mana.content.entities.StarImpactEvent;
 import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 import com.seabreyh.mana.foundation.event.world.ShootingStarEvent;
 import com.seabreyh.mana.foundation.mana_stat.PlayerManaStat;
@@ -14,14 +12,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingTickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

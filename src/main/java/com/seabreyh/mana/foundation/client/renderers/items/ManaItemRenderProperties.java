@@ -1,6 +1,5 @@
 package com.seabreyh.mana.foundation.client.renderers.items;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 

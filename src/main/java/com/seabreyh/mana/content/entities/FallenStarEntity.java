@@ -1,7 +1,7 @@
 package com.seabreyh.mana.content.entities;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
+import com.seabreyh.mana.content.blocks.block_entities.StarCatcherBlockEntity;
 import com.seabreyh.mana.registries.ManaEntities;
 import com.seabreyh.mana.registries.ManaItems;
 import com.seabreyh.mana.registries.ManaParticles;
@@ -24,7 +24,7 @@ public class FallenStarEntity extends AbstractFallingSpaceEntity {
 
     private double catchSpeed = 0.8D;
     private int timeTillStartCatch = 130;
-    public BlockEntityStarCatcher catcher;
+    public StarCatcherBlockEntity catcher;
     public BlockPos catcherPos;
     private boolean isTargeted;
     public boolean moveToCatcher;
@@ -241,17 +241,17 @@ public class FallenStarEntity extends AbstractFallingSpaceEntity {
     }
 
     // GETTER - catcher
-    public BlockEntityStarCatcher getCatcher() {
+    public StarCatcherBlockEntity getCatcher() {
         return this.catcher;
     }
 
     // SETTER - catcher
     public void setCatcher(BlockPos catcherPos) {
         BlockEntity blockEntity = level().getBlockEntity(catcherPos);
-        if (blockEntity instanceof BlockEntityStarCatcher) {
-            this.catcher = (BlockEntityStarCatcher) blockEntity;
+        if (blockEntity instanceof StarCatcherBlockEntity) {
+            this.catcher = (StarCatcherBlockEntity) blockEntity;
         } else {
-            ManaMod.LOGGER.warn("Error at setCatcher() - Block entity at Pos: " + catcherPos
+            ManaMod.LOGGER.error("Error at setCatcher() - Block entity at Pos: " + catcherPos
                     + " does not appear to be Star Catcher. Entity Found: " + blockEntity);
         }
     }

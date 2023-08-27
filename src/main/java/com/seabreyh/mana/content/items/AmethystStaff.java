@@ -1,7 +1,5 @@
 package com.seabreyh.mana.content.items;
 
-import java.util.Random;
-
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -16,9 +14,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
-import org.jetbrains.annotations.Nullable;
 
-import com.seabreyh.mana.ManaMod;
+import javax.annotation.Nullable;
+
 import com.seabreyh.mana.content.entities.AmethystStaffProjectile;
 import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 
@@ -46,7 +44,6 @@ public class AmethystStaff extends Item {
         if (!world.isClientSide) {
             if (this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
                 // Handle depletion of player mana from use
-                ManaMod.LOGGER.info("Check mana: ");
                 hasMana = PlayerManaEvent.consumeMana(player, 1);
                 hasMana |= player.isCreative();
             }

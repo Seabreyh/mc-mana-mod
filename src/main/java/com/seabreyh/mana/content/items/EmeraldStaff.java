@@ -1,11 +1,10 @@
 package com.seabreyh.mana.content.items;
 
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.entities.EmeraldStaffProjectile;
 import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 
 import java.util.List;
-import java.util.Random;
+import javax.annotation.Nullable;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -13,7 +12,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -22,7 +20,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
-import org.jetbrains.annotations.Nullable;
 
 public class EmeraldStaff extends Item {
 
@@ -40,19 +37,14 @@ public class EmeraldStaff extends Item {
     // Called when player right clicks staff
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
 
-        ManaMod.LOGGER.info("EmeraldStaff.use() called");
-
         ItemStack itemstack = player.getItemInHand(hand);
         boolean hasMana = false;
 
         if (!world.isClientSide) {
-            ManaMod.LOGGER.info("EmeraldStaff.use() called, not client side");
             if (this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
                 // Handle depletion of player mana from use
                 hasMana = PlayerManaEvent.consumeMana(player, 3);
                 hasMana |= player.isCreative();
-
-                ManaMod.LOGGER.info("EmeraldStaff.use() called, hasMana = " + hasMana);
             }
             if (hasMana && this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
                 EmeraldStaffProjectile energyBall = new EmeraldStaffProjectile(world, player);
@@ -60,28 +52,19 @@ public class EmeraldStaff extends Item {
                         0.0F, 1.5F, 1.0F);
                 energyBall.setNoGravity(true);
                 world.addFreshEntity(energyBall);
-
-                ManaMod.LOGGER.info("EmeraldStaff.use() called, hasMana = " + hasMana);
             }
         }
         if (hasMana && this.getDamage(itemstack) < this.getMaxDamage(itemstack)) {
             this.playSound(world, player);
             this.setDamage(itemstack, this.getDamage(itemstack) + 2);
 
-            ManaMod.LOGGER.info("Item Damage: " + this.getDamage(itemstack) + " / " + this.getMaxDamage(itemstack));
-
             return InteractionResultHolder.success(itemstack);
         } else {
-
-            ManaMod.LOGGER.info("FAILED damage item");
-
             return InteractionResultHolder.fail(itemstack);
         }
     }
 
     private void playSound(Level level, Player player) {
-
-        ManaMod.LOGGER.info("EmeraldStaff.playSound() called");
 
         RandomSource random = level.getRandom();
         level.playSound((Player) null, player.getX(), player.getY(), player.getZ(),

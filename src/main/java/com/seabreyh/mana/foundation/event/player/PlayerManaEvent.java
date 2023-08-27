@@ -4,10 +4,7 @@ import com.seabreyh.mana.foundation.mana_stat.PlayerManaStatProvider;
 import com.seabreyh.mana.foundation.networking.ManaMessages;
 import com.seabreyh.mana.foundation.networking.packet.ManaStatSyncS2CPacket;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 
 public class PlayerManaEvent {

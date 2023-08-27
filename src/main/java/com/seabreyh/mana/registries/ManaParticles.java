@@ -2,11 +2,8 @@ package com.seabreyh.mana.registries;
 
 import com.seabreyh.mana.ManaMod;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.SoulParticle;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;

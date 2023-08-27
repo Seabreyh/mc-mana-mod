@@ -1,7 +1,5 @@
 package com.seabreyh.mana.foundation.client;
 
-import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
-
 import net.minecraft.core.BlockPos;
 
 public class ClientFallenStarData {

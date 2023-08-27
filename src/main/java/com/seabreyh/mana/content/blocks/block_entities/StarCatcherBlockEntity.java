@@ -1,6 +1,5 @@
 package com.seabreyh.mana.content.blocks.block_entities;
 
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.entities.FallenStarEntity;
 import com.seabreyh.mana.foundation.client.gui.screens.StarCatcherMenu;
 import com.seabreyh.mana.foundation.networking.ManaMessages;
@@ -39,7 +38,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import net.minecraftforge.items.IItemHandler;
 
-public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider {
+public class StarCatcherBlockEntity extends BlockEntity implements MenuProvider {
     public int tickCount;
     public int catchCount;
     public float activeRotation;
@@ -55,7 +54,7 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
-    public BlockEntityStarCatcher(BlockPos pWorldPosition, BlockState pBlockState) {
+    public StarCatcherBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(ManaBlockEntities.STAR_CATCHER_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
         // ManaMod.LOGGER.info("StarCatcher ENTITY BLOCK init");
     }
@@ -128,7 +127,7 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, BlockEntityStarCatcher pBlockEntity) {
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, StarCatcherBlockEntity pBlockEntity) {
 
         if (pLevel.isClientSide) {
             // ManaMod.LOGGER
@@ -159,7 +158,7 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
     }
 
     private static void locateStars(Level plevel, BlockPos pPos, BlockState pState,
-            BlockEntityStarCatcher pBlockEntity) {
+            StarCatcherBlockEntity pBlockEntity) {
         if (!plevel.isClientSide()) {
 
             if (pBlockEntity.hasNotReachedStackLimit()) {

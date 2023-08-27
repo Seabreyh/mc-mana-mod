@@ -2,7 +2,6 @@ package com.seabreyh.mana.foundation.client.renderers.entities;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.entities.FallenStarEntity;
-import com.seabreyh.mana.foundation.client.renderers.items.ManaItemStackRenderer;
 
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -10,8 +9,6 @@ import org.joml.Quaternionf;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-
-import org.joml.Vector3f;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -31,7 +28,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

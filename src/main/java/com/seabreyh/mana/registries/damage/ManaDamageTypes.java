@@ -4,7 +4,6 @@ import com.seabreyh.mana.ManaMod;
 
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.world.damagesource.DamageScaling;
 import net.minecraft.world.damagesource.DamageType;
 
 public class ManaDamageTypes {

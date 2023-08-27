@@ -1,22 +1,23 @@
 package com.seabreyh.mana.registries;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.blocks.AmethystBlock;
-import com.seabreyh.mana.content.blocks.CelestialTorch;
-import com.seabreyh.mana.content.blocks.StarBottle;
-import com.seabreyh.mana.content.blocks.StarCatcher;
-import com.seabreyh.mana.content.blocks.botany.flowers.Flower;
+import com.seabreyh.mana.content.blocks.botany.flowers.ManaFlower;
+import com.seabreyh.mana.content.blocks.decoration.AmethystBlock;
+import com.seabreyh.mana.content.blocks.functional.CelestialTorch;
+import com.seabreyh.mana.content.blocks.functional.StarBottle;
+import com.seabreyh.mana.content.blocks.functional.StarCatcher;
+
 import com.google.common.base.Supplier;
 
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -36,16 +37,16 @@ public class ManaBlocks {
         // that block, just replace new StarCatcher with Block
 
         public static final RegistryObject<Block> STAR_BOTTLE = registerBlock("star_bottle",
-                        () -> new StarBottle());
+                        () -> new StarBottle(StarBottle.PROPERTIES));
 
         public static final RegistryObject<Block> CELESTIAL_TORCH = registerBlock("celestial_torch",
-                        () -> new CelestialTorch());
+                        () -> new CelestialTorch(CelestialTorch.PROPERTIES, CelestialTorch.PARTICLE));
 
         public static final RegistryObject<Block> AMETHYST_BLOCK = registerBlock("amethyst_block",
-                        () -> new AmethystBlock());
+                        () -> new AmethystBlock(AmethystBlock.PROPERTIES));
 
         public static final RegistryObject<Block> STAR_CATCHER = registerBlock("star_catcher",
-                        () -> new StarCatcher());
+                        () -> new StarCatcher(StarCatcher.PROPERTIES));
 
         // public static final RegistryObject<Block> STAFF_TABLE =
         // registerBlock("staff_table",
@@ -57,33 +58,40 @@ public class ManaBlocks {
         // .lightLevel(BlockState -> 5)));
 
         // -----------------------
-        // REGISTER FLOWERS
-        // Note: Dont forget to register in setup of ManaMod.java
+        // REGISTER PLANTS
         // -----------------------
 
         public static final RegistryObject<Block> FLOWER_BUTTERCUP = registerBlock("flower_buttercup",
-                        () -> new Flower(BlockBehaviour.Properties
-                                        .copy(Blocks.DANDELION)
-                                        .noCollission()
-                                        .instabreak()
-                                        .sound(SoundType.GRASS)));
+                        () -> new FlowerBlock(() -> MobEffects.SATURATION, 7, ManaFlower.FLOWER_PROPERTIES));
+
+        public static final RegistryObject<Block> PLANT_LEMONBALM = registerBlock("plant_lemonbalm",
+                        () -> new FlowerBlock(() -> MobEffects.SATURATION, 7, ManaFlower.FLOWER_PROPERTIES));
+
+        // potted plants ----------------
 
         public static final RegistryObject<Block> POTTED_FLOWER_BUTTERCUP = registerBlockWithoutBlockItem(
                         "potted_flower_buttercup",
-                        () -> new FlowerPotBlock(null, ManaBlocks.FLOWER_BUTTERCUP,
-                                        BlockBehaviour.Properties.copy(Blocks.POTTED_DANDELION).noOcclusion()));
-
-        public static final RegistryObject<Block> PLANT_LEMONBALM = registerBlock("plant_lemonbalm",
-                        () -> new Flower(BlockBehaviour.Properties
-                                        .copy(Blocks.DANDELION)
-                                        .noCollission()
-                                        .instabreak()
-                                        .sound(SoundType.GRASS)));
+                        () -> new FlowerPotBlock(
+                                        () -> (FlowerPotBlock) Blocks.FLOWER_POT,
+                                        ManaBlocks.FLOWER_BUTTERCUP,
+                                        ManaFlower.FLOWER_POT_BLOCK_PROPERTIES));
 
         public static final RegistryObject<Block> POTTED_PLANT_LEMONBALM = registerBlockWithoutBlockItem(
                         "potted_plant_lemonbalm",
-                        () -> new FlowerPotBlock(null, ManaBlocks.PLANT_LEMONBALM,
-                                        BlockBehaviour.Properties.copy(Blocks.POTTED_DANDELION).noOcclusion()));
+                        () -> new FlowerPotBlock(
+                                        () -> (FlowerPotBlock) Blocks.FLOWER_POT,
+                                        ManaBlocks.PLANT_LEMONBALM,
+                                        ManaFlower.FLOWER_POT_BLOCK_PROPERTIES));
+
+        // Common Setup - Potted plants - Called from Main class ----------
+
+        public static void pottedPlantsSetup(FMLCommonSetupEvent event) {
+                ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ManaBlocks.FLOWER_BUTTERCUP.getId(),
+                                ManaBlocks.POTTED_FLOWER_BUTTERCUP);
+
+                ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ManaBlocks.PLANT_LEMONBALM.getId(),
+                                ManaBlocks.POTTED_PLANT_LEMONBALM);
+        }
 
         // -----------------------
         // END REGISTER

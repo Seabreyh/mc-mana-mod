@@ -1,12 +1,8 @@
-package com.seabreyh.mana.content.blocks;
+package com.seabreyh.mana.content.blocks.functional;
 
 import java.util.List;
-import java.util.Random;
-
 import javax.annotation.Nullable;
 
-import com.ibm.icu.text.MessagePattern.Part;
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.registries.ManaParticles;
 
 import net.minecraft.world.level.block.Block;
@@ -28,7 +24,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -43,6 +38,15 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class CelestialTorch extends TorchBlock implements SimpleWaterloggedBlock {
 
+    public static final Properties PROPERTIES = Properties.of()
+            .pushReaction(PushReaction.DESTROY)
+            .noCollission()
+            .sound(SoundType.WOOD)
+            .lightLevel(state -> 15)
+            .instabreak();
+
+    public static final ParticleOptions PARTICLE = ParticleTypes.FLAME;
+
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final IntegerProperty FLOWING_WATER = IntegerProperty.create("water_level", 1, 8);
@@ -52,16 +56,6 @@ public class CelestialTorch extends TorchBlock implements SimpleWaterloggedBlock
     private static final VoxelShape TORCH_EAST = Block.box(0.0D, 3.0D, 5.5D, 5.0D, 13.0D, 10.5D);
     private static final VoxelShape TORCH_SOUTH = Block.box(5.5D, 3.0D, 0.0D, 10.5D, 13.0D, 5.0D);
     private static final VoxelShape TORCH_WEST = Block.box(11.0D, 3.0D, 5.5D, 16.0D, 13.0D, 10.5D);
-
-    public CelestialTorch() {
-        this(Properties.of()
-                .pushReaction(PushReaction.DESTROY)
-                .noCollission()
-                .sound(SoundType.WOOD)
-                .lightLevel(state -> 15)
-                .instabreak(),
-                ParticleTypes.FLAME);
-    }
 
     public CelestialTorch(Properties properties, ParticleOptions particle) {
         super(properties, particle);
@@ -128,9 +122,9 @@ public class CelestialTorch extends TorchBlock implements SimpleWaterloggedBlock
         double z = (double) pos.getZ() + 0.5D;
         for (int i = 0; i < 20; i++) {
             if (rand.nextInt(10) == 0) {
-                double d0 = (double) pos.getX() + 0.5D;
-                double d1 = (double) pos.getY() + 0.7D;
-                double d2 = (double) pos.getZ() + 0.5D;
+                // double d0 = (double) pos.getX() + 0.5D;
+                // double d1 = (double) pos.getY() + 0.7D;
+                // double d2 = (double) pos.getZ() + 0.5D;
 
                 level.addParticle(ManaParticles.STAR_POWER.get(),
                         x + 0.3D * (double) facing.getOpposite().getStepX(),

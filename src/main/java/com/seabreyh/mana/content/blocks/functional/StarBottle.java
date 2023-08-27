@@ -1,10 +1,8 @@
 
-package com.seabreyh.mana.content.blocks;
+package com.seabreyh.mana.content.blocks.functional;
 
 import javax.annotation.Nullable;
-
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Stream;
 
 import com.seabreyh.mana.registries.ManaParticles;
@@ -12,7 +10,6 @@ import com.seabreyh.mana.registries.ManaParticles;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
@@ -33,15 +30,20 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
-
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class StarBottle extends Block implements SimpleWaterloggedBlock {
+
+    public static final Properties PROPERTIES = Properties.of()
+            .sound(SoundType.GLASS)
+            .strength(0.2f)
+            .destroyTime(0.3f)
+            .lightLevel(BlockState -> 15);
+
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -56,14 +58,6 @@ public class StarBottle extends Block implements SimpleWaterloggedBlock {
             Block.box(6, 8, 6, 10, 9, 10),
             Block.box(5.5, 9, 5.5, 10.5, 10, 10.5),
             Block.box(6.5, 8, 6.5, 9.5, 9, 9.5)).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
-
-    public StarBottle() {
-        this(Properties.of()
-                .sound(SoundType.GLASS)
-                .strength(0.2f)
-                .destroyTime(0.3f)
-                .lightLevel(BlockState -> 15));
-    }
 
     public StarBottle(BlockBehaviour.Properties p_153465_) {
         super(p_153465_);

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
+import com.seabreyh.mana.content.blocks.block_entities.StarCatcherBlockEntity;
 import com.seabreyh.mana.registries.ManaBlockEntities;
 import com.seabreyh.mana.registries.ManaBlocks;
 import com.seabreyh.mana.registries.ManaItems;
@@ -39,7 +39,7 @@ import org.joml.Quaternionf;
 // @OnlyIn(Dist.CLIENT)
 public class ManaItemStackRenderer extends BlockEntityWithoutLevelRenderer {
 
-    BlockEntityStarCatcher catcher = new BlockEntityStarCatcher(BlockPos.ZERO,
+    StarCatcherBlockEntity catcher = new StarCatcherBlockEntity(BlockPos.ZERO,
             ManaBlocks.STAR_CATCHER.get().defaultBlockState());
 
     public static int ticksExisted = 0;
