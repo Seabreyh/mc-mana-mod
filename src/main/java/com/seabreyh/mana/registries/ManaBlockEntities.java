@@ -2,7 +2,6 @@ package com.seabreyh.mana.registries;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
-import com.seabreyh.mana.content.blocks.block_entities.FallenStarBlockEntityItem;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -20,10 +19,11 @@ public class ManaBlockEntities {
                                         () -> BlockEntityType.Builder.of(BlockEntityStarCatcher::new,
                                                         ManaBlocks.STAR_CATCHER.get()).build(null));
 
-        public static final RegistryObject<BlockEntityType<BlockEntityStarCatcher>> FALLEN_STAR_BLOCK_ENTITY_ITEM = BLOCK_ENTITY_TYPES
-                        .register("fallen_star_block_entity_item",
-                                        () -> BlockEntityType.Builder.of(FallenStarBlockEntityItem::new,
-                                                        ManaBlocks.STAR_CATCHER.get()).build(null));
+        // public static final RegistryObject<BlockEntityType<BlockEntityStarCatcher>>
+        // FALLEN_STAR_BLOCK_ENTITY_ITEM = BLOCK_ENTITY_TYPES
+        // .register("fallen_star_block_entity_item",
+        // () -> BlockEntityType.Builder.of(FallenStarBlockEntityItem::new,
+        // ManaBlocks.STAR_CATCHER.get()).build(null));
 
         public static void register(IEventBus eventBus) {
                 BLOCK_ENTITY_TYPES.register(eventBus);

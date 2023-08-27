@@ -2,7 +2,7 @@ package com.seabreyh.mana.foundation.client.renderers.block_entities;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
-import com.seabreyh.mana.content.entities.AbstractStarEntity;
+import com.seabreyh.mana.content.entities.AbstractFallingSpaceEntity;
 
 import org.joml.Quaternionf;
 
@@ -81,7 +81,7 @@ public class RendererBlockEntityStarCatcher implements BlockEntityRenderer<Block
         stack.popPose();
     }
 
-    public ResourceLocation getTextureLocation(AbstractStarEntity p_114157_) {
+    public ResourceLocation getTextureLocation(AbstractFallingSpaceEntity p_114157_) {
         return TEXTURE;
     }
 }

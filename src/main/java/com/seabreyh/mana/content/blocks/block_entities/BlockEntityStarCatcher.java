@@ -170,7 +170,7 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
                 for (FallenStarEntity foundStar : fallenStars) {
                     // make sure star can only be targeted by one star catcher
 
-                    if (foundStar.isInGround()) {
+                    if (foundStar.readyToCatch()) {
 
                         if (foundStar.getIsTargeted() == false) {
                             if (plevel instanceof ServerLevel) {

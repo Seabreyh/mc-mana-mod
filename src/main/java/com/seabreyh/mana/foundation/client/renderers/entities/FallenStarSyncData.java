@@ -9,7 +9,7 @@ import java.util.Vector;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
-import com.seabreyh.mana.content.entities.AbstractStarEntity;
+import com.seabreyh.mana.content.entities.AbstractFallingSpaceEntity;
 import com.seabreyh.mana.content.entities.FallenStarEntity;
 
 import net.minecraft.network.FriendlyByteBuf;

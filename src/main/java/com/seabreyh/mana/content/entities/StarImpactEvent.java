@@ -15,7 +15,7 @@ import net.minecraftforge.eventbus.api.Cancelable;
  * This event is fired on the {@link MinecraftForge#EVENT_BUS}.<br>
  * This event is fired when a projectile entity impacts something.<br>
  * This event is fired via
- * {@link EventFactory#onStarImpact(AbstractStarEntity, HitResult)}
+ * {@link EventFactory#onStarImpact(AbstractFallingSpaceEntity, HitResult)}
  * This event is fired for all vanilla projectiles by Forge,
  * custom projectiles should fire this event and check the result in a similar
  * fashion.
@@ -27,9 +27,9 @@ import net.minecraftforge.eventbus.api.Cancelable;
 @Cancelable
 public class StarImpactEvent extends EntityEvent {
     private final HitResult ray;
-    private final AbstractStarEntity projectile;
+    private final AbstractFallingSpaceEntity projectile;
 
-    public StarImpactEvent(AbstractStarEntity projectile, HitResult ray) {
+    public StarImpactEvent(AbstractFallingSpaceEntity projectile, HitResult ray) {
         super(projectile);
         this.ray = ray;
         this.projectile = projectile;
@@ -39,7 +39,7 @@ public class StarImpactEvent extends EntityEvent {
         return ray;
     }
 
-    public AbstractStarEntity getProjectile() {
+    public AbstractFallingSpaceEntity getProjectile() {
         return projectile;
     }
 }

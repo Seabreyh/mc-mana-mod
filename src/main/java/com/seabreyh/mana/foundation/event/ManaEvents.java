@@ -1,7 +1,7 @@
 package com.seabreyh.mana.foundation.event;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.entities.AbstractStarEntity;
+import com.seabreyh.mana.content.entities.AbstractFallingSpaceEntity;
 import com.seabreyh.mana.content.entities.StarImpactEvent;
 import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 import com.seabreyh.mana.foundation.event.world.ShootingStarEvent;
