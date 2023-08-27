@@ -87,7 +87,6 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
             Player ownPlayer) {
 
         this(getEntity, world);
-
     }
 
     // Block Dispenser
