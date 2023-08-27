@@ -78,7 +78,7 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
 
     // private static final EntityDataAccessor<FallenStarSyncData> FALLEN_STAR_DATA
     // = SynchedEntityData.defineId(
-    // AbstractFallingSpaceEntity.class ,
+    // AbstractFallingSpaceEntity.class -,
     // ManaEntityDataSerializers.FALLEN_STAR_DATA);
 
     protected AbstractFallingSpaceEntity(EntityType<? extends AbstractFallingSpaceEntity> entityType, Level level) {
