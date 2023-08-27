@@ -1,9 +1,11 @@
 package com.seabreyh.mana.content.entities;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;// impot co
+import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
+// import com.seabreyh.mana.foundation.client.renderers.entities.FallenStarSyncData;
 import com.seabreyh.mana.foundation.event.player.PlayerWishEvent;
 import com.seabreyh.mana.foundation.event.world.ShootingStarEvent;
+import com.seabreyh.mana.registries.ManaEntityDataSerializers;
 import com.seabreyh.mana.registries.ManaParticles;
 
 import net.minecraft.core.BlockPos;
@@ -77,6 +79,7 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
     // private static final EntityDataAccessor<FallenStarSyncData> FALLEN_STAR_DATA
     // = SynchedEntityData.defineId(
     // AbstractFallingSpaceEntity.class --,
+    // ManaEntityDataSerializers.FALLEN_STAR_DATA);
 
     protected AbstractFallingSpaceEntity(EntityType<? extends AbstractFallingSpaceEntity> entityType, Level level) {
         super(entityType, level);
@@ -85,8 +88,8 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
 
     public AbstractFallingSpaceEntity(EntityType<? extends AbstractFallingSpaceEntity> getEntity, Level world,
             Player ownPlayer) {
-
         this(getEntity, world);
+        this.ownPlayer = ownPlayer;
     }
 
     // Block Dispenser
