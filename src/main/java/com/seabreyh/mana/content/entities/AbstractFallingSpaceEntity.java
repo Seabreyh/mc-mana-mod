@@ -2,7 +2,7 @@ package com.seabreyh.mana.content.entities;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
-import com.seabreyh.mana.foundation.client.renderers.entities.FallenStarSyncData;
+// import com.seabreyh.mana.foundation.client.renderers.entities.FallenStarSyncData;
 import com.seabreyh.mana.foundation.event.player.PlayerWishEvent;
 import com.seabreyh.mana.foundation.event.world.ShootingStarEvent;
 import com.seabreyh.mana.registries.ManaEntityDataSerializers;
@@ -76,8 +76,10 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
     protected final SoundEvent BUBBLE = SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT;
     protected final SoundEvent DISCARD_ENTITY = SoundEvents.FIRE_EXTINGUISH;
 
-    private static final EntityDataAccessor<FallenStarSyncData> FALLEN_STAR_DATA = SynchedEntityData.defineId(
-            AbstractFallingSpaceEntity.class, ManaEntityDataSerializers.FALLEN_STAR_DATA);
+    // private static final EntityDataAccessor<FallenStarSyncData> FALLEN_STAR_DATA
+    // = SynchedEntityData.defineId(
+    // AbstractFallingSpaceEntity.class,
+    // ManaEntityDataSerializers.FALLEN_STAR_DATA);
 
     protected AbstractFallingSpaceEntity(EntityType<? extends AbstractFallingSpaceEntity> entityType, Level level) {
         super(entityType, level);
