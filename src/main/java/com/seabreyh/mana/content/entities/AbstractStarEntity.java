@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
-import com.seabreyh.mana.foundation.client.renderers.entity.FallenStarSyncData;
+import com.seabreyh.mana.foundation.client.renderers.entities.FallenStarSyncData;
 import com.seabreyh.mana.foundation.event.player.PlayerWishEvent;
 import com.seabreyh.mana.foundation.event.world.ShootingStarEvent;
 import com.seabreyh.mana.foundation.networking.ManaMessages;

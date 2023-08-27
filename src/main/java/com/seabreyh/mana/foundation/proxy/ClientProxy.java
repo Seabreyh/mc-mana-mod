@@ -3,7 +3,7 @@ package com.seabreyh.mana.foundation.proxy;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.foundation.client.renderers.item.ManaItemRenderProperties;
+import com.seabreyh.mana.foundation.client.renderers.items.ManaItemRenderProperties;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;

@@ -13,10 +13,10 @@ import com.seabreyh.mana.foundation.client.gui.screens.ManaMenuTypes;
 import com.seabreyh.mana.foundation.client.gui.screens.StarCatcherScreen;
 import com.seabreyh.mana.foundation.client.gui.screens.WishViewScreen;
 import com.seabreyh.mana.foundation.client.renderers.block_entities.RendererBlockEntityStarCatcher;
-import com.seabreyh.mana.foundation.client.renderers.entity.AmethystStaffProjectileRenderer;
-import com.seabreyh.mana.foundation.client.renderers.entity.EmeraldStaffProjectileRenderer;
-import com.seabreyh.mana.foundation.client.renderers.entity.FallenStarRenderer;
-import com.seabreyh.mana.foundation.client.renderers.item.ManaItemStackRenderer;
+import com.seabreyh.mana.foundation.client.renderers.entities.AmethystStaffProjectileRenderer;
+import com.seabreyh.mana.foundation.client.renderers.entities.EmeraldStaffProjectileRenderer;
+import com.seabreyh.mana.foundation.client.renderers.entities.FallenStarRenderer;
+import com.seabreyh.mana.foundation.client.renderers.items.ManaItemStackRenderer;
 import com.seabreyh.mana.registries.ManaBlockEntities;
 import com.seabreyh.mana.registries.ManaBlocks;
 import com.seabreyh.mana.registries.ManaEntities;
@@ -86,7 +86,7 @@ public class ManaClientEvents {
 
         @SubscribeEvent
         public static void registerBlockEntityRenderers(FMLClientSetupEvent event) {
-                BlockEntityRenderers.register(ManaBlockEntities.STAR_CATCHER_ENTITY_BLOCK.get(),
+                BlockEntityRenderers.register(ManaBlockEntities.STAR_CATCHER_BLOCK_ENTITY.get(),
                                 RendererBlockEntityStarCatcher::new);
         }
 

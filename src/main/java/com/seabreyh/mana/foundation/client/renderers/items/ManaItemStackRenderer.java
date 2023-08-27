@@ -1,4 +1,4 @@
-package com.seabreyh.mana.foundation.client.renderers.item;
+package com.seabreyh.mana.foundation.client.renderers.items;
 
 import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.vertex.PoseStack;

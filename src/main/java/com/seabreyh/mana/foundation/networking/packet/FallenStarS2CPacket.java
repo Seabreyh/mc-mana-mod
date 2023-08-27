@@ -8,7 +8,7 @@ import com.seabreyh.mana.content.blocks.block_entities.BlockEntityStarCatcher;
 import com.seabreyh.mana.content.entities.FallenStarEntity;
 import com.seabreyh.mana.foundation.client.ClientFallenStarData;
 import com.seabreyh.mana.foundation.client.ClientManaStatData;
-import com.seabreyh.mana.foundation.client.renderers.entity.FallenStarSyncData;
+import com.seabreyh.mana.foundation.client.renderers.entities.FallenStarSyncData;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;

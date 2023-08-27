@@ -1,4 +1,4 @@
-package com.seabreyh.mana.foundation.client.renderers.entity;
+package com.seabreyh.mana.foundation.client.renderers.entities;
 
 import java.util.ArrayList;
 import java.util.HashSet;

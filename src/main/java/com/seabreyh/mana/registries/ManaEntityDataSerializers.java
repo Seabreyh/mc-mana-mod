@@ -3,7 +3,7 @@ package com.seabreyh.mana.registries;
 import com.mojang.logging.LogUtils;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.foundation.client.gui.screens.ManaMenuTypes;
-import com.seabreyh.mana.foundation.client.renderers.entity.FallenStarSyncDataSerializer;
+import com.seabreyh.mana.foundation.client.renderers.entities.FallenStarSyncDataSerializer;
 import com.seabreyh.mana.foundation.event.ManaClientEvents;
 import com.seabreyh.mana.foundation.networking.ManaMessages;
 import com.seabreyh.mana.registries.ManaBlockEntities;

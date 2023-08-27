@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.entities.FallenStarEntity;
-import com.seabreyh.mana.foundation.client.renderers.item.ManaItemStackRenderer;
+import com.seabreyh.mana.foundation.client.renderers.items.ManaItemStackRenderer;
 import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 
 import net.minecraft.client.Minecraft;

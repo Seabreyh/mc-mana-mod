@@ -1,4 +1,4 @@
-package com.seabreyh.mana.foundation.client.renderers.item;
+package com.seabreyh.mana.foundation.client.renderers.items;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;

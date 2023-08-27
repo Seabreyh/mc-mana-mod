@@ -56,7 +56,7 @@ public class BlockEntityStarCatcher extends BlockEntity implements MenuProvider 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     public BlockEntityStarCatcher(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(ManaBlockEntities.STAR_CATCHER_ENTITY_BLOCK.get(), pWorldPosition, pBlockState);
+        super(ManaBlockEntities.STAR_CATCHER_BLOCK_ENTITY.get(), pWorldPosition, pBlockState);
         // ManaMod.LOGGER.info("StarCatcher ENTITY BLOCK init");
     }
 

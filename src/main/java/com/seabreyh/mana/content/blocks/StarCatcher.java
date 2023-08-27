@@ -203,7 +203,7 @@ public class StarCatcher extends BaseEntityBlock implements SimpleWaterloggedBlo
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState,
             BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, ManaBlockEntities.STAR_CATCHER_ENTITY_BLOCK.get(),
+        return createTickerHelper(pBlockEntityType, ManaBlockEntities.STAR_CATCHER_BLOCK_ENTITY.get(),
                 BlockEntityStarCatcher::tick);
     }
 
