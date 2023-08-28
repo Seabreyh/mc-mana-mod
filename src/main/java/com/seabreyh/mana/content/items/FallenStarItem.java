@@ -93,7 +93,7 @@ public class FallenStarItem extends Item {
             Level level = source.getLevel();
             Position position = DispenserBlock.getDispensePosition(source);
             Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
-            Projectile projectile = this.getProjectile(level, position, stack);
+            Projectile projectile = this.getProjectile(level, position, stack, direction);
             projectile.shoot((double) direction.getStepX(), (double) ((float) direction.getStepY() + 0.1F),
                     (double) direction.getStepZ(), this.getPower(), this.getUncertainty());
             level.addFreshEntity(projectile);
@@ -101,8 +101,14 @@ public class FallenStarItem extends Item {
             return stack;
         }
 
-        protected Projectile getProjectile(Level level, Position pos, ItemStack stack) {
-            FallenStarEntity fallenStar = new FallenStarEntity(level, pos.x(), pos.y(), pos.z());
+        protected Projectile getProjectile(Level level, Position pos, ItemStack stack, Direction direction) {
+            FallenStarEntity fallenStar;
+            if (direction != Direction.UP && direction != Direction.DOWN) {
+                fallenStar = new FallenStarEntity(level, pos.x(), pos.y() - 0.4, pos.z());
+            } else {
+                fallenStar = new FallenStarEntity(level, pos.x(), pos.y(), pos.z());
+            }
+
             fallenStar.pickup = AbstractArrow.Pickup.ALLOWED;
             return fallenStar;
         }
@@ -118,7 +124,7 @@ public class FallenStarItem extends Item {
         }
 
         protected float getPower() {
-            return 1.1F;
+            return 2.5F;
         }
 
     };

@@ -21,34 +21,30 @@ public class ManaCreativeTab {
                     .displayItems((pParameters, pOutPut) -> {
 
                         // -----------------------
-                        // REGISTER TAB ITEMS
+                        // REGISTER TAB ITEMS / BLOCKS
                         // -----------------------
 
+                        pOutPut.accept(ManaBlocks.STAR_CATCHER.get());
+
+                        pOutPut.accept(ManaItems.FALLEN_STAR_ITEM.get());
+                        pOutPut.accept(ManaItems.STAR_DUST.get());
                         pOutPut.accept(ManaItems.AMETHYST_STAFF.get());
                         pOutPut.accept(ManaItems.EMERALD_STAFF.get());
-                        pOutPut.accept(ManaItems.STAR_DUST.get());
-                        pOutPut.accept(ManaItems.EMPTY_MANA_CAPSULE.get());
-                        pOutPut.accept(ManaItems.FALLEN_STAR_ITEM.get());
-                        pOutPut.accept(ManaItems.FILLED_MANA_CAPSULE.get());
                         pOutPut.accept(ManaItems.MANA_CRYSTAL.get());
                         pOutPut.accept(ManaItems.MANA_DUST.get());
                         pOutPut.accept(ManaItems.MANA_SHARD.get());
                         pOutPut.accept(ManaItems.MANA_TREAT.get());
+                        pOutPut.accept(ManaItems.EMPTY_MANA_CAPSULE.get());
+                        pOutPut.accept(ManaItems.FILLED_MANA_CAPSULE.get());
                         pOutPut.accept(ManaItems.WISH_ITEM.get());
                         pOutPut.accept(ManaItems.SEALED_WISH_ITEM.get());
                         pOutPut.accept(ManaItems.GRANTED_WISH_ITEM.get());
 
-                        // -----------------------
-                        // REGISTER TAB BLOCKS
-                        // -----------------------
-
-                        pOutPut.accept(ManaBlocks.FLOWER_BUTTERCUP.get().asItem());
-                        pOutPut.accept(ManaBlocks.PLANT_LEMONBALM.get().asItem());
-
                         pOutPut.accept(ManaBlocks.STAR_BOTTLE.get());
                         pOutPut.accept(ManaBlocks.CELESTIAL_TORCH.get());
                         pOutPut.accept(ManaBlocks.AMETHYST_BLOCK.get());
-                        pOutPut.accept(ManaBlocks.STAR_CATCHER.get());
+                        pOutPut.accept(ManaBlocks.FLOWER_BUTTERCUP.get().asItem());
+                        pOutPut.accept(ManaBlocks.PLANT_LEMONBALM.get().asItem());
 
                         // -----------------------
                         // END REGISTER

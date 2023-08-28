@@ -7,9 +7,7 @@ import com.seabreyh.mana.registries.ManaParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -36,7 +34,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
 
-    protected int age; // server var
+    protected int age;
     protected final int maxAge = 23000;
 
     public Boolean isFalling = true;
@@ -59,8 +57,8 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
 
     private SoundEvent soundEvent = this.getDefaultHitGroundSoundEvent();
 
-    private final float starDespawnTime = ShootingStarEvent.getStarDespawnTime();
-    private final float starSpawnStartTime = ShootingStarEvent.getStarSpawnStartTime();
+    private final float STAR_DESPAWN_TIME = ShootingStarEvent.getStarDespawnTime();
+    private final float STAR_SPAWN_START_TIME = ShootingStarEvent.getStarSpawnStartTime();
 
     protected final SoundEvent HIT_SOUND = SoundEvents.AMETHYST_BLOCK_BREAK;
     protected final SoundEvent HIT_GROUND_FAIL = SoundEvents.DRAGON_FIREBALL_EXPLODE;
@@ -105,12 +103,10 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
         }
         this.lastPosition = this.position();
 
-        // despawn checker
-        currentTime = this.level().getTimeOfDay(1.0F);
-        if (currentTime > starDespawnTime || currentTime < starSpawnStartTime)
-            discardEntity();
-        if (this.age != -32768)
-            ++this.age;
+        // check if star should despawn
+        if (!this.level().isClientSide) {
+            this.tickDespawn();
+        }
 
         // wish upon star
         if (this.isFalling && this.ownPlayer != null && this.ownPlayer.getUseItem().is(Items.SPYGLASS)
@@ -167,14 +163,13 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
 
         // FIXME update this to make more reliable inGround and flag, just always tick
         // despawn once entity created
+        // in ground and has physics
         if (this.inGround && !flag) {
+            // if last block hit != current block in, then start falling
             if (this.lastState != blockstate && this.shouldFall()) {
                 this.startFalling();
-            } else if (!this.level().isClientSide) {
-                this.tickDespawn();
             }
             ++this.inGroundTime;
-
         } else {
             this.inGroundTime = 0;
             Vec3 vec32 = this.position();
@@ -218,7 +213,7 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
             double deltaY = vec3.y;
             double deltaZ = vec3.z;
 
-            if (!this.onGround() && (this.travelDistance > 0.16)) {
+            if (!this.onGround() && (this.travelDistance > 0.16) && this.tickCount > 3) {
                 // play normal falling particles if greater than 0.16 travel distance
                 playTravelEffects(deltaX, deltaY, deltaZ);
 
@@ -451,56 +446,24 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
 
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult) {
-        Entity entity = entityHitResult.getEntity();
+
+        Entity entityTarget = entityHitResult.getEntity();
+        Entity entityOwner = this.getOwner();
+        DamageSource damageSource;
         float f = (float) this.getDeltaMovement().length();
         int i = Mth.ceil(Mth.clamp((double) f * this.baseDamage, 0.0D, 2.147483647E9D));
 
-        Entity entity1 = this.getOwner();
-        DamageSource damagesource;
-
-        if (entity1 == null) {
-            // If no owner, use this as damage source
-            damagesource = this.damageSources().indirectMagic(this, this);
+        if (entityOwner == null) {
+            damageSource = this.damageSources().indirectMagic(this, this);
         } else {
-            // If owner, use this as damage source
-            damagesource = this.damageSources().indirectMagic(this, entity1);
-            if (entity1 instanceof LivingEntity) {
-                ((LivingEntity) entity1).setLastHurtMob(entity);
+            damageSource = this.damageSources().indirectMagic(this, entityOwner);
+            if (entityOwner instanceof LivingEntity) {
+                ((LivingEntity) entityOwner).setLastHurtMob(entityTarget);
             }
         }
 
-        // If can damage, damages entity if true, otherwise go to next else statement
-        if (entity.hurt(damagesource, (float) i)) {
-            if (entity instanceof LivingEntity) {
-                LivingEntity livingentity = (LivingEntity) entity;
-
-                // this.doPostHurtEffects(livingentity);
-                if (entity1 != null && livingentity != entity1 && livingentity instanceof Player
-                        && entity1 instanceof ServerPlayer && !this.isSilent()) {
-                    // FIXME ???
-                    ((ServerPlayer) entity1).connection
-                            .send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
-                }
-            }
-
-            // playHitSound();
-
-            playHitSound();
-        } else {
-
-            this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
-            this.setYRot(this.getYRot() + 180.0F);
-            this.yRotO += 180.0F;
-            if (!this.level().isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
-                if (this.pickup == AbstractArrow.Pickup.ALLOWED) {
-                    this.spawnAtLocation(this.getPickupItem(), 0.1F);
-                }
-
-                this.discard();
-            }
-
-        }
-
+        entityTarget.hurt(damageSource, (float) i);
+        playHitSound();
     }
 
     protected void playHitSound() {
@@ -526,11 +489,10 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
     // Despawn timer
     @Override
     protected void tickDespawn() {
+        checkTimeOfDay();
         this.age++;
-        // After 23000 ticks, roughly a full day cycle, the star will be removed.
-        if (this.age >= this.maxAge) {
+        if (this.age >= this.maxAge)
             discardEntity();
-        }
     }
 
     // Discard entity
@@ -547,6 +509,12 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
                     1D, 1D, 1D, 0.3D);
         }
         this.discard();
+    }
+
+    public void checkTimeOfDay() {
+        currentTime = this.level().getTimeOfDay(1.0F);
+        if (currentTime > STAR_DESPAWN_TIME || currentTime < STAR_SPAWN_START_TIME)
+            discardEntity();
     }
 
     // ---------------------------------
