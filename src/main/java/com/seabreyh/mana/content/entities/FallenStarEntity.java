@@ -118,27 +118,7 @@ public class FallenStarEntity extends AbstractFallingSpaceEntity {
     protected void playTravelEffects(double deltaX, double deltaY, double deltaZ) {
         if (!moveToCatcher) {
             // normal falling effects
-            for (int i = 0; i < 8; ++i) {
-                this.level().addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_FALLING_STAR.get(),
-                        this.getX() + deltaX * (double) i / 4.0D - deltaX * 2.5,
-                        this.getY() + deltaY * (double) i / 4.0D - deltaY * 2.5 + 0.55D,
-                        this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 2.5, -deltaX, -deltaY, -deltaZ);
-
-                if (!this.isUnderWater()) {
-                    this.level().addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
-                            this.getX() + this.random.nextGaussian() * 0.5,
-                            this.getY() + this.random.nextGaussian() * 0.7,
-                            this.getZ() + this.random.nextGaussian() * 0.5,
-                            0D, 0.4D, 0D);
-                }
-            }
-            if (this.age % 2 == 0 && !this.isUnderWater()) {
-                this.level().playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND,
-                        SoundSource.AMBIENT, 20.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
-            } else if (this.age % 7 == 0) {
-                this.level().playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND,
-                        SoundSource.AMBIENT, 20.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
-            }
+            super.playTravelEffects(deltaX, deltaY, deltaZ);
 
         } else {
             // star catcher effects
@@ -147,17 +127,17 @@ public class FallenStarEntity extends AbstractFallingSpaceEntity {
                         this.getX() + deltaX * (double) i / 4.0D - deltaX * 1.5,
                         this.getY() + deltaY * (double) i / 4.0D - deltaY * 1.5 + 0.48D,
                         this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 1.5,
-                        -deltaX,
-                        -deltaY,
-                        -deltaZ);
+                        -deltaX, -deltaY, -deltaZ);
 
-                this.level().addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
-                        this.getX() + this.random.nextGaussian() * 0.5,
-                        this.getY() + this.random.nextGaussian() * 0.7,
-                        this.getZ() + this.random.nextGaussian() * 0.5,
-                        0D, 0.4D, 0D);
+                if (!this.isUnderWater() && this.tickCount % 10 == 0) {
+                    this.level().addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
+                            this.getX() + this.random.nextGaussian() * 0.5,
+                            this.getY() + this.random.nextGaussian() * 0.7,
+                            this.getZ() + this.random.nextGaussian() * 0.5,
+                            0D, 0.4D, 0D);
+                }
             }
-            if (this.age % 2 == 0) {
+            if (this.tickCount % 2 == 0) {
                 this.level().playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND,
                         SoundSource.AMBIENT, 5.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
 

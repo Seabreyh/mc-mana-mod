@@ -103,7 +103,7 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
         }
         this.lastPosition = this.position();
 
-        // check if star should despawn
+        // check if entity should despawn, server side
         if (!this.level().isClientSide) {
             this.tickDespawn();
         }
@@ -213,9 +213,11 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
             double deltaY = vec3.y;
             double deltaZ = vec3.z;
 
-            if (!this.onGround() && (this.travelDistance > 0.16) && this.tickCount > 3) {
+            if (this.isFalling && (this.travelDistance > 0.16) && this.tickCount > 3) {
                 // play normal falling particles if greater than 0.16 travel distance
+                // if (this.level().isClientSide) {
                 playTravelEffects(deltaX, deltaY, deltaZ);
+                // }
 
             }
 
@@ -250,7 +252,7 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
         }
 
         if (this.level().isClientSide) {
-            if (this.age % 3 == 0) {
+            if (this.tickCount % 3 == 0) {
                 this.level().addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
                         this.getX() + this.random.nextGaussian() * 0.3,
                         this.getY() + 0.4 + this.random.nextGaussian() * 0.5,
@@ -272,7 +274,7 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
 
         }
 
-        if (isInWater() && this.age % 9 == 0) {
+        if (isInWater() && this.tickCount % 9 == 0) {
             this.level().playSound((Player) null, this.getOnPos(), BUBBLE, SoundSource.AMBIENT,
                     1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
         }
@@ -288,8 +290,9 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
         for (int i = 0; i < 8; ++i) {
             this.level().addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_FALLING_STAR.get(),
                     this.getX() + deltaX * (double) i / 4.0D - deltaX * 2.5,
-                    this.getY() + deltaY * (double) i / 4.0D - deltaY * 2.5 + 0.55D,
-                    this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 2.5, -deltaX, -deltaY, -deltaZ);
+                    this.getY() + deltaY * (double) i / 4.0D - deltaY * 2.5 + 0.3,
+                    this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 2.5,
+                    -deltaX, -deltaY, -deltaZ);
 
             if (!this.isUnderWater()) {
                 this.level().addParticle(ManaParticles.TWINKLE_PARTICLE.get(),
@@ -299,10 +302,11 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
                         0D, 0.4D, 0D);
             }
         }
-        if (this.age % 2 == 0 && !this.isUnderWater()) {
+
+        if (this.tickCount % 2 == 0 && !this.isUnderWater()) {
             this.level().playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND,
                     SoundSource.AMBIENT, 20.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
-        } else if (this.age % 7 == 0) {
+        } else if (this.tickCount % 7 == 0) {
             this.level().playSound((Player) null, this.getX(), this.getY(), this.getZ(), FALL_SOUND,
                     SoundSource.AMBIENT, 20.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
         }
@@ -429,17 +433,21 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
 
     @Override
     protected void onHitBlock(BlockHitResult p_36755_) {
-        this.pickup = AbstractArrow.Pickup.ALLOWED;
+        // change the sound from the parent class
         this.setSoundEvent(HIT_SOUND);
-        this.isFalling = false;
-        this.inGround = true;
-        BlockState blockstate = this.level().getBlockState(p_36755_.getBlockPos());
-        blockstate.onProjectileHit(this.level(), blockstate, p_36755_, this);
-        this.lastState = this.level().getBlockState(p_36755_.getBlockPos());
+
         Vec3 vec3 = p_36755_.getLocation().subtract(this.getX(), this.getY(), this.getZ());
         this.setDeltaMovement(vec3);
         Vec3 vec31 = vec3.normalize().scale((double) 0.05F);
         this.setPosRaw(this.getX() - vec31.x, this.getY() - vec31.y, this.getZ() - vec31.z);
+
+        BlockState blockstate = this.level().getBlockState(p_36755_.getBlockPos());
+        blockstate.onProjectileHit(this.level(), blockstate, p_36755_, this);
+        this.lastState = this.level().getBlockState(p_36755_.getBlockPos());
+
+        this.pickup = AbstractArrow.Pickup.ALLOWED;
+        this.isFalling = false;
+        this.inGround = true;
 
         playHitSound();
     }

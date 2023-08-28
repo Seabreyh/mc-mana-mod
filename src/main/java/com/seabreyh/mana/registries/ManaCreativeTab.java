@@ -16,7 +16,7 @@ public class ManaCreativeTab {
             .create(Registries.CREATIVE_MODE_TAB, ManaMod.MOD_ID);
 
     public static final RegistryObject<CreativeModeTab> MANA_TAB = CREATIVE_MODE_TABS.register("mana_tab",
-            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ManaItems.STAR_DUST.get()))
+            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ManaItems.FALLEN_STAR_ITEM.get()))
                     .title(Component.translatable("creativetab.mana_tab"))
                     .displayItems((pParameters, pOutPut) -> {
 
