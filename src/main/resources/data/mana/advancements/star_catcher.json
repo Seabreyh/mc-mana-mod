@@ -1,0 +1,22 @@
+{
+  "display": {
+    "icon": {
+      "item": "mana:star_catcher"
+    },
+    "title": "Working with magic",
+    "description": "Start gathering Fallen Stars with a Star Catcher",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "parent": "mana:fallen_star",
+  "criteria": {
+    "placed": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "mana:star_catcher"
+      }
+    }
+  },
+  "requirements": [["block"]]
+}
