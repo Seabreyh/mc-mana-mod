@@ -1,7 +1,8 @@
 {
+  "parent": "mana:fallen_star",
   "display": {
     "icon": {
-      "item": "mana:fallen_star"
+      "item": "mana:fallen_star_item"
     },
     "title": "Starstruck",
     "description": "Watch your head!",
@@ -9,9 +10,8 @@
     "show_toast": true,
     "announce_to_chat": true
   },
-  "parent": "mana:fallen_star",
   "criteria": {
-    "struck": {
+    "get_hit_by_star": {
       "trigger": "minecraft:entity_hurt_player",
       "conditions": {
         "damage": {
@@ -22,5 +22,8 @@
       }
     }
   },
-  "requirements": [["struck"]]
+  "requirements": [["get_hit_by_star"]],
+  "rewards": {
+    "experience": 500
+  }
 }

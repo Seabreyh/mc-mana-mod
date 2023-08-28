@@ -1,22 +1,32 @@
 {
+  "parent": "mana:fallen_star",
   "display": {
     "icon": {
       "item": "mana:star_catcher"
     },
     "title": "Working with magic",
-    "description": "Start gathering Fallen Stars with a Star Catcher",
-    "frame": "task",
+    "description": "Look at you, a little Girlboss. Making the stars work for you!",
+    "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true
   },
-  "parent": "mana:fallen_star",
   "criteria": {
-    "placed": {
+    "requirement": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "block": "mana:star_catcher"
+        "location": [
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": ["mana:star_catcher"]
+            }
+          }
+        ]
       }
     }
   },
-  "requirements": [["block"]]
+  "requirements": [["requirement"]],
+  "rewards": {
+    "experience": 100
+  }
 }

@@ -5,7 +5,7 @@
     },
     "background": "mana:textures/gui/advancements.png",
     "title": "The sky is falling!",
-    "description": "Discover a strace source of magic...",
+    "description": "Discover a strange source of magic...",
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true
@@ -29,6 +29,7 @@
       "mana:star_catcher",
       "mana:star_dust",
       "mana:wish_item"
-    ]
+    ],
+    "experience": 100
   }
 }
