@@ -118,7 +118,7 @@ public class CelestialTorch extends TorchBlock implements SimpleWaterloggedBlock
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rand) {
         Direction facing = state.getValue(FACING);
 
-        if (state.getValue(WATERLOGGED)) {
+        if (state.getValue(WATERLOGGED) && state.getValue(FLOWING_WATER) >= 8) {
             if (rand.nextInt(10) % 2 == 0) {
                 level.addParticle(ParticleTypes.BUBBLE_COLUMN_UP,
                         pos.getX() + 0.5D + 0.3D * (double) facing.getOpposite().getStepX(),
