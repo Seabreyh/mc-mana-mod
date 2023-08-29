@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+      "bottom": "mana:block/cracked_celestial_bricks",
+      "side": "mana:block/cracked_celestial_bricks",
+      "top": "mana:block/cracked_celestial_bricks"
+      
+  }
+}

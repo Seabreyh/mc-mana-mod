@@ -1,8 +1,10 @@
 package com.seabreyh.mana.registries;
 
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.content.blocks.botany.CarvedMelon;
 import com.seabreyh.mana.content.blocks.botany.flowers.ManaFlower;
 import com.seabreyh.mana.content.blocks.decoration.AmethystBlock;
+import com.seabreyh.mana.content.blocks.decoration.ManaStoneBlock;
 import com.seabreyh.mana.content.blocks.functional.CelestialTorch;
 import com.seabreyh.mana.content.blocks.functional.StarBottle;
 import com.seabreyh.mana.content.blocks.functional.StarCatcher;
@@ -16,6 +18,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
@@ -47,6 +55,79 @@ public class ManaBlocks {
 
         public static final RegistryObject<Block> STAR_CATCHER = registerBlock("star_catcher",
                         () -> new StarCatcher(StarCatcher.PROPERTIES));
+
+        public static final RegistryObject<Block> CARVED_MELON = registerBlock("carved_melon",
+                        () -> new CarvedMelon(CarvedMelon.PROPERTIES));
+
+        public static final RegistryObject<Block> CELESTIAL_BRICKS = registerBlock("celestial_bricks",
+                        () -> new ManaStoneBlock(ManaStoneBlock.CELESTIAL_PROPERTIES));
+
+        public static final RegistryObject<Block> MOSSY_CELESTIAL_BRICKS = registerBlock("mossy_celestial_bricks",
+                        () -> new ManaStoneBlock(ManaStoneBlock.CELESTIAL_PROPERTIES));
+
+        public static final RegistryObject<Block> CRACKED_CELESTIAL_BRICKS = registerBlock("cracked_celestial_bricks",
+                        () -> new ManaStoneBlock(ManaStoneBlock.CELESTIAL_PROPERTIES));
+
+        public static final RegistryObject<Block> CINDER_STONE_BRICKS = registerBlock("cinder_stone_bricks",
+                        () -> new ManaStoneBlock(ManaStoneBlock.PROPERTIES));
+
+        // STAIRS -----------------------
+
+        @SuppressWarnings("deprecation")
+        public static final RegistryObject<Block> CELESTIAL_BRICK_STAIRS = registerBlock("celestial_brick_stairs",
+                        () -> new StairBlock(CELESTIAL_BRICKS.get().defaultBlockState(),
+                                        BlockBehaviour.Properties.copy(CELESTIAL_BRICKS.get())));
+
+        @SuppressWarnings("deprecation")
+        public static final RegistryObject<Block> MOSSY_CELESTIAL_BRICK_STAIRS = registerBlock(
+                        "mossy_celestial_brick_stairs",
+                        () -> new StairBlock(MOSSY_CELESTIAL_BRICKS.get().defaultBlockState(),
+                                        BlockBehaviour.Properties.copy(MOSSY_CELESTIAL_BRICKS.get())));
+
+        @SuppressWarnings("deprecation")
+        public static final RegistryObject<Block> CRACKED_CELESTIAL_BRICK_STAIRS = registerBlock(
+                        "cracked_celestial_brick_stairs",
+                        () -> new StairBlock(CRACKED_CELESTIAL_BRICKS.get().defaultBlockState(),
+                                        BlockBehaviour.Properties.copy(CRACKED_CELESTIAL_BRICKS.get())));
+
+        @SuppressWarnings("deprecation")
+        public static final RegistryObject<Block> CINDER_STONE_BRICK_STAIRS = registerBlock("cinder_stone_brick_stairs",
+                        () -> new StairBlock(CINDER_STONE_BRICKS.get().defaultBlockState(),
+                                        BlockBehaviour.Properties.copy(CINDER_STONE_BRICKS.get())));
+
+        // SLABS -----------------------
+
+        public static final RegistryObject<Block> CELESTIAL_BRICK_SLAB = registerBlock("celestial_brick_slab",
+                        () -> new SlabBlock(BlockBehaviour.Properties.copy(CELESTIAL_BRICKS.get())));
+
+        public static final RegistryObject<Block> MOSSY_CELESTIAL_BRICK_SLAB = registerBlock(
+                        "mossy_celestial_brick_slab",
+                        () -> new SlabBlock(BlockBehaviour.Properties.copy(MOSSY_CELESTIAL_BRICKS.get())));
+
+        public static final RegistryObject<Block> CRACKED_CELESTIAL_BRICK_SLAB = registerBlock(
+                        "cracked_celestial_brick_slab",
+                        () -> new SlabBlock(BlockBehaviour.Properties.copy(CRACKED_CELESTIAL_BRICKS.get())));
+
+        public static final RegistryObject<Block> CINDER_STONE_BRICK_SLAB = registerBlock("cinder_stone_brick_slab",
+                        () -> new SlabBlock(BlockBehaviour.Properties.copy(CINDER_STONE_BRICKS.get())));
+
+        // WALLS -----------------------
+
+        public static final RegistryObject<Block> CELESTIAL_BRICK_WALL = registerBlock("celestial_brick_wall",
+                        () -> new WallBlock(BlockBehaviour.Properties.copy(CELESTIAL_BRICKS.get())));
+
+        public static final RegistryObject<Block> MOSSY_CELESTIAL_BRICK_WALL = registerBlock(
+                        "mossy_celestial_brick_wall",
+                        () -> new WallBlock(
+                                        BlockBehaviour.Properties.copy(MOSSY_CELESTIAL_BRICKS.get())));
+
+        public static final RegistryObject<Block> CRACKED_CELESTIAL_BRICK_WALL = registerBlock(
+                        "cracked_celestial_brick_wall",
+                        () -> new WallBlock(
+                                        BlockBehaviour.Properties.copy(CRACKED_CELESTIAL_BRICKS.get())));
+
+        public static final RegistryObject<Block> CINDER_STONE_BRICK_WALL = registerBlock("cinder_stone_brick_wall",
+                        () -> new WallBlock(BlockBehaviour.Properties.copy(CINDER_STONE_BRICKS.get())));
 
         // public static final RegistryObject<Block> STAFF_TABLE =
         // registerBlock("staff_table",

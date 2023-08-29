@@ -37,7 +37,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class StarBottle extends Block implements SimpleWaterloggedBlock {
-
     public static final Properties PROPERTIES = Properties.of()
             .sound(SoundType.GLASS)
             .strength(0.2f)

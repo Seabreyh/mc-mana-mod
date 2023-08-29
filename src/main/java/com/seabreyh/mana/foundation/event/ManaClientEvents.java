@@ -8,6 +8,7 @@ import com.seabreyh.mana.content.particles.MagicPloomParticleFire;
 import com.seabreyh.mana.content.particles.MagicPloomParticleStarCatcher;
 import com.seabreyh.mana.content.particles.StarPowerParticle;
 import com.seabreyh.mana.content.particles.TwinkleParticle;
+import com.seabreyh.mana.foundation.client.gui.hud.CarvedMelonOverlay;
 import com.seabreyh.mana.foundation.client.gui.hud.ManaHudOverlay;
 import com.seabreyh.mana.foundation.client.gui.screens.ManaMenuTypes;
 import com.seabreyh.mana.foundation.client.gui.screens.StarCatcherScreen;
@@ -80,19 +81,26 @@ public class ManaClientEvents {
 
         @SubscribeEvent
         public static void registerBlockEntityRenderers(FMLClientSetupEvent event) {
+
                 BlockEntityRenderers.register(ManaBlockEntities.STAR_CATCHER_BLOCK_ENTITY.get(),
                                 RendererBlockEntityStarCatcher::new);
         }
 
         // No @SubscribeEvent
         public static void registerMenuScreens() {
+
                 MenuScreens.register(ManaMenuTypes.STAR_CATCHER_MENU.get(),
                                 StarCatcherScreen::new);
         }
 
         @SubscribeEvent
         public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
+
                 event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "mana_level", ManaHudOverlay.MANA_STAT_HUD);
+
+                event.registerAbove(VanillaGuiOverlay.HELMET.id(), "mana_carved_melon",
+                                CarvedMelonOverlay.CARVED_MELON_OVERLAY);
+
         }
 
         @SubscribeEvent

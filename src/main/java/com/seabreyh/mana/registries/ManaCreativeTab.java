@@ -42,7 +42,29 @@ public class ManaCreativeTab {
 
                         pOutPut.accept(ManaBlocks.STAR_BOTTLE.get());
                         pOutPut.accept(ManaBlocks.CELESTIAL_TORCH.get());
+
+                        pOutPut.accept(ManaBlocks.CELESTIAL_BRICKS.get());
+                        pOutPut.accept(ManaBlocks.CELESTIAL_BRICK_STAIRS.get());
+                        pOutPut.accept(ManaBlocks.CELESTIAL_BRICK_SLAB.get());
+                        pOutPut.accept(ManaBlocks.CELESTIAL_BRICK_WALL.get());
+
+                        pOutPut.accept(ManaBlocks.MOSSY_CELESTIAL_BRICKS.get());
+                        pOutPut.accept(ManaBlocks.MOSSY_CELESTIAL_BRICK_STAIRS.get());
+                        pOutPut.accept(ManaBlocks.MOSSY_CELESTIAL_BRICK_SLAB.get());
+                        pOutPut.accept(ManaBlocks.MOSSY_CELESTIAL_BRICK_WALL.get());
+
+                        pOutPut.accept(ManaBlocks.CRACKED_CELESTIAL_BRICKS.get());
+                        pOutPut.accept(ManaBlocks.CRACKED_CELESTIAL_BRICK_STAIRS.get());
+                        pOutPut.accept(ManaBlocks.CRACKED_CELESTIAL_BRICK_SLAB.get());
+                        pOutPut.accept(ManaBlocks.CRACKED_CELESTIAL_BRICK_WALL.get());
+
+                        pOutPut.accept(ManaBlocks.CINDER_STONE_BRICKS.get());
+                        pOutPut.accept(ManaBlocks.CINDER_STONE_BRICK_STAIRS.get());
+                        pOutPut.accept(ManaBlocks.CINDER_STONE_BRICK_SLAB.get());
+                        pOutPut.accept(ManaBlocks.CINDER_STONE_BRICK_WALL.get());
+
                         pOutPut.accept(ManaBlocks.AMETHYST_BLOCK.get());
+                        pOutPut.accept(ManaBlocks.CARVED_MELON.get());
                         pOutPut.accept(ManaBlocks.FLOWER_BUTTERCUP.get().asItem());
                         pOutPut.accept(ManaBlocks.PLANT_LEMONBALM.get().asItem());
 

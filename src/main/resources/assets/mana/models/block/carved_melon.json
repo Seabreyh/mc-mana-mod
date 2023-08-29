@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "mana:block/carved_melon",
+    "side": "mana:block/melon_side",
+    "top": "mana:block/melon_top"
+  }
+}

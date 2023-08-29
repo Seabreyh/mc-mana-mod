@@ -6,7 +6,7 @@
     },
     "title": "Working with magic",
     "description": "Look at you, a little Girlboss. Making the stars work for you!",
-    "frame": "challenge",
+    "frame": "task",
     "show_toast": true,
     "announce_to_chat": true
   },
