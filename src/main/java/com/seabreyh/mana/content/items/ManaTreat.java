@@ -1,6 +1,5 @@
 package com.seabreyh.mana.content.items;
 
-import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 import com.seabreyh.mana.foundation.mana_stat.PlayerManaStatProvider;
 
@@ -25,16 +24,19 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
 public class ManaTreat extends Item {
+
+    public static final Properties PROPERTIES = (new Item.Properties()).food((new FoodProperties.Builder())
+            .nutrition(2)
+            .saturationMod(0.2f)
+            .build());
+
     boolean isAtMaxManaLevel;
-    public static final Properties PROPERTIES = (new Item.Properties())
-            .food((new FoodProperties.Builder())
-                    .nutrition(2)
-                    .saturationMod(0.2f)
-                    .build());
 
     public ManaTreat(Properties p_41383_) {
         super(p_41383_);
     }
+
+    // ------------------ Functions ------------------
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player,
@@ -55,31 +57,6 @@ public class ManaTreat extends Item {
         }
         return InteractionResultHolder.fail(itemstack);
     }
-
-    // @Override
-    // public InteractionResultHolder<ItemStack> use(Level p_41432_, Player player,
-    // InteractionHand p_41434_) {
-    // ItemStack itemstack = player.getItemInHand(p_41434_);
-    // // ManaMod.LOGGER.info("-- " + PlayerManaEvent.isAtMaxManaLevel(player) + "
-    // // locvar: " + isAtMaxManaLevel);
-
-    // ((Player)
-    // player).getCapability(PlayerManaStatProvider.PLAYER_MANA_STAT).ifPresent(mana_stat
-    // -> {
-    // isAtMaxManaLevel = PlayerManaEvent.isAtMaxManaLevel(player);
-    // });
-
-    // if (!isAtMaxManaLevel) {
-
-    // ManaMod.LOGGER.info(" " + itemstack + " EDIBLE: " + itemstack.isEdible());
-
-    // player.startUsingItem(p_41434_);
-    // return InteractionResultHolder.consume(itemstack);
-
-    // } else {
-    // return InteractionResultHolder.fail(itemstack);
-    // }
-    // }
 
     @Override
     public ItemStack finishUsingItem(ItemStack itemStack, Level world,
@@ -112,7 +89,6 @@ public class ManaTreat extends Item {
 
             }
         }
-
         return this.isEdible() ? livingEntity.eat(world, itemStack) : itemStack;
     }
 

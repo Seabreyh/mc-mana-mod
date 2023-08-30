@@ -6,7 +6,6 @@ import com.seabreyh.mana.foundation.event.player.PlayerWishEvent.WishType;
 import java.util.List;
 import javax.annotation.Nullable;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -22,7 +21,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
 public class GrantedWishItem extends SealedWishItem {
@@ -32,6 +30,8 @@ public class GrantedWishItem extends SealedWishItem {
     public GrantedWishItem(Properties p_41383_) {
         super(p_41383_);
     }
+
+    // ------------------ Functions ------------------
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {

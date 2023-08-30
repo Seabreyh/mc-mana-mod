@@ -1,5 +1,10 @@
 {
   "variants": {
-    "": { "model": "mana:block/cracked_celestial_bricks" }
+    "": [
+      { "model": "mana:block/cracked_celestial_bricks" },
+      { "model": "mana:block/cracked_celestial_bricks_var2" },
+      { "model": "mana:block/cracked_celestial_bricks_var3" },
+      { "model": "mana:block/cracked_celestial_bricks_var4" }
+    ]
   }
 }
