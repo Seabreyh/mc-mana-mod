@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "mana:block/mossy_celestial_bricks"
+  }
+}

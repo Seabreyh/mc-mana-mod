@@ -1,6 +1,22 @@
 {
-    "replace": false,
-    "values": [
-      "mana:amethyst_block"
-    ]
-  }
+  "replace": false,
+  "values": [
+    "mana:amethyst_block",
+    "mana:celestial_bricks",
+    "mana:mossy_celestial_bricks",
+    "mana:cracked_celestial_bricks",
+    "mana:cinder_stone_bricks",
+    "mana:cinder_stone_brick_stairs",
+    "mana:celestial_brick_stairs",
+    "mana:mossy_celestial_brick_stairs",
+    "mana:cracked_celestial_brick_stairs",
+    "mana:celestial_brick_slab",
+    "mana:mossy_celestial_brick_slab",
+    "mana:cracked_celestial_brick_slab",
+    "mana:celestial_brick_wall",
+    "mana:mossy_celestial_brick_wall",
+    "mana:cracked_celestial_brick_wall",
+    "mana:cinder_stone_brick_slab",
+    "mana:cinder_stone_brick_wall"
+  ]
+}

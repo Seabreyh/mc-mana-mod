@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "mana:block/cinder_stone_bricks",
+    "side": "mana:block/cinder_stone_bricks",
+    "top": "mana:block/cinder_stone_bricks"
+  }
+}

@@ -2,5 +2,9 @@
   "parent": "minecraft:item/generated",
   "textures": {
     "layer0": "mana:item/star_bottle"
+  },
+  "loader": "forge:item_layers",
+  "render_types": {
+    "minecraft:translucent": [0]
   }
 }

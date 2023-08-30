@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "mana:block/cinder_stone_brick_slab"
+    },
+    "type=double": {
+      "model": "mana:block/cinder_stone_bricks"
+    },
+    "type=top": {
+      "model": "mana:block/cinder_stone_brick_slab"
+    }
+  }
+}

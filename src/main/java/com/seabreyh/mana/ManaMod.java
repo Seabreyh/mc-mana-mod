@@ -1,44 +1,34 @@
 package com.seabreyh.mana;
 
 import com.mojang.logging.LogUtils;
-import com.seabreyh.mana.event.ManaClientEvents;
-import com.seabreyh.mana.networking.ManaMessages;
-import com.seabreyh.mana.recipes.StaffTableRecipes;
-import com.seabreyh.mana.registry.ManaBlockEntities;
-import com.seabreyh.mana.registry.ManaBlocks;
-// import com.seabreyh.mana.event.ManaClientEvents;
-import com.seabreyh.mana.registry.ManaCreativeTab;
-import com.seabreyh.mana.registry.ManaEntities;
-// import com.seabreyh.mana.gui.ManaMenuTypes;
-// import com.seabreyh.mana.networking.ManaMessages;
-// import com.seabreyh.mana.registry.ManaBlockEntities;
-// import com.seabreyh.mana.registry.ManaBlocks;
-// import com.seabreyh.mana.registry.ManaCreativeTab;
-// import com.seabreyh.mana.registry.ManaEntities;
-import com.seabreyh.mana.registry.ManaItems;
-// import com.seabreyh.mana.registry.ManaPotions;
-// import com.seabreyh.mana.registry.ManaRecipes;
-// import com.seabreyh.mana.registry.ManaSounds;
-import com.seabreyh.mana.registry.ManaParticles;
-import com.seabreyh.mana.screen.ManaMenuTypes;
+import com.seabreyh.mana.foundation.client.gui.screens.ManaMenuTypes;
+import com.seabreyh.mana.foundation.event.ManaClientEvents;
+import com.seabreyh.mana.foundation.networking.ManaMessages;
+import com.seabreyh.mana.foundation.proxy.ClientProxy;
+import com.seabreyh.mana.foundation.proxy.CommonProxy;
+import com.seabreyh.mana.registries.ManaEntityDataSerializers;
+import com.seabreyh.mana.registries.ManaBlockEntities;
+import com.seabreyh.mana.registries.ManaBlocks;
+import com.seabreyh.mana.registries.ManaCreativeTab;
+import com.seabreyh.mana.registries.ManaEntities;
+import com.seabreyh.mana.registries.ManaItems;
+import com.seabreyh.mana.registries.ManaParticles;
+import com.seabreyh.mana.registries.damage.DamageTypeDataProvider;
+import com.seabreyh.mana.registries.damage.DamageTypeTagGen;
 
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
-//import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
@@ -59,8 +49,8 @@ public class ManaMod {
 
         ManaItems.register(eventBus);
         ManaCreativeTab.register(eventBus);
-        ManaEntities.ENTITIES.register(eventBus);
-        ManaParticles.PARTICLE_TYPES.register(eventBus);
+        ManaEntities.register(eventBus);
+        ManaParticles.register(eventBus);
         ManaEntityDataSerializers.register(eventBus);
         // ManaSounds.SOUND_EVENTS.register(eventBus);
 
@@ -84,11 +74,7 @@ public class ManaMod {
         event.enqueueWork(() -> {
             ManaMessages.register();
 
-            ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ManaBlocks.FLOWER_BUTTERCUP.getId(),
-                    ManaBlocks.POTTED_FLOWER_BUTTERCUP);
-
-            ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(ManaBlocks.PLANT_LEMONBALM.getId(),
-                    ManaBlocks.POTTED_PLANT_LEMONBALM);
+            ManaBlocks.pottedPlantsSetup(event);
 
             // ManaPotions.registerRecipes();
 
@@ -106,7 +92,7 @@ public class ManaMod {
         ManaClientEvents.registerEntityRenderers(event);
         ManaClientEvents.registerBlockRenderers(event);
         ManaClientEvents.registerBlockEntityRenderers(event);
-        ManaClientEvents.registerOverlays(event);
+        // ManaClientEvents.registerGuiOverlays(event);
         ManaClientEvents.registerMenuScreens();
         ManaClientEvents.registerParticleFactories(null);
 
@@ -139,5 +125,33 @@ public class ManaMod {
 
     public Object getISTERProperties() {
         return null;
+    }
+
+    public static ResourceLocation asResource(String path) {
+        return new ResourceLocation(MOD_ID, path);
+    }
+
+    public static void gatherData(GatherDataEvent event) {
+        // TagGen.datagen();
+        DataGenerator gen = event.getGenerator();
+        PackOutput output = gen.getPackOutput();
+
+        // if (event.includeClient()) {
+        // gen.addProvider(true, AllSoundEvents.provider(gen));
+        // LangMerger.attachToRegistrateProvider(gen, output);
+        // }
+
+        if (event.includeServer()) {
+            // gen.addProvider(true, new AllAdvancements(output));
+            // gen.addProvider(true, new StandardRecipeGen(output));
+            // gen.addProvider(true, new MechanicalCraftingRecipeGen(output));
+            // gen.addProvider(true, new //SequencedAssemblyRecipeGen(output));
+            // ProcessingRecipeGen.registerAll(gen, output);
+            // gen.addProvider(true,
+            // WorldgenDataProvider.makeFactory(event.getLookupProvider()));
+            gen.addProvider(true, DamageTypeDataProvider.makeFactory(event.getLookupProvider()));
+            gen.addProvider(true,
+                    new DamageTypeTagGen(output, event.getLookupProvider(), event.getExistingFileHelper()));
+        }
     }
 }

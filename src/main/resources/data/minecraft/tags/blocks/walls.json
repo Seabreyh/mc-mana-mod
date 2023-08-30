@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "mana:celestial_brick_wall",
+    "mana:mossy_celestial_brick_wall",
+    "mana:cracked_celestial_brick_wall",
+    "mana:cinder_stone_brick_wall"
+  ]
+}
