@@ -68,7 +68,9 @@
   "item.minecraft.lingering_potion.effect.mana_instant": "Lingering Potion of Instant Mana",
   "item.minecraft.lingering_potion.effect.mana_regen": "Lingering Potion of Mana Regeneration",
 
-  "tooltip.mana.lshift.tooltip": "§7Hold §8[§fLSHIFT§8] §7for more info",
+  "tooltip.mana.lshift.tooltip": "§7Hold §8[§fLSHIFT§8]§7 for more info",
+  "tooltip.mana.info.right_click": "§7§8[§fRight Click§8]§7 to use",
+
   "tooltip.mana.underwater": "§fCan be placed §9underwater§f!",
   "tooltip.mana.amethyst_staff.tooltip": "§7Does not react well to fire... or does it?",
   "tooltip.mana.emerald_staff.tooltip": "§7Auto targeted magic",
@@ -77,6 +79,11 @@
   "tooltip.mana.star_bottle.tooltip": "§7A bottle with a cute little star.",
   "tooltip.mana.celestial_torch.tooltip": "§7A very bright torch.",
   "tooltip.mana.fallen_star.tooltip": "§7A strange source of magic, fallen from the sky...",
+  "tooltip.mana.sealed_wish_item.tooltip": "§7Spot a shooting star through a spyglass and make your wish come true!",
+
+  "tooltip.mana.wish_item_clear_weather": "§6Wish for clear weather",
+  "tooltip.mana.wish_item_stormy_weather": "§6Wish for stormy weather",
+  "tooltip.mana.wish_item_friend": "§6Wish for a friend",
 
   "creativetab.mana_tab": "Mana Mod"
 }

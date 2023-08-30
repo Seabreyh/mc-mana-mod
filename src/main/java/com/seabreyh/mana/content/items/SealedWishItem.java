@@ -25,27 +25,17 @@ public class SealedWishItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
+
         CompoundTag compoundtag = stack.getOrCreateTag();
         int wishTypeIndx = compoundtag.getInt("wishType");
         WishType wishType = PlayerWishEvent.fromIndex(wishTypeIndx);
 
-        components
-                .add(Component.translatable(PlayerWishEvent.displayName(wishType))
-                        .withStyle(ChatFormatting.GRAY));
-
-        if (!Screen.hasShiftDown()) {
-            components
-                    .add(Component.translatable(
-                            "Press SHIFT for more info")
-                            .withStyle(ChatFormatting.BLUE));
+        if (Screen.hasShiftDown()) {
+            components.add(Component.translatable("tooltip.mana.sealed_wish_item.tooltip"));
         } else {
-            components
-                    .add(Component.translatable(
-                            "Spot a shooting star through a spyglass and make your wish come true!")
-                            .withStyle(ChatFormatting.YELLOW));
+            components.add(Component.translatable(PlayerWishEvent.displayName(wishType)));
+            components.add(Component.translatable("tooltip.mana.lshift.tooltip"));
         }
-
-        super.appendHoverText(stack, level, components, flag);
     }
 
     public static void addWishType(ItemStack itemstack, WishType wish) {

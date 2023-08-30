@@ -34,11 +34,11 @@ public class PlayerWishEvent {
     public static String displayName(WishType wishType) {
         switch (wishType) {
             case WEATHER_CLEAR:
-                return "Wish for clearer weather";
+                return "tooltip.mana.wish_item_clear_weather";
             case WEATHER_STORM:
-                return "Wish for stormy weather";
+                return "tooltip.mana.wish_item_stormy_weather";
             case SUMMON_STAR_FRIEND:
-                return "Wish for a friend";
+                return "tooltip.mana.wish_item_friend";
         }
         return "Unknown";
     }

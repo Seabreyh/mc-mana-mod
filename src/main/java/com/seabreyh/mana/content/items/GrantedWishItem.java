@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -21,6 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
 public class GrantedWishItem extends SealedWishItem {
@@ -69,19 +71,17 @@ public class GrantedWishItem extends SealedWishItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
+
         CompoundTag compoundtag = stack.getOrCreateTag();
         int wishTypeIndx = compoundtag.getInt("wishType");
         WishType wishType = PlayerWishEvent.fromIndex(wishTypeIndx);
 
-        components
-                .add(Component.translatable(PlayerWishEvent.displayName(wishType))
-                        .withStyle(ChatFormatting.GRAY));
-
-        components
-                .add(Component.translatable(
-                        "Right-click to use")
-                        .withStyle(ChatFormatting.BLUE));
-
+        if (Screen.hasShiftDown()) {
+            components.add(Component.translatable("tooltip.mana.info.right_click"));
+        } else {
+            components.add(Component.translatable(PlayerWishEvent.displayName(wishType)));
+            components.add(Component.translatable("tooltip.mana.lshift.tooltip"));
+        }
     }
 
     private void playSound(Level level, Player player) {

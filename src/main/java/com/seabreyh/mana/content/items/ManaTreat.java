@@ -1,5 +1,6 @@
 package com.seabreyh.mana.content.items;
 
+import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 import com.seabreyh.mana.foundation.mana_stat.PlayerManaStatProvider;
 
@@ -13,6 +14,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -22,19 +25,61 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
 public class ManaTreat extends Item {
-
-    public static final Properties PROPERTIES = new Item.Properties()
-            .food(ManaTreat.FOOD_PROPERTIES);
-
-    public static final FoodProperties FOOD_PROPERTIES = new FoodProperties.Builder()
-            .nutrition(2)
-            .saturationMod(0.2f)
-            .alwaysEat()
-            .build();
+    boolean isAtMaxManaLevel;
+    public static final Properties PROPERTIES = (new Item.Properties())
+            .food((new FoodProperties.Builder())
+                    .nutrition(2)
+                    .saturationMod(0.2f)
+                    .build());
 
     public ManaTreat(Properties p_41383_) {
         super(p_41383_);
     }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level world, Player player,
+            InteractionHand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+        boolean fullMana = false;
+        if (!world.isClientSide) {
+            // Handle regeneration of player mana from using star
+            fullMana = PlayerManaEvent.isAtMaxManaLevel(player);
+
+            if (fullMana) {
+                return InteractionResultHolder.pass(itemstack);
+
+            } else {
+                player.startUsingItem(hand);
+                return InteractionResultHolder.consume(itemstack);
+            }
+        }
+        return InteractionResultHolder.fail(itemstack);
+    }
+
+    // @Override
+    // public InteractionResultHolder<ItemStack> use(Level p_41432_, Player player,
+    // InteractionHand p_41434_) {
+    // ItemStack itemstack = player.getItemInHand(p_41434_);
+    // // ManaMod.LOGGER.info("-- " + PlayerManaEvent.isAtMaxManaLevel(player) + "
+    // // locvar: " + isAtMaxManaLevel);
+
+    // ((Player)
+    // player).getCapability(PlayerManaStatProvider.PLAYER_MANA_STAT).ifPresent(mana_stat
+    // -> {
+    // isAtMaxManaLevel = PlayerManaEvent.isAtMaxManaLevel(player);
+    // });
+
+    // if (!isAtMaxManaLevel) {
+
+    // ManaMod.LOGGER.info(" " + itemstack + " EDIBLE: " + itemstack.isEdible());
+
+    // player.startUsingItem(p_41434_);
+    // return InteractionResultHolder.consume(itemstack);
+
+    // } else {
+    // return InteractionResultHolder.fail(itemstack);
+    // }
+    // }
 
     @Override
     public ItemStack finishUsingItem(ItemStack itemStack, Level world,

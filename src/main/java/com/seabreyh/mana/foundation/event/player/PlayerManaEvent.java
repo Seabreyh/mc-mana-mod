@@ -68,4 +68,16 @@ public class PlayerManaEvent {
 
         return maxCapacity;
     }
+
+    public static boolean isAtMaxManaLevel(Player player) {
+        player.getCapability(PlayerManaStatProvider.PLAYER_MANA_STAT).ifPresent(mana_stat -> {
+
+            if (mana_stat.isAtMaxCapacity()) {
+                maxCapacity = true;
+            } else {
+                maxCapacity = false;
+            }
+        });
+        return maxCapacity;
+    }
 }
