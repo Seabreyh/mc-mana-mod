@@ -3,7 +3,7 @@ package com.seabreyh.mana.registries;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.blocks.botany.CarvedMelon;
 import com.seabreyh.mana.content.blocks.botany.flowers.ManaFlower;
-import com.seabreyh.mana.content.blocks.decoration.AmethystBlock;
+import com.seabreyh.mana.content.blocks.decoration.CompactBlockOfAmethyst;
 import com.seabreyh.mana.content.blocks.decoration.ManaStoneBlock;
 import com.seabreyh.mana.content.blocks.functional.CelestialTorch;
 import com.seabreyh.mana.content.blocks.functional.StarBottle;
@@ -50,8 +50,8 @@ public class ManaBlocks {
         public static final RegistryObject<Block> CELESTIAL_TORCH = registerBlock("celestial_torch",
                         () -> new CelestialTorch(CelestialTorch.PROPERTIES, CelestialTorch.PARTICLE));
 
-        public static final RegistryObject<Block> AMETHYST_BLOCK = registerBlock("amethyst_block",
-                        () -> new AmethystBlock(AmethystBlock.PROPERTIES));
+        public static final RegistryObject<Block> COMPACT_BLOCK_OF_AMETHYST = registerBlock("compact_block_of_amethyst",
+                        () -> new CompactBlockOfAmethyst(CompactBlockOfAmethyst.PROPERTIES));
 
         public static final RegistryObject<Block> STAR_CATCHER = registerBlock("star_catcher",
                         () -> new StarCatcher(StarCatcher.PROPERTIES));

@@ -63,7 +63,7 @@ public class ManaCreativeTab {
                         pOutPut.accept(ManaBlocks.CINDER_STONE_BRICK_SLAB.get());
                         pOutPut.accept(ManaBlocks.CINDER_STONE_BRICK_WALL.get());
 
-                        pOutPut.accept(ManaBlocks.AMETHYST_BLOCK.get());
+                        pOutPut.accept(ManaBlocks.COMPACT_BLOCK_OF_AMETHYST.get());
                         pOutPut.accept(ManaBlocks.CARVED_MELON.get());
                         pOutPut.accept(ManaBlocks.FLOWER_BUTTERCUP.get().asItem());
                         pOutPut.accept(ManaBlocks.PLANT_LEMONBALM.get().asItem());

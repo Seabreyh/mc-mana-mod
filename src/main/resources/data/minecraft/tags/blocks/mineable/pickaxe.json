@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "mana:amethyst_block",
+    "mana:compact_block_of_amethyst",
     "mana:celestial_bricks",
     "mana:mossy_celestial_bricks",
     "mana:cracked_celestial_bricks",

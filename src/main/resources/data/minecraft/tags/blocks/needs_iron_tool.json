@@ -1,6 +1,4 @@
 {
-    "replace": false,
-    "values": [
-      "mana:amethyst_block"
-    ]
-  }
+  "replace": false,
+  "values": ["mana:compact_block_of_amethyst"]
+}

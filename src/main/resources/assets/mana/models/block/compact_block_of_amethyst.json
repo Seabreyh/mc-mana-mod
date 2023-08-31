@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "mana:block/amethyst_block"
+    "all": "mana:block/compact_block_of_amethyst"
   }
 }
