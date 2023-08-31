@@ -37,13 +37,6 @@ public class ManaEntities {
                         () -> EntityType.Builder.<FallenStarEntity>of(FallenStarEntity::new, MobCategory.MISC)
                                         .sized(0.5f, 0.7f).build("fallen_star"));
 
-        // public static final RegistryObject<EntityType<FallenStar>> FALLEN_STAR =
-        // ENTITIES.register(
-        // "fallen_star", FallenStar::new, () -> FallenStarRenderer::new,
-        // MobCategory.MISC).sized(0.5f,
-        // 0.7f)
-        // .build("fallen_star");
-
         // public static final RegistryObject<EntityType<Meteor>> METEOR =
         // ENTITIES.register(
         // "meteor",

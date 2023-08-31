@@ -1,16 +1,9 @@
 package com.seabreyh.mana.foundation.client.gui.screens;
-// package com.seabreyh.mana.foundation.client.gui.screens;
 
 import com.seabreyh.mana.foundation.event.player.PlayerWishEvent;
 
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.PageButton;
-import net.minecraft.network.chat.Component;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -18,21 +11,22 @@ import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import javax.annotation.Nullable;
 
-import org.apache.commons.codec.language.bm.Lang;
+import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.client.gui.screens.CreditsAndAttributionScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.PageButton;
+import net.minecraft.network.chat.Component;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.PlainTextButton;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.Component;
-// import net.minecraft.network.chat.TextComponent;
-// import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -58,6 +52,7 @@ public class WishViewScreen extends Screen {
     private List<FormattedCharSequence> cachedPageComponents = Collections.emptyList();
     private int cachedPage = -1;
     private Component pageMsg = Component.empty();
+    private Button submitButton;
     private PageButton forwardButton;
     private PageButton backButton;
     private final boolean playTurnSound;
@@ -70,7 +65,7 @@ public class WishViewScreen extends Screen {
     }
 
     public boolean setPage(int p_98276_) {
-        int i = Mth.clamp(p_98276_, 0, this.PAGE_COUNT - 1);
+        int i = Mth.clamp(p_98276_, 0, WishViewScreen.PAGE_COUNT - 1);
         if (i != this.currentPage) {
             this.currentPage = i;
             this.updateButtonVisibility();
@@ -92,28 +87,13 @@ public class WishViewScreen extends Screen {
 
     protected void createMenuControls() {
 
-        PageButton forward = new PageButton(this.width / 2 - 100, 196, true,
-                $ -> PlayerWishEvent.makeWishFromIndx(this.currentPage), true);
-        addRenderableWidget(forward);
+        submitButton = new PlainTextButton(width / 2 - 50, 196, 200, 20,
+                Component.translatable("gui.mana.select_wish"), (p_280834_) -> {
+                    this.minecraft.setScreen((Screen) null);
+                    PlayerWishEvent.makeWishFromIndx(this.currentPage);
+                }, this.font);
 
-        // IconButton confirmButton = new IconButton(x + background.width - 33, y +
-        // background.height - 24, AllIcons.I_CONFIRM);
-        // confirmButton.withCallback(() -> {
-        // onClose();
-        // });
-        // addRenderableWidget(confirmButton);
-
-        // this.addRenderableWidget(
-        // new Button(this.width / 2 - 100, 196, 200, 20,
-        // Component.translatable("gui.mana.select_wish"),
-        // () -> {
-        // this.minecraft.setScreen((Screen) null);
-        // PlayerWishEvent.makeWishFromIndx(this.currentPage);
-        // }));
-
-        // .bounds(center - 100, yStart + 92, bLongWidth, bHeight)
-        //
-        // .build());
+        addRenderableWidget(submitButton);
     }
 
     protected void createPageControlButtons() {
@@ -131,7 +111,7 @@ public class WishViewScreen extends Screen {
     }
 
     private int getNumPages() {
-        return this.PAGE_COUNT;
+        return WishViewScreen.PAGE_COUNT;
     }
 
     protected void pageBack() {
@@ -196,7 +176,7 @@ public class WishViewScreen extends Screen {
         // 0);
 
         graphics.drawString(font, this.pageMsg,
-                (int) (i - i1 + 192 - 44), 18, 0);
+                (int) (i - i1 + 192 - 44), 18, 0, false);
 
         int k = Math.min(128 / 9, this.cachedPageComponents.size());
 
@@ -209,7 +189,7 @@ public class WishViewScreen extends Screen {
             graphics.drawString(font, formattedcharsequence,
                     (int) (i + 36), (int) (32
                             + l * 9),
-                    0);
+                    0, false);
         }
 
         Style style = this.getClickedComponentStyleAt((double) p_98283_, (double) p_98284_);
@@ -233,8 +213,9 @@ public class WishViewScreen extends Screen {
         return super.mouseClicked(p_98272_, p_98273_, p_98274_);
     }
 
-    public boolean handleComponentClicked(Style p_98293_) {
-        ClickEvent clickevent = p_98293_.getClickEvent();
+    public boolean handleComponentClicked(@Nullable Style style) {
+
+        ClickEvent clickevent = style.getClickEvent();
         if (clickevent == null) {
             return false;
         } else if (clickevent.getAction() == ClickEvent.Action.CHANGE_PAGE) {
@@ -247,13 +228,14 @@ public class WishViewScreen extends Screen {
                 return false;
             }
         } else {
-            boolean flag = super.handleComponentClicked(p_98293_);
+            boolean flag = super.handleComponentClicked(style);
             if (flag && clickevent.getAction() == ClickEvent.Action.RUN_COMMAND) {
                 this.closeScreen();
             }
 
             return flag;
         }
+
     }
 
     protected void closeScreen() {
