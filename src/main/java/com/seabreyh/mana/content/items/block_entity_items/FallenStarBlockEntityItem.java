@@ -1,6 +1,7 @@
-package com.seabreyh.mana.content.blocks.block_entities;
+package com.seabreyh.mana.content.items.block_entity_items;
 
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.content.blocks.block_entities.StarCatcherBlockEntity;
 import com.seabreyh.mana.content.entities.FallenStarEntity;
 import com.seabreyh.mana.foundation.client.gui.screens.StarCatcherMenu;
 import com.seabreyh.mana.foundation.networking.ManaMessages;
@@ -33,6 +34,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -40,8 +42,35 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 
 public class FallenStarBlockEntityItem extends BlockEntity implements MenuProvider {
+    public int tickCount;
+    public float activeRotation;
+    public float rotationSpeed = 1F;
+
     public FallenStarBlockEntityItem(BlockPos pWorldPosition, BlockState pBlockState) {
         super(ManaBlockEntities.FALLEN_STAR_BLOCK_ENTITY_ITEM.get(), pWorldPosition, pBlockState);
+    }
+
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, FallenStarBlockEntityItem pBlockEntity) {
+
+        if (pLevel.isClientSide) {
+            // ManaMod.LOGGER
+            // .info("ID" + pBlockEntity.worldPosition.getZ() + " speed: " +
+            // pBlockEntity.rotationSpeed
+            // + " catchCount: "
+            // + pBlockEntity.catchCount);
+
+            // if (pBlockEntity.catchCount > 0) {
+            // float modifier = Math.min((float) pBlockEntity.catchCount * 10.0f, 20.0f);
+            // pBlockEntity.rotationSpeed = (3.0f + modifier);
+            // } else {
+
+            // pBlockEntity.rotationSpeed = (1.0f);
+            // }
+            // }
+
+            // // animationTick(pLevel, pPos, list, pBlockEntity.tickCount);
+            // ++pBlockEntity.activeRotation;}
+        }
     }
 
     @Override
@@ -49,6 +78,7 @@ public class FallenStarBlockEntityItem extends BlockEntity implements MenuProvid
     public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
         // FIXME Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'createMenu'");
+
     }
 
     @Override

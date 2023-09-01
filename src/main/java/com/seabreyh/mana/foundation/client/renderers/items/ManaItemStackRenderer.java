@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.blocks.block_entities.StarCatcherBlockEntity;
+import com.seabreyh.mana.content.items.block_entity_items.FallenStarBlockEntityItem;
 import com.seabreyh.mana.registries.ManaBlockEntities;
 import com.seabreyh.mana.registries.ManaBlocks;
 import com.seabreyh.mana.registries.ManaItems;
@@ -39,8 +40,8 @@ import org.joml.Quaternionf;
 // @OnlyIn(Dist.CLIENT)
 public class ManaItemStackRenderer extends BlockEntityWithoutLevelRenderer {
 
-    StarCatcherBlockEntity catcher = new StarCatcherBlockEntity(BlockPos.ZERO,
-            ManaBlocks.STAR_CATCHER.get().defaultBlockState());
+    FallenStarBlockEntityItem catcher = new FallenStarBlockEntityItem(BlockPos.ZERO,
+            ManaBlocks.ABSTRACT_BLOCK_ENTITY_AS_ITEM.get().defaultBlockState());
 
     public static int ticksExisted = 0;
     private static final ResourceLocation TEXTURE = new ResourceLocation(ManaMod.MOD_ID,
@@ -74,14 +75,9 @@ public class ManaItemStackRenderer extends BlockEntityWithoutLevelRenderer {
 
             float f1 = (tick * -0.0375F * 6F) * (180F / (float) Math.PI);
 
-            // matrixStack.translate(1.25D * -SIN_45, 1D, 0D * -SIN_45);
-            // matrixStack.scale(0.8F, 0.8F, 0.8F);
-            // matrixStack.translate(0D, 0.1D, 0D);
-            // matrixStack.rotateAround(com.mojang.math.Axis.YP.rotationDegrees(f1), 0.8F,
-            // 0F, 0.7F);
+            matrixStack.rotateAround(com.mojang.math.Axis.YP.rotationDegrees(f1), 0.8F,
+                    0F, 0.7F);
 
-            // matrixStack.mulPose(new Quaternionf(SIN_45, 0.0F, SIN_45, ((float) Math.PI /
-            // 6F)));
             mc.getBlockEntityRenderDispatcher().renderItem(
                     catcher,
                     matrixStack, buffer, i, i1);

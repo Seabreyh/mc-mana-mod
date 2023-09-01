@@ -1,6 +1,7 @@
 package com.seabreyh.mana.foundation.event;
 
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.content.items.block_entity_items.renderers.FallenStarBlockEntityItemRenderer;
 import com.seabreyh.mana.content.particles.MagicPloomParticleAmethyst;
 import com.seabreyh.mana.content.particles.MagicPloomParticleEmerald;
 import com.seabreyh.mana.content.particles.MagicPloomParticleFallingStar;
@@ -55,6 +56,8 @@ public class ManaClientEvents {
 
         @SubscribeEvent
         public static void registerBlockRenderers(FMLClientSetupEvent event) {
+                ItemBlockRenderTypes.setRenderLayer(ManaBlocks.ABSTRACT_BLOCK_ENTITY_AS_ITEM.get(),
+                                RenderType.cutout());
                 ItemBlockRenderTypes.setRenderLayer(ManaBlocks.STAR_CATCHER.get(), RenderType.cutout());
                 ItemBlockRenderTypes.setRenderLayer(ManaBlocks.STAR_BOTTLE.get(), RenderType.cutout());
                 ItemBlockRenderTypes.setRenderLayer(ManaBlocks.CELESTIAL_TORCH.get(), RenderType.cutout());
@@ -84,6 +87,9 @@ public class ManaClientEvents {
 
                 BlockEntityRenderers.register(ManaBlockEntities.STAR_CATCHER_BLOCK_ENTITY.get(),
                                 RendererBlockEntityStarCatcher::new);
+
+                BlockEntityRenderers.register(ManaBlockEntities.FALLEN_STAR_BLOCK_ENTITY_ITEM.get(),
+                                FallenStarBlockEntityItemRenderer::new);
         }
 
         // No @SubscribeEvent

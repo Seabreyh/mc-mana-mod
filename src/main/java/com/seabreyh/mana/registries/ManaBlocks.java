@@ -8,7 +8,8 @@ import com.seabreyh.mana.content.blocks.decoration.ManaStoneBlock;
 import com.seabreyh.mana.content.blocks.functional.CelestialTorch;
 import com.seabreyh.mana.content.blocks.functional.StarBottle;
 import com.seabreyh.mana.content.blocks.functional.StarCatcher;
-
+import com.seabreyh.mana.content.blocks.invalid_blocks.AbstractBlockEntityAsItem;
+import com.seabreyh.mana.content.items.block_entity_items.FallenStarBlockEntityItem;
 import com.google.common.base.Supplier;
 
 import net.minecraft.world.effect.MobEffects;
@@ -137,6 +138,10 @@ public class ManaBlocks {
         // .destroyTime(0.3f)
         // .noOcclusion()
         // .lightLevel(BlockState -> 5)));
+
+        public static final RegistryObject<Block> ABSTRACT_BLOCK_ENTITY_AS_ITEM = registerBlock(
+                        "abstract_block_entity_as_item",
+                        () -> new AbstractBlockEntityAsItem(AbstractBlockEntityAsItem.PROPERTIES));
 
         // -----------------------
         // REGISTER PLANTS

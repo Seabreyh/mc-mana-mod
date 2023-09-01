@@ -3,6 +3,7 @@ package com.seabreyh.mana.content.items.block_entity_items.renderers;
 import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.content.blocks.block_entities.StarCatcherBlockEntity;
 import com.seabreyh.mana.content.entities.AbstractFallingSpaceEntity;
+import com.seabreyh.mana.content.items.block_entity_items.FallenStarBlockEntityItem;
 
 import org.joml.Quaternionf;
 
@@ -53,7 +54,7 @@ public class FallenStarBlockEntityItemRenderer implements BlockEntityRenderer<Fa
     }
 
     @Override
-    public void render(StarCatcherBlockEntity entityBlock, float partialTicks, PoseStack stack,
+    public void render(FallenStarBlockEntityItem entityBlock, float partialTicks, PoseStack stack,
             MultiBufferSource buffer, int combinedOverlay, int packedLight) {
 
         stack.pushPose();
@@ -62,8 +63,8 @@ public class FallenStarBlockEntityItemRenderer implements BlockEntityRenderer<Fa
 
         VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entityTranslucent(TEXTURE, true));
         stack.pushPose();
-        stack.scale(0.4F, 0.4F, 0.4F);
-        stack.translate(1.25D, 1.17D, 1.25D);
+        stack.scale(1.4F, 1.4F, 1.4F);
+        stack.translate(0D, 0D, 0D);
         int i = OverlayTexture.NO_OVERLAY;
 
         stack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(f1));
@@ -84,5 +85,4 @@ public class FallenStarBlockEntityItemRenderer implements BlockEntityRenderer<Fa
     public ResourceLocation getTextureLocation(AbstractFallingSpaceEntity p_114157_) {
         return TEXTURE;
     }
-
 }
