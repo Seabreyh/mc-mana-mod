@@ -71,6 +71,7 @@ public class ManaCreativeTab {
                         // -----------------------
                         // END REGISTER
                         // -----------------------
+
                     })
                     .build());
 

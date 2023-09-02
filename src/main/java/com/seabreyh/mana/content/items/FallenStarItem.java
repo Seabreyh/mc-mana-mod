@@ -32,7 +32,8 @@ import net.minecraft.core.Position;
 
 public class FallenStarItem extends Item {
 
-    public static final Properties PROPERTIES = new Item.Properties();
+    public static final Properties PROPERTIES = new Item.Properties()
+            .fireResistant();
 
     public FallenStarItem(Properties p_41383_) {
         super(p_41383_);

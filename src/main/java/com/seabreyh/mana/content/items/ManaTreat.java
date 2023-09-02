@@ -2,6 +2,7 @@ package com.seabreyh.mana.content.items;
 
 import com.seabreyh.mana.foundation.event.player.PlayerManaEvent;
 import com.seabreyh.mana.foundation.mana_stat.PlayerManaStatProvider;
+import com.seabreyh.mana.registries.ManaEffects;
 
 import java.util.List;
 import javax.annotation.Nullable;
@@ -15,6 +16,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;

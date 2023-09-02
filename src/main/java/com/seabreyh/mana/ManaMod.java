@@ -10,9 +10,11 @@ import com.seabreyh.mana.registries.ManaEntityDataSerializers;
 import com.seabreyh.mana.registries.ManaBlockEntities;
 import com.seabreyh.mana.registries.ManaBlocks;
 import com.seabreyh.mana.registries.ManaCreativeTab;
+import com.seabreyh.mana.registries.ManaEffects;
 import com.seabreyh.mana.registries.ManaEntities;
 import com.seabreyh.mana.registries.ManaItems;
 import com.seabreyh.mana.registries.ManaParticles;
+import com.seabreyh.mana.registries.ManaPotions;
 import com.seabreyh.mana.registries.damage.DamageTypeDataProvider;
 import com.seabreyh.mana.registries.damage.DamageTypeTagGen;
 
@@ -57,6 +59,10 @@ public class ManaMod {
         ManaBlocks.register(eventBus);
         ManaBlockEntities.register(eventBus);
         ManaMenuTypes.register(eventBus);
+
+        ManaPotions.register(eventBus);
+
+        ManaEffects.register(eventBus);
         // ManaRecipes.register(eventBus);
 
         // Add listeners
