@@ -69,7 +69,7 @@ public class ManaItems {
         public static final RegistryObject<Item> GRANTED_WISH_ITEM = ITEMS.register("granted_wish_item",
                         () -> new GrantedWishItem(GrantedWishItem.PROPERTIES));
 
-        // -----------------------z
+        // -----------------------
         // END REGISTER ITEMS
         // -----------------------
 
