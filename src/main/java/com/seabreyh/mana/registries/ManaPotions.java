@@ -3,6 +3,7 @@ package com.seabreyh.mana.registries;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraft.world.item.ItemStack;
@@ -12,6 +13,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.Potions;
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.content.items.brewing.ProperBrewingRecipe;
 
 @Mod.EventBusSubscriber(modid = ManaMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ManaPotions {
@@ -52,12 +54,12 @@ public class ManaPotions {
         return p_43550_;
     }
 
-    // // POTION RECIPES
-    // public static void registerRecipes() {
-    // BrewingRecipeRegistry.addRecipe(new ProperBrewingRecipe(Potions.THICK,
-    // ManaItems.STAR_DUST.get(), ManaPotions.MANA_INSTANT_POTION));
+    // POTION RECIPES
+    public static void registerRecipes() {
+        BrewingRecipeRegistry.addRecipe(new ProperBrewingRecipe(Potions.THICK,
+                ManaItems.STAR_DUST.get(), ManaPotions.MANA_INSTANT_POTION.get()));
 
-    // BrewingRecipeRegistry.addRecipe(new ProperBrewingRecipe(Potions.THICK,
-    // ManaItems.MANA_DUST.get(), ManaPotions.MANA_REGEN_POTION));
-    // }
+        BrewingRecipeRegistry.addRecipe(new ProperBrewingRecipe(Potions.THICK,
+                ManaItems.MANA_DUST.get(), ManaPotions.MANA_REGEN_POTION.get()));
+    }
 }

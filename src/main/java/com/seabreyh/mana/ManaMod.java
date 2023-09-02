@@ -27,6 +27,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -79,29 +80,17 @@ public class ManaMod {
         // some preinit code
         event.enqueueWork(() -> {
             ManaMessages.register();
-
             ManaBlocks.pottedPlantsSetup(event);
-
-            // ManaPotions.registerRecipes();
-
+            ManaPotions.registerRecipes();
         });
-
-    }
-
-    // @SubscribeEvent
-    // UPDATED
-    public static void registerRecipes(RegisterEvent.RegisterHelper<RecipeSerializer<?>> event) {
-        // ManaPotions.registerRecipes();
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
         ManaClientEvents.registerEntityRenderers(event);
         ManaClientEvents.registerBlockRenderers(event);
         ManaClientEvents.registerBlockEntityRenderers(event);
-        // ManaClientEvents.registerGuiOverlays(event);
         ManaClientEvents.registerMenuScreens();
         ManaClientEvents.registerParticleFactories(null);
-
         PROXY.clientInit();
     }
 
@@ -114,13 +103,6 @@ public class ManaMod {
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
-        // @SubscribeEvent
-        // UPDATED
-        public static void onBlocksRegistry(final RegisterEvent.RegisterHelper<Block> blockRegistryEvent) {
-            // Register a new block here
-            // LOGGER.info("HELLO from Register Block");
-        }
-
         // @SubscribeEvent
         // public static void registerRecipeTypes(final
         // RegisterEvent.RegisterHelper<RecipeSerializer<?>> event) {
