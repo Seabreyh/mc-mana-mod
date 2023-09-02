@@ -11,7 +11,8 @@ import com.seabreyh.mana.content.particles.StarPowerParticle;
 import com.seabreyh.mana.content.particles.TwinkleParticle;
 import com.seabreyh.mana.foundation.client.gui.hud.CarvedMelonOverlay;
 import com.seabreyh.mana.foundation.client.gui.hud.ManaHudOverlay;
-import com.seabreyh.mana.foundation.client.gui.screens.ManaMenuTypes;
+import com.seabreyh.mana.foundation.client.gui.screens.StaffTableMenu;
+import com.seabreyh.mana.foundation.client.gui.screens.StaffTableScreen;
 import com.seabreyh.mana.foundation.client.gui.screens.StarCatcherScreen;
 import com.seabreyh.mana.foundation.client.gui.screens.WishViewScreen;
 import com.seabreyh.mana.foundation.client.renderers.block_entities.RendererBlockEntityStarCatcher;
@@ -22,6 +23,7 @@ import com.seabreyh.mana.foundation.client.renderers.items.ManaItemStackRenderer
 import com.seabreyh.mana.registries.ManaBlockEntities;
 import com.seabreyh.mana.registries.ManaBlocks;
 import com.seabreyh.mana.registries.ManaEntities;
+import com.seabreyh.mana.registries.ManaMenuTypes;
 import com.seabreyh.mana.registries.ManaParticles;
 
 import net.minecraftforge.api.distmarker.Dist;
@@ -92,6 +94,9 @@ public class ManaClientEvents {
 
                 MenuScreens.register(ManaMenuTypes.STAR_CATCHER_MENU.get(),
                                 StarCatcherScreen::new);
+
+                MenuScreens.register(ManaMenuTypes.STAFF_TABLE_MENU.get(),
+                                StaffTableScreen::new);
         }
 
         @SubscribeEvent

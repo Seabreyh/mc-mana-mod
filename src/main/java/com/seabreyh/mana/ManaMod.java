@@ -1,11 +1,12 @@
 package com.seabreyh.mana;
 
 import com.mojang.logging.LogUtils;
-import com.seabreyh.mana.foundation.client.gui.screens.ManaMenuTypes;
+import com.seabreyh.mana.content.blocks.functional.StarBottle;
 import com.seabreyh.mana.foundation.event.ManaClientEvents;
 import com.seabreyh.mana.foundation.networking.ManaMessages;
 import com.seabreyh.mana.foundation.proxy.ClientProxy;
 import com.seabreyh.mana.foundation.proxy.CommonProxy;
+import com.seabreyh.mana.foundation.utils.StaffTableRecipe;
 import com.seabreyh.mana.registries.ManaEntityDataSerializers;
 import com.seabreyh.mana.registries.ManaBlockEntities;
 import com.seabreyh.mana.registries.ManaBlocks;
@@ -13,19 +14,26 @@ import com.seabreyh.mana.registries.ManaCreativeTab;
 import com.seabreyh.mana.registries.ManaEffects;
 import com.seabreyh.mana.registries.ManaEntities;
 import com.seabreyh.mana.registries.ManaItems;
+import com.seabreyh.mana.registries.ManaMenuTypes;
 import com.seabreyh.mana.registries.ManaParticles;
 import com.seabreyh.mana.registries.ManaPotions;
+import com.seabreyh.mana.registries.ManaRecipes;
 import com.seabreyh.mana.registries.damage.DamageTypeDataProvider;
 import com.seabreyh.mana.registries.damage.DamageTypeTagGen;
 
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegisterEvent;
+import net.minecraftforge.registries.RegistryObject;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -62,6 +70,7 @@ public class ManaMod {
         ManaMenuTypes.register(eventBus);
 
         ManaPotions.register(eventBus);
+        ManaRecipes.register(eventBus);
 
         ManaEffects.register(eventBus);
         // ManaRecipes.register(eventBus);
@@ -101,15 +110,10 @@ public class ManaMod {
         // LOGGER.info("HELLO from server starting");
     }
 
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-        // @SubscribeEvent
-        // public static void registerRecipeTypes(final
-        // RegisterEvent.RegisterHelper<RecipeSerializer<?>> event) {
-        // RegisterEvent.register(Registry.RECIPE_TYPE, StaffTableRecipes.Type.ID,
-        // StaffTableRecipes.Type.INSTANCE);
-        // }
-    }
+    // @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+    // public static class RegistryEvents {
+
+    // }
 
     public Object getISTERProperties() {
         return null;

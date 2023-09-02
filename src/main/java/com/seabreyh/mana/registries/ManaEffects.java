@@ -17,24 +17,24 @@ import net.minecraft.world.item.alchemy.Potions;
 import java.lang.reflect.Field;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.items.brewing.ProperBrewingRecipe;
 import com.seabreyh.mana.content.effects.EffectManaRegen;
 import com.seabreyh.mana.content.effects.EffectManaInstant;
 
 @Mod.EventBusSubscriber(modid = ManaMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ManaEffects {
 
-    public static final DeferredRegister<MobEffect> MANA_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS,
-            ManaMod.MOD_ID);
+        public static final DeferredRegister<MobEffect> MANA_EFFECTS = DeferredRegister.create(
+                        ForgeRegistries.MOB_EFFECTS,
+                        ManaMod.MOD_ID);
 
-    public static final RegistryObject<MobEffect> MANA_INSTANT = MANA_EFFECTS.register("mana_instant",
-            EffectManaInstant::new);
+        public static final RegistryObject<MobEffect> MANA_INSTANT = MANA_EFFECTS.register("mana_instant",
+                        EffectManaInstant::new);
 
-    public static final RegistryObject<MobEffect> MANA_REGEN = MANA_EFFECTS.register("mana_regen",
-            EffectManaRegen::new);
+        public static final RegistryObject<MobEffect> MANA_REGEN = MANA_EFFECTS.register("mana_regen",
+                        EffectManaRegen::new);
 
-    public static void register(IEventBus eventBus) {
-        MANA_EFFECTS.register(eventBus);
-    }
+        public static void register(IEventBus eventBus) {
+                MANA_EFFECTS.register(eventBus);
+        }
 
 }

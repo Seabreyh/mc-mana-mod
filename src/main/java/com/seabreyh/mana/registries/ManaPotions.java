@@ -13,7 +13,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.Potions;
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.items.brewing.ProperBrewingRecipe;
+import com.seabreyh.mana.foundation.utils.ManaBrewingRecipe;
 
 @Mod.EventBusSubscriber(modid = ManaMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ManaPotions {
@@ -56,10 +56,10 @@ public class ManaPotions {
 
     // POTION RECIPES
     public static void registerRecipes() {
-        BrewingRecipeRegistry.addRecipe(new ProperBrewingRecipe(Potions.THICK,
+        BrewingRecipeRegistry.addRecipe(new ManaBrewingRecipe(Potions.THICK,
                 ManaItems.STAR_DUST.get(), ManaPotions.MANA_INSTANT_POTION.get()));
 
-        BrewingRecipeRegistry.addRecipe(new ProperBrewingRecipe(Potions.THICK,
+        BrewingRecipeRegistry.addRecipe(new ManaBrewingRecipe(Potions.THICK,
                 ManaItems.MANA_DUST.get(), ManaPotions.MANA_REGEN_POTION.get()));
     }
 }

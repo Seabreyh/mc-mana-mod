@@ -31,6 +31,7 @@ public class ManaCreativeTab {
                         // -----------------------
 
                         outPut.accept(ManaBlocks.STAR_CATCHER.get());
+                        outPut.accept(ManaBlocks.STAFF_TABLE.get());
 
                         outPut.accept(ManaItems.FALLEN_STAR_ITEM.get());
                         outPut.accept(ManaItems.STAR_DUST.get());

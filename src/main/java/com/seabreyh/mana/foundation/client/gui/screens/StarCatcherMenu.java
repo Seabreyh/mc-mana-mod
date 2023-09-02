@@ -2,6 +2,7 @@ package com.seabreyh.mana.foundation.client.gui.screens;
 
 import com.seabreyh.mana.content.blocks.block_entities.StarCatcherBlockEntity;
 import com.seabreyh.mana.registries.ManaBlocks;
+import com.seabreyh.mana.registries.ManaMenuTypes;
 import com.seabreyh.mana.foundation.client.gui.screens.slot.ManaResultSlot;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -44,7 +45,6 @@ public class StarCatcherMenu extends AbstractContainerMenu {
     private static final int VANILLA_FIRST_SLOT_INDEX = 0;
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
-    // THIS YOU HAVE TO DEFINE!
     private static final int TE_INVENTORY_SLOT_COUNT = 1; // must be the number of slots you have!
 
     @Override

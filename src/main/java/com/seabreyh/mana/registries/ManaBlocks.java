@@ -6,6 +6,7 @@ import com.seabreyh.mana.content.blocks.botany.flowers.ManaFlower;
 import com.seabreyh.mana.content.blocks.decoration.CompactBlockOfAmethyst;
 import com.seabreyh.mana.content.blocks.decoration.ManaStoneBlock;
 import com.seabreyh.mana.content.blocks.functional.CelestialTorch;
+import com.seabreyh.mana.content.blocks.functional.StaffTable;
 import com.seabreyh.mana.content.blocks.functional.StarBottle;
 import com.seabreyh.mana.content.blocks.functional.StarCatcher;
 import com.seabreyh.mana.content.blocks.invalid_blocks.AbstractBlockEntityAsItem;
@@ -56,6 +57,9 @@ public class ManaBlocks {
 
         public static final RegistryObject<Block> STAR_CATCHER = registerBlock("star_catcher",
                         () -> new StarCatcher(StarCatcher.PROPERTIES));
+
+        public static final RegistryObject<Block> STAFF_TABLE = registerBlock("staff_table",
+                        () -> new StaffTable(StaffTable.PROPERTIES));
 
         public static final RegistryObject<Block> CARVED_MELON = registerBlock("carved_melon",
                         () -> new CarvedMelon(CarvedMelon.PROPERTIES));
@@ -129,15 +133,6 @@ public class ManaBlocks {
 
         public static final RegistryObject<Block> CINDER_STONE_BRICK_WALL = registerBlock("cinder_stone_brick_wall",
                         () -> new WallBlock(BlockBehaviour.Properties.copy(CINDER_STONE_BRICKS.get())));
-
-        // public static final RegistryObject<Block> STAFF_TABLE =
-        // registerBlock("staff_table",
-        // () -> new StaffTable(BlockBehaviour.Properties
-        // .of(Material.STONE)
-        // .strength(0.2f)
-        // .destroyTime(0.3f)
-        // .noOcclusion()
-        // .lightLevel(BlockState -> 5)));
 
         public static final RegistryObject<Block> ABSTRACT_BLOCK_ENTITY_AS_ITEM = registerBlock(
                         "abstract_block_entity_as_item",

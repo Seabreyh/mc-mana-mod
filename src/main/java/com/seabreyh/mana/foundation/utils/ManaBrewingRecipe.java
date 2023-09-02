@@ -1,4 +1,4 @@
-package com.seabreyh.mana.content.items.brewing;
+package com.seabreyh.mana.foundation.utils;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -7,12 +7,12 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
 
-public class ProperBrewingRecipe implements IBrewingRecipe {
+public class ManaBrewingRecipe implements IBrewingRecipe {
     private final Potion input;
     private final Item ingredient;
     private final Potion output;
 
-    public ProperBrewingRecipe(Potion input, Item ingredient, Potion output) {
+    public ManaBrewingRecipe(Potion input, Item ingredient, Potion output) {
         this.input = input;
         this.ingredient = ingredient;
         this.output = output;

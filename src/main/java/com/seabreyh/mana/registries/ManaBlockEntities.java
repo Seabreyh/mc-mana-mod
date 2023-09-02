@@ -1,11 +1,10 @@
 package com.seabreyh.mana.registries;
 
 import com.seabreyh.mana.ManaMod;
+import com.seabreyh.mana.content.blocks.block_entities.StaffTableBlockEntity;
 import com.seabreyh.mana.content.blocks.block_entities.StarCatcherBlockEntity;
-import com.seabreyh.mana.content.blocks.botany.CarvedMelon;
 import com.seabreyh.mana.content.items.block_entity_items.FallenStarBlockEntityItem;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -28,11 +27,10 @@ public class ManaBlockEntities {
                                         () -> BlockEntityType.Builder.of(FallenStarBlockEntityItem::new,
                                                         ManaBlocks.ABSTRACT_BLOCK_ENTITY_AS_ITEM.get()).build(null));
 
-        // public static final RegistryObject<BlockEntityType<BlockEntityStarCatcher>>
-        // FALLEN_STAR_BLOCK_ENTITY_ITEM = BLOCK_ENTITY_TYPES
-        // .register("fallen_star_block_entity_item",
-        // () -> BlockEntityType.Builder.of(FallenStarBlockEntityItem::new,
-        // ManaBlocks.STAR_CATCHER.get()).build(null));
+        public static final RegistryObject<BlockEntityType<StaffTableBlockEntity>> STAFF_TABLE_BLOCK_ENTITY = BLOCK_ENTITY_TYPES
+                        .register("staff_table_block_entity",
+                                        () -> BlockEntityType.Builder.of(StaffTableBlockEntity::new,
+                                                        ManaBlocks.STAFF_TABLE.get()).build(null));
 
         public static void register(IEventBus eventBus) {
                 BLOCK_ENTITY_TYPES.register(eventBus);
