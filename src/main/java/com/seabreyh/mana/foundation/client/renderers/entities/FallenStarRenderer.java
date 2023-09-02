@@ -33,11 +33,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class FallenStarRenderer<T extends FallenStarEntity> extends EntityRenderer<T> {
+
     private static final ResourceLocation TEXTURE = new ResourceLocation(ManaMod.MOD_ID,
             "textures/entity/fallen_star/fallen_star.png");
     private static final float SIN_45 = (float) Math.sin((Math.PI / 4D));
     private final ModelPart glass;
     private final ModelPart cube;
+    Minecraft mc = Minecraft.getInstance();
 
     public FallenStarRenderer(EntityRendererProvider.Context manager) {
         super(manager);
@@ -62,7 +64,7 @@ public class FallenStarRenderer<T extends FallenStarEntity> extends EntityRender
         float animSpeed = 3.0F;
         poseStack.pushPose();
         float f = getY(fallenStar, floatTwo);
-        float f1 = ((float) fallenStar.tickCount * animSpeed + floatTwo) * 3.0F;
+        float f1 = -((float) fallenStar.tickCount * animSpeed + floatTwo) * 3.0F;
         VertexConsumer vertexconsumer = multBuff.getBuffer(RenderType.entityTranslucent(TEXTURE, true));
         poseStack.pushPose();
         poseStack.scale(0.35F, 0.35F, 0.35F);
@@ -121,7 +123,7 @@ public class FallenStarRenderer<T extends FallenStarEntity> extends EntityRender
             pose.mulPose(this.entityRenderDispatcher.cameraOrientation());
             pose.scale(-0.025F, -0.025F, 0.025F);
             Matrix4f matrix4f = pose.last().pose();
-            float f1 = Minecraft.getInstance().options.getBackgroundOpacity(0.95F);
+            float f1 = mc.options.getBackgroundOpacity(0.95F);
             int j = (int) (f1 * 255.0F) << 24;
             Font font = this.getFont();
             float f2 = (float) (-font.width(text) / 2);

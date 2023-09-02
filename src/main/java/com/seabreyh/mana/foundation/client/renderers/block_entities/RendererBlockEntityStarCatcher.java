@@ -56,28 +56,26 @@ public class RendererBlockEntityStarCatcher implements BlockEntityRenderer<StarC
     public void render(StarCatcherBlockEntity entityBlock, float partialTicks, PoseStack stack,
             MultiBufferSource buffer, int combinedOverlay, int packedLight) {
 
-        stack.pushPose();
         float f1 = ((entityBlock.activeRotation + partialTicks) * -0.0375F * entityBlock.rotationSpeed)
                 * (180F / (float) Math.PI);
 
+        stack.pushPose();
+
         VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entityTranslucent(TEXTURE, true));
         stack.pushPose();
+
         stack.scale(0.4F, 0.4F, 0.4F);
         stack.translate(1.25D, 1.17D, 1.25D);
         int i = OverlayTexture.NO_OVERLAY;
-
         stack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(f1));
-
         stack.mulPose(new Quaternionf(SIN_45, 0.0F, SIN_45, ((float) Math.PI / 6F)));
         this.glass.render(stack, vertexconsumer, 6029544, i);
-
         stack.mulPose(new Quaternionf(SIN_45, 0.0F, SIN_45, ((float) Math.PI / 3F)));
         stack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(f1));
         stack.scale(0.25F, 0.25F, 0.25F);
-
         this.cube.render(stack, vertexconsumer, 6029544, i);
-
         stack.popPose();
+
         stack.popPose();
     }
 

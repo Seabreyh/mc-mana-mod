@@ -1,7 +1,6 @@
 package com.seabreyh.mana.content.items.block_entity_items.renderers;
 
 import com.seabreyh.mana.ManaMod;
-import com.seabreyh.mana.content.blocks.block_entities.StarCatcherBlockEntity;
 import com.seabreyh.mana.content.entities.AbstractFallingSpaceEntity;
 import com.seabreyh.mana.content.items.block_entity_items.FallenStarBlockEntityItem;
 
@@ -63,17 +62,14 @@ public class FallenStarBlockEntityItemRenderer implements BlockEntityRenderer<Fa
 
         VertexConsumer vertexconsumer = buffer.getBuffer(RenderType.entityTranslucent(TEXTURE, true));
         stack.pushPose();
-        stack.scale(1.4F, 1.4F, 1.4F);
-        stack.translate(0D, 0D, 0D);
-        int i = OverlayTexture.NO_OVERLAY;
+        stack.scale(1.0F, 1.0F, 1.0F);
 
-        stack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(f1));
+        int i = OverlayTexture.NO_OVERLAY;
 
         stack.mulPose(new Quaternionf(SIN_45, 0.0F, SIN_45, ((float) Math.PI / 6F)));
         this.glass.render(stack, vertexconsumer, 6029544, i);
 
         stack.mulPose(new Quaternionf(SIN_45, 0.0F, SIN_45, ((float) Math.PI / 3F)));
-        stack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(f1));
         stack.scale(0.25F, 0.25F, 0.25F);
 
         this.cube.render(stack, vertexconsumer, 6029544, i);

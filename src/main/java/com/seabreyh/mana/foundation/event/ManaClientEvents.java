@@ -69,11 +69,6 @@ public class ManaClientEvents {
                 // RenderType.cutout());
         }
 
-        // @SubscribeEvent
-        // public static void registerItemRenderers(FMLClientSetupEvent event) {
-        // EntityRenderers.register(null, null);
-        // }v
-
         // FIXME NEEDED???
         @SubscribeEvent
         public void clientTick(TickEvent.ClientTickEvent event) {
