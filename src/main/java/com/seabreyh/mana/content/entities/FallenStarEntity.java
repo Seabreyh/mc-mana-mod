@@ -46,7 +46,20 @@ public class FallenStarEntity extends AbstractFallingSpaceEntity {
 
     @Override
     public void tick() {
+
         super.tick();
+
+        // physics - inground
+        if (this.level().isClientSide) {
+            this.noPhysics = false;
+        } else {
+            this.noPhysics = !this.level().noCollision(this, this.getBoundingBox().deflate(0.3D));
+            if (this.noPhysics) {
+                this.moveTowardsClosestSpace(this.getX(),
+                        (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2D,
+                        this.getZ());
+            }
+        }
 
         // check if catcher was removed
         if (catcher != null) {

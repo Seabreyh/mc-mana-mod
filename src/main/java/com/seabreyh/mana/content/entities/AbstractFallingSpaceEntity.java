@@ -287,12 +287,13 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
     // ---------------------------------
 
     protected void playTravelEffects(double deltaX, double deltaY, double deltaZ) {
+
         for (int i = 0; i < 8; ++i) {
             this.level().addParticle(ManaParticles.MAGIC_PLOOM_PARTICLE_FALLING_STAR.get(),
                     this.getX() + deltaX * (double) i / 4.0D - deltaX * 2.5,
-                    this.getY() + deltaY * (double) i / 4.0D - deltaY * 2.5 + 0.3,
+                    this.getY() + deltaY * (double) i / 4.0D - deltaY * 2.5,
                     this.getZ() + deltaZ * (double) i / 4.0D - deltaZ * 2.5,
-                    -deltaX, -deltaY, -deltaZ);
+                    0, 0, 0);
 
             if (!this.isUnderWater()) {
                 this.level().addParticle(ManaParticles.TWINKLE_PARTICLE.get(),

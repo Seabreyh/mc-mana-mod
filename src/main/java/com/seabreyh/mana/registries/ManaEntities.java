@@ -43,14 +43,8 @@ public class ManaEntities {
         // () -> EntityType.Builder.<Meteor>of(Meteor::new, MobCategory.MISC)
         // .build("meteor"));
 
-        // public static Object CAUGHT_STAR;
-
-        public static final RegistryObject<EntityType<FallenStarEntity>> CAUGHT_STAR = ENTITIES.register(
-                        "caught_star",
-                        () -> EntityType.Builder.<FallenStarEntity>of(FallenStarEntity::new, MobCategory.MISC)
-                                        .build("caught_star"));
-
         public static void register(IEventBus eventBus) {
                 ENTITIES.register(eventBus);
         }
+
 }
