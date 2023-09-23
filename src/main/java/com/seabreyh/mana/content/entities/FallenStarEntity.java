@@ -7,10 +7,15 @@ import com.seabreyh.mana.registries.ManaItems;
 import com.seabreyh.mana.registries.ManaParticles;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -37,6 +42,7 @@ public class FallenStarEntity extends AbstractFallingSpaceEntity {
     // Shooting Star Event
     public FallenStarEntity(EntityType<? extends FallenStarEntity> entity, Level level, Player player) {
         super(entity, level, player);
+        this.spawnedNaturally = true;
     }
 
     // Block Dispenser
@@ -110,21 +116,53 @@ public class FallenStarEntity extends AbstractFallingSpaceEntity {
     // ---------------------------------
 
     @Override
-    protected void onHitBlock(BlockHitResult p_36755_) {
+    protected void onHitBlock(BlockHitResult hitResult) {
         this.setSoundEvent(HIT_SOUND);
         this.isFalling = false;
         if (!moveToCatcher) {
             this.inGround = true;
         }
-        BlockState blockstate = this.level().getBlockState(p_36755_.getBlockPos());
-        blockstate.onProjectileHit(this.level(), blockstate, p_36755_, this);
-        this.lastState = this.level().getBlockState(p_36755_.getBlockPos());
-        Vec3 vec3 = p_36755_.getLocation().subtract(this.getX(), this.getY(), this.getZ());
+        BlockState blockstate = this.level().getBlockState(hitResult.getBlockPos());
+        blockstate.onProjectileHit(this.level(), blockstate, hitResult, this);
+        this.lastState = this.level().getBlockState(hitResult.getBlockPos());
+
+        // ----
+        Entity entity = (Entity) (this.isVehicle() && this.getControllingPassenger() != null
+                ? this.getControllingPassenger()
+                : this);
+        float f3 = entity == this ? 0.2F : 0.9F;
+        Vec3 vec32 = entity.getDeltaMovement();
+
+        float f1 = Math.min(1.0F,
+                (float) Math
+                        .sqrt(vec32.x * vec32.x * (double) 0.2F + vec32.y * vec32.y + vec32.z * vec32.z * (double) 0.2F)
+                        * f3);
+
+        if (!this.level().isClientSide && f1 < 0.22F) {
+            double d0 = this.getX();
+            double d1 = this.getY();
+            double d2 = this.getZ();
+            float f = (float) Mth.ceil(this.fallDistance - 3.0F);
+            double d4 = Math.min((double) (0.2F + f / 15.0F), 2.5D);
+            int i = (int) (150.0D * d4);
+
+            ((ServerLevel) this.level()).sendParticles(
+                    new BlockParticleOption(ParticleTypes.BLOCK, blockstate).setPos(hitResult.getBlockPos()), d0,
+                    d1,
+                    d2, i, 0.0D, 0.0D, 0.0D, (double) 0.15F);
+
+            ManaMod.LOGGER.warn("Hit Block: " + blockstate.getBlock().getName().getString());
+        }
+
+        // ----
+        Vec3 vec3 = hitResult.getLocation().subtract(this.getX(), this.getY(), this.getZ());
         this.setDeltaMovement(vec3);
         Vec3 vec31 = vec3.normalize().scale((double) 0.05F);
         this.setPosRaw(this.getX() - vec31.x, this.getY() - vec31.y, this.getZ() - vec31.z);
 
         playHitSound();
+        ManaMod.LOGGER.warn(this.fallDistance + "");
+
     }
 
     @Override // override parent class function to include catcher effects

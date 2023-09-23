@@ -50,6 +50,7 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
     private float waterInertia = 0.7F;
     private EntityDimensions dimensions;
     float currentTime;
+    protected boolean spawnedNaturally = false;
 
     // splash variables
     private Vec3 lastPosition = this.position();
@@ -521,9 +522,12 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
     }
 
     public void checkTimeOfDay() {
-        currentTime = this.level().getTimeOfDay(1.0F);
-        if (currentTime > STAR_DESPAWN_TIME || currentTime < STAR_SPAWN_START_TIME)
-            discardEntity();
+        // only do time despawns for naturally spawned entities.
+        if (spawnedNaturally) {
+            currentTime = this.level().getTimeOfDay(1.0F);
+            if (currentTime > STAR_DESPAWN_TIME || currentTime < STAR_SPAWN_START_TIME)
+                discardEntity();
+        }
     }
 
     // ---------------------------------
