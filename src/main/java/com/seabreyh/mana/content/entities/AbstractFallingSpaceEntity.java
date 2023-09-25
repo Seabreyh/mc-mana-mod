@@ -1,5 +1,6 @@
 package com.seabreyh.mana.content.entities;
 
+import com.seabreyh.mana.ManaMod;
 import com.seabreyh.mana.foundation.event.player.PlayerWishEvent;
 import com.seabreyh.mana.foundation.event.world.ShootingStarEvent;
 import com.seabreyh.mana.registries.ManaParticles;
@@ -51,6 +52,9 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
     private EntityDimensions dimensions;
     float currentTime;
     protected boolean spawnedNaturally = false;
+    protected int failedProbability = random.nextInt(20);
+    protected int failedDistanceModifier = random.nextInt(100);
+    protected boolean isFailedLandingStar;
 
     // splash variables
     private Vec3 lastPosition = this.position();
@@ -83,6 +87,7 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
             Player ownPlayer) {
         this(getEntity, world);
         this.ownPlayer = ownPlayer;
+
     }
 
     // Block Dispenser
@@ -435,6 +440,9 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
 
     @Override
     protected void onHitBlock(BlockHitResult p_36755_) {
+
+        this.playHitSound();
+
         // change the sound from the parent class
         this.setSoundEvent(HIT_SOUND);
 
@@ -451,7 +459,27 @@ public abstract class AbstractFallingSpaceEntity extends AbstractArrow {
         this.isFalling = false;
         this.inGround = true;
 
-        playHitSound();
+    }
+
+    protected void discardFailedLanding() {
+        this.playSound(SoundEvents.FIRE_EXTINGUISH, 1.0F, 8.0F);
+        this.playSound(SoundEvents.FIREWORK_ROCKET_BLAST_FAR, 1F, 8.0F);
+        if (!this.level().isClientSide) { // qty spread velocity
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.SMOKE, this.getX(), this.getY(), this.getZ(),
+                    20, 0D, 0D, 0D, 0.7D);
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.END_ROD, this.getX(), this.getY(), this.getZ(),
+                    10, 0D, 0D, 0D, 0.1D);
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.LARGE_SMOKE, this.getX(), this.getY(), this.getZ(),
+                    60, 0D, 0D, 0D, 0.7D);
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.SMALL_FLAME, this.getX(), this.getY(),
+                    this.getZ(),
+                    20, 0D, 0D, 0D, 0.3D);
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.FLASH, this.getX(),
+                    this.getY(), this.getZ(), 1,
+                    0D,
+                    0D, 0D, 0D);
+        }
+        this.discard();
     }
 
     @Override

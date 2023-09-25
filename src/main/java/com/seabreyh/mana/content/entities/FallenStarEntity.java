@@ -20,6 +20,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.GlassBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -43,6 +46,15 @@ public class FallenStarEntity extends AbstractFallingSpaceEntity {
     public FallenStarEntity(EntityType<? extends FallenStarEntity> entity, Level level, Player player) {
         super(entity, level, player);
         this.spawnedNaturally = true;
+        // failed landing star
+        if (failedProbability < 3) {
+            isFailedLandingStar = true;
+        } else {
+            isFailedLandingStar = false;
+        }
+
+        ManaMod.LOGGER.info(failedProbability + "probability");
+        ManaMod.LOGGER.info(isFailedLandingStar + "boolean");
     }
 
     // Block Dispenser
@@ -108,6 +120,18 @@ public class FallenStarEntity extends AbstractFallingSpaceEntity {
         } else {
             ++this.clientSideCatchStarTickCount;
         }
+
+        // failedLanding Check
+        if (isFailedLandingStar) {
+            BlockState bsFailed = this.level().getBlockState(
+                    new BlockPos((int) this.position().x(), (int) this.position().y() - (10 + failedDistanceModifier),
+                            (int) this.position().z()));
+
+            if (!(bsFailed.getBlock() instanceof AirBlock)) {
+                discardFailedLanding();
+            }
+        }
+
     }
     // END TICK ---------------------------------------------------------------
 
@@ -117,6 +141,9 @@ public class FallenStarEntity extends AbstractFallingSpaceEntity {
 
     @Override
     protected void onHitBlock(BlockHitResult hitResult) {
+
+        this.playHitSound();
+
         this.setSoundEvent(HIT_SOUND);
         this.isFalling = false;
         if (!moveToCatcher) {
